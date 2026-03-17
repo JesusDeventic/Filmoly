@@ -41,9 +41,9 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text(S.of(context).dialogWarningTitle),
+          title: Text(S.current.dialogWarningTitle),
           content: Text(
-            S.of(context).dialogConfirmSave,
+            S.current.dialogConfirmSave,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           actions: [
@@ -56,7 +56,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
                           .pop({"saved": false, "success": false});
                     },
                     child: Text(
-                      S.of(context).actionNo,
+                      S.current.actionNo,
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
@@ -70,7 +70,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
                           .pop({"saved": true, "success": ok});
                     },
                     child: Text(
-                      S.of(context).actionYes,
+                      S.current.actionYes,
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
@@ -111,7 +111,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
       await _prefs.setWeekStart(_weekStart);
       await _prefs.setDateFormat(_dateFormat);
       // De momento solo persistimos en local; más adelante se llamará al endpoint WP.
-      showCustomSnackBar(S.of(context).success, type: 1);
+      showCustomSnackBar(S.current.success, type: 1);
       setState(() {
         _initialWeekStart = _weekStart;
         _initialDateFormat = _dateFormat;
@@ -121,14 +121,14 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
       });
       return true;
     } catch (_) {
-      showCustomSnackBar(S.of(context).error, type: -1);
+      showCustomSnackBar(S.current.error, type: -1);
       return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = S.of(context);
+    final l10n = S.current;
     final now = DateTime.now();
     final dateFormatsList = [
       'dd/MM/yyyy',
@@ -364,7 +364,7 @@ class _LanguageSelectorSettings extends StatelessWidget {
       width: double.infinity,
       child: PopupMenuButton<String>(
         enabled: isEditing,
-        tooltip: S.of(context).language,
+        tooltip: S.current.language,
         onOpened: () => unFocusGlobal(),
         onSelected: (value) => lang.changeLanguage(value),
         itemBuilder: (ctx) => languageKeys.map((code) {

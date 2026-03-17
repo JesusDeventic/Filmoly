@@ -6,6 +6,8 @@ import 'package:filmoly/generated/l10n.dart';
 import 'package:filmoly/model/user_model.dart';
 import 'package:filmoly/routes/app_routes.dart';
 import 'package:filmoly/widget/components_widgets.dart';
+import 'package:filmoly/providers/language_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
@@ -92,6 +94,8 @@ class _LoginPageState extends State<LoginPage> {
           }
           RecaptchaService.hideBadge();
           showCustomSnackBar(S.current.welcome, type: 1);
+          // Sincronizar push: registrar token en backend + topic idioma
+          await syncPushConfig();
           context.go(AppRoutes.home);
           return;
         }
@@ -109,6 +113,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Escuchar cambios de idioma para reconstruir toda la pantalla (como en Fitcron)
+    Provider.of<LanguageProvider>(context); // listen: true por defecto
     final screenWidth = MediaQuery.of(context).size.width;
     return PopScope(
       canPop: false,

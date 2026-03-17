@@ -45,5 +45,13 @@
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    // Registrar el service worker de Firebase para Web Push (como en Fitcron)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('firebase-messaging-sw.js').catch(function (e) {
+        console.log('Error registrando firebase-messaging-sw.js', e);
+      });
+    }
+  </script>
 </body>
 </html>

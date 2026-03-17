@@ -42,77 +42,84 @@ void showCustomSnackBar(String message, {int? type}) {
 }
 
 Widget rowSettingsAppAndVersion(BuildContext context) {
-  final lang = context.read<LanguageProvider>();
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       Expanded(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: PopupMenuButton<String>(
-            tooltip: S.current.language,
-            onOpened: () => unFocusGlobal(),
-            onSelected: (value) => lang.changeLanguage(value),
-            itemBuilder: (ctx) => languageKeys.map((code) {
-            final isSelected = code == lang.currentLanguage;
-              return PopupMenuItem<String>(
-                value: code,
-                child: Row(
-                  children: [
-                    if (isSelected)
-                      Icon(
-                        Icons.check_rounded,
-                        size: 18,
-                        color: Theme.of(ctx).colorScheme.secondary,
-                      ),
-                    if (isSelected) const SizedBox(width: 8),
-                    Text(
-                      getLanguageFlag(code),
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: isSelected
-                            ? Theme.of(ctx).colorScheme.secondary
-                            : null,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        getLanguageName(code),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: isSelected
-                              ? Theme.of(ctx).colorScheme.secondary
-                              : null,
+          child: Consumer<LanguageProvider>(
+            builder: (ctx, lang, _) {
+              return PopupMenuButton<String>(
+                tooltip: S.current.language,
+                onOpened: () => unFocusGlobal(),
+                onSelected: (value) async {
+                  if (value.isNotEmpty) {
+                    await lang.changeLanguage(value);
+                  }
+                },
+                itemBuilder: (ctx) => languageKeys.map((code) {
+                      final isSelected = code == lang.currentLanguage;
+                      return PopupMenuItem<String>(
+                        value: code,
+                        child: Row(
+                          children: [
+                            if (isSelected)
+                              Icon(
+                                Icons.check_rounded,
+                                size: 18,
+                                color: Theme.of(ctx).colorScheme.secondary,
+                              ),
+                            if (isSelected) const SizedBox(width: 8),
+                            Text(
+                              getLanguageFlag(code),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: isSelected
+                                    ? Theme.of(ctx).colorScheme.secondary
+                                    : null,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                getLanguageName(code),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: isSelected
+                                      ? Theme.of(ctx).colorScheme.secondary
+                                      : null,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                      );
+                    }).toList(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        getLanguageFlag(lang.currentLanguage),
+                        style: const TextStyle(fontSize: 20),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          getNativeLanguageName(lang.currentLanguage),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
-            }).toList(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    getLanguageFlag(lang.currentLanguage),
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      getNativeLanguageName(lang.currentLanguage),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            },
           ),
         ),
       ),

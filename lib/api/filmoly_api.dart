@@ -177,4 +177,50 @@ class FilmolyApi {
       return null;
     }
   }
+
+  /// POST /push/register-token — guarda/actualiza el token FCM del dispositivo.
+  ///
+  /// Backend esperado (WordPress): `wordpress_backend/notificaciones.php`
+  static Future<bool> registerPushToken({
+    required String token,
+    required String fcmToken,
+  }) async {
+    final url = Uri.parse('$_baseUrl/push/register-token');
+    try {
+      final response = await http.post(
+        url,
+        headers: _headers(token: token),
+        body: jsonEncode({
+          'fcm_token': fcmToken,
+        }),
+      );
+      if (response.statusCode != 200) return false;
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      return data['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// POST /push/unregister-token — marca un token (o deviceId) como inactivo.
+  static Future<bool> unregisterPushToken({
+    required String token,
+    required String fcmToken,
+  }) async {
+    final url = Uri.parse('$_baseUrl/push/unregister-token');
+    try {
+      final response = await http.post(
+        url,
+        headers: _headers(token: token),
+        body: jsonEncode({
+          'fcm_token': fcmToken,
+        }),
+      );
+      if (response.statusCode != 200) return false;
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      return data['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
 }

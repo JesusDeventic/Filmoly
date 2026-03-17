@@ -6,6 +6,8 @@ import 'package:filmoly/generated/l10n.dart';
 import 'package:filmoly/model/user_model.dart';
 import 'package:filmoly/routes/app_routes.dart';
 import 'package:filmoly/widget/components_widgets.dart';
+import 'package:filmoly/providers/language_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -83,6 +85,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Escuchar cambios de idioma para reconstruir toda la pantalla de registro
+    Provider.of<LanguageProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
     return PopScope(
       canPop: false,

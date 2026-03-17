@@ -9,7 +9,7 @@ class AppColors {
   static const Color primaryAccent = Color(0xFFC8E65C);
   /// Gris antracita (fondos oscuros, texto, contraste)
   static const Color anthracite = Color(0xFF2C2C2E);
-  static const Color anthraciteDark = Color(0xFF1C1C1E);
+  static const Color anthraciteDark = Color(0xFF121212);
   /// Secundario / apoyo
   static const Color secondary = Color(0xFFE5A84B);
   static const Color secondaryLow = Color(0xFFFFB84B);
@@ -18,8 +18,8 @@ class AppColors {
   static const Color black = Color(0xFF000000);
   static const Color grey = Color(0xFF9E9E9E);
   static const Color surfaceLight = Color(0xFFFAFAFA);
-  /// Superficie oscura = antracita
-  static const Color surfaceDark = Color(0xFF1C1C1E);
+  /// Superficie oscura (igual que Fitcron)
+  static const Color surfaceDark = Color(0xFF121212);
 }
 
 ColorScheme get lightColorScheme {

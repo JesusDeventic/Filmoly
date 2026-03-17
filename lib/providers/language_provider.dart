@@ -1,4 +1,5 @@
 import 'package:filmoly/core/user_preferences.dart';
+import 'package:filmoly/core/global_functions.dart';
 import 'package:filmoly/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -60,6 +61,10 @@ class LanguageProvider extends ChangeNotifier {
         await S.load(const Locale('en'));
       }
       notifyListeners();
+      // Mantener topic FCM alineado con el idioma (no bloquear el cambio de idioma)
+      // Se hace en segundo plano para no notar lag en la UI.
+      // ignore: discarded_futures
+      syncPushConfig();
     }
   }
 }

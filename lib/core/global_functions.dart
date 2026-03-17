@@ -1,9 +1,17 @@
+import 'dart:io';
+
 import 'package:filmoly/api/filmoly_api.dart';
+import 'package:filmoly/api/firebase_web_config.dart';
 import 'package:filmoly/core/global_variables.dart';
 import 'package:filmoly/core/secure_storage.dart';
 import 'package:filmoly/generated/l10n.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
+import 'package:filmoly/providers/language_provider.dart';
+import 'package:filmoly/main.dart';
 
 final _secureStorage = FilmolySecureStorage();
 
@@ -17,6 +25,14 @@ void unFocusGlobal() {
 }
 
 Future<void> logoutUser() async {
+  // Borrar token FCM para desuscribirse de notificaciones
+  if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+    try {
+      await FirebaseMessaging.instance.deleteToken();
+    } catch (_) {
+      // ignorar errores de FCM en logout
+    }
+  }
   await FilmolyApi.logoutAndClear();
 }
 
@@ -28,7 +44,54 @@ Future<bool> loginUser() async {
   if (user == null) return false;
   globalUserToken = token;
   globalCurrentUser = user;
+  // Sincronizar push tras login silencioso (token + topic por idioma)
+  await syncPushConfig();
   return true;
+}
+
+/// Sincroniza la configuración push del usuario actual:
+/// - registra/actualiza el token FCM en backend (WP)
+/// - suscribe a topic por idioma (solo Android/iOS)
+Future<void> syncPushConfig() async {
+  if (!(kIsWeb || Platform.isAndroid || Platform.isIOS)) return;
+  if (globalUserToken.isEmpty) return;
+  try {
+    final ctx = navigatorKey.currentContext;
+    String langCode = 'en';
+    String? previousLangCode;
+    if (ctx != null) {
+      final lp = Provider.of<LanguageProvider>(ctx, listen: false);
+      langCode = lp.currentLanguage;
+      previousLangCode = lp.previousLanguage;
+    }
+    final fcm = FirebaseMessaging.instance;
+    final fcmToken = kIsWeb
+        ? await fcm.getToken(vapidKey: FilmolyFirebaseWebConfig.webVapidKey)
+        : await fcm.getToken();
+    if (fcmToken == null || fcmToken.isEmpty) return;
+
+    final ok = await FilmolyApi.registerPushToken(
+      token: globalUserToken,
+      fcmToken: fcmToken,
+    );
+    debugPrint('Registro token push backend: $ok');
+
+    // Topics: solo Android/iOS (en web no aplica)
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      if (previousLangCode != null &&
+          previousLangCode.isNotEmpty &&
+          previousLangCode != langCode) {
+        try {
+          await fcm.unsubscribeFromTopic(previousLangCode);
+        } catch (_) {
+          // ignorar
+        }
+      }
+      await fcm.subscribeToTopic(langCode);
+    }
+  } catch (e) {
+    debugPrint('Error sincronizando push (token/topic): $e');
+  }
 }
 
 /// Compara dos versiones tipo "1.0.1" devolviendo:

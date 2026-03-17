@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'es';
 
   static String m0(seconds) =>
-      "Usuario o contraseña incorrectos. Por favor espera ${seconds} segundos antes de intentar nuevamente";
+      "Usuario o contraseña incorrectos.\nPor favor espera ${seconds} segundos para intentarlo nuevamente";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{

@@ -40,7 +40,6 @@ class _SplashScreenPageState extends State<SplashScreenPage>
   }
 
   Future<void> _startApp() async {
-    await loadAppVersion();
     if (kIsWeb) {
       await RecaptchaService.initiate();
     }

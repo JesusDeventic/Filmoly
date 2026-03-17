@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'package:filmoly/api/filmoly_messaging_service.dart';
+import 'package:filmoly/core/global_functions.dart';
 import 'package:filmoly/generated/l10n.dart';
 import 'package:filmoly/providers/language_provider.dart';
 import 'package:filmoly/providers/theme_provider.dart';
 import 'package:filmoly/routes/app_router.dart';
 import 'package:filmoly/styles/colors.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +18,18 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Cargar versión de la app SIEMPRE al arrancar (como en Fitcron),
+  // para que esté disponible incluso tras reload en Web.
+  await loadAppVersion();
+  // Inicializar notificaciones push solo en Android / iOS / Web
+  if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+    try {
+      final messaging = FilmolyMessagingService();
+      await messaging.initialize();
+    } catch (e) {
+      debugPrint('Error inicializando notificaciones de Firebase: $e');
+    }
+  }
   runApp(
     MultiProvider(
       providers: [
@@ -43,7 +59,7 @@ class _FilmolyAppState extends State<FilmolyApp> {
           routerConfig: _router,
           scaffoldMessengerKey: scaffoldMessengerKey,
           debugShowCheckedModeBanner: false,
-          title: S.current.appName,
+          onGenerateTitle: (context) => S.current.appName,
           theme: themeProvider.isDarkMode ? darkTheme : lightTheme,
           locale: Locale(languageProvider.currentLanguage),
           localizationsDelegates: const [

@@ -2,6 +2,11 @@
 cmake_minimum_required(VERSION 3.14)
 project(filmoly LANGUAGES CXX)
 
+# Firebase (via firebase_core) pulls a CMake project that still declares a very
+# old minimum (e.g. 3.1). Newer CMake versions remove compatibility with policy
+# versions < 3.5 unless this is set.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "Minimum policy version" FORCE)
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "filmoly")
@@ -65,9 +70,10 @@ include(flutter/generated_plugins.cmake)
 set(BUILD_BUNDLE_DIR "$<TARGET_FILE_DIR:${BINARY_NAME}>")
 # Make the "install" step default, as it's required to run.
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
-endif()
+# IMPORTANT: Force install prefix to a writable location.
+# Some toolchains end up with the default "C:/Program Files/<app>" which fails
+# without admin permissions during the INSTALL.vcxproj step.
+set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}")
