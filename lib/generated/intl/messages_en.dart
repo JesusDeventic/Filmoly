@@ -225,6 +225,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageUpdateSuccess": MessageLookupByLibrary.simpleMessage(
       "Profile updated successfully",
     ),
+    "messagesDelete": MessageLookupByLibrary.simpleMessage("Delete"),
+    "messagesDeleteConfirm": MessageLookupByLibrary.simpleMessage(
+      "Delete this message?",
+    ),
+    "messagesDeleted": MessageLookupByLibrary.simpleMessage("Message deleted"),
+    "messagesEdit": MessageLookupByLibrary.simpleMessage("Edit"),
+    "messagesEdited": MessageLookupByLibrary.simpleMessage("edited"),
+    "messagesEmpty": MessageLookupByLibrary.simpleMessage(
+      "You have no conversations yet.",
+    ),
+    "messagesErrorDelete": MessageLookupByLibrary.simpleMessage(
+      "Could not delete the message.",
+    ),
+    "messagesErrorEdit": MessageLookupByLibrary.simpleMessage(
+      "Could not edit the message.",
+    ),
+    "messagesErrorSend": MessageLookupByLibrary.simpleMessage(
+      "Could not send the message.",
+    ),
+    "messagesNoMessages": MessageLookupByLibrary.simpleMessage(
+      "No messages yet. Say something!",
+    ),
+    "messagesRead": MessageLookupByLibrary.simpleMessage("Read"),
+    "messagesSend": MessageLookupByLibrary.simpleMessage("Send"),
+    "messagesSent": MessageLookupByLibrary.simpleMessage("Sent"),
+    "messagesTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Write a message...",
+    ),
     "newPassword": MessageLookupByLibrary.simpleMessage("New password"),
     "notificationsLabel": MessageLookupByLibrary.simpleMessage("Notifications"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),

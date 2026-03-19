@@ -5,4 +5,8 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
   static const String accountProfile = '/account-profile';
+  static const String conversations = '/conversations';
+  static const String chat = '/chat/:userId';
+
+  static String chatWith(int userId) => '/chat/$userId';
 }

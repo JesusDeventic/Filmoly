@@ -1299,6 +1299,116 @@ class S {
     return Intl.message('Cancel', name: 'buttonCancel', desc: '', args: []);
   }
 
+  /// `You have no conversations yet.`
+  String get messagesEmpty {
+    return Intl.message(
+      'You have no conversations yet.',
+      name: 'messagesEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No messages yet. Say something!`
+  String get messagesNoMessages {
+    return Intl.message(
+      'No messages yet. Say something!',
+      name: 'messagesNoMessages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Message deleted`
+  String get messagesDeleted {
+    return Intl.message(
+      'Message deleted',
+      name: 'messagesDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `edited`
+  String get messagesEdited {
+    return Intl.message('edited', name: 'messagesEdited', desc: '', args: []);
+  }
+
+  /// `Write a message...`
+  String get messagesTypeHint {
+    return Intl.message(
+      'Write a message...',
+      name: 'messagesTypeHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send`
+  String get messagesSend {
+    return Intl.message('Send', name: 'messagesSend', desc: '', args: []);
+  }
+
+  /// `Edit`
+  String get messagesEdit {
+    return Intl.message('Edit', name: 'messagesEdit', desc: '', args: []);
+  }
+
+  /// `Delete`
+  String get messagesDelete {
+    return Intl.message('Delete', name: 'messagesDelete', desc: '', args: []);
+  }
+
+  /// `Delete this message?`
+  String get messagesDeleteConfirm {
+    return Intl.message(
+      'Delete this message?',
+      name: 'messagesDeleteConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read`
+  String get messagesRead {
+    return Intl.message('Read', name: 'messagesRead', desc: '', args: []);
+  }
+
+  /// `Sent`
+  String get messagesSent {
+    return Intl.message('Sent', name: 'messagesSent', desc: '', args: []);
+  }
+
+  /// `Could not send the message.`
+  String get messagesErrorSend {
+    return Intl.message(
+      'Could not send the message.',
+      name: 'messagesErrorSend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not edit the message.`
+  String get messagesErrorEdit {
+    return Intl.message(
+      'Could not edit the message.',
+      name: 'messagesErrorEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not delete the message.`
+  String get messagesErrorDelete {
+    return Intl.message(
+      'Could not delete the message.',
+      name: 'messagesErrorDelete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Change password`
   String get buttonChangePassword {
     return Intl.message(

@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:filmoly/api/filmoly_api.dart';
 import 'package:filmoly/core/global_functions.dart';
 import 'package:filmoly/core/global_variables.dart';
 import 'package:filmoly/generated/l10n.dart';
 import 'package:filmoly/page/home/placeholder_section_page.dart';
+import 'package:filmoly/page/messages/private_conversations_page.dart';
 import 'package:filmoly/page/users/account_profile_page.dart';
 import 'package:filmoly/page/users/contact_page.dart';
 import 'package:filmoly/page/users/general_settings_page.dart';
@@ -24,6 +27,27 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
   int _unreadNotificationsCount = 0;
   int _unreadMessagesCount = 0;
   bool _collapseMenu = false;
+  Timer? _unreadTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUnreadMessages();
+    _unreadTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (mounted) _refreshUnreadMessages();
+    });
+  }
+
+  @override
+  void dispose() {
+    _unreadTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refreshUnreadMessages() async {
+    final count = await FilmolyApi.getUnreadMessagesCount();
+    if (mounted) setState(() => _unreadMessagesCount = count);
+  }
 
   Widget _buildDesktopAppBarDivider() {
     return Container(
@@ -45,11 +69,9 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PlaceholderSectionPage(
-                title: S.current.privateMessages,
-              ),
+              builder: (context) => const PrivateConversationsPage(),
             ),
-          );
+          ).then((_) => _refreshUnreadMessages());
         },
         child: Padding(
           padding: isDesktop ? const EdgeInsets.all(8) : const EdgeInsets.all(2),

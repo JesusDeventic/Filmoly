@@ -2,6 +2,8 @@ import 'package:filmoly/core/global_functions.dart';
 import 'package:filmoly/core/global_variables.dart';
 import 'package:filmoly/generated/l10n.dart';
 import 'package:filmoly/page/home/home_placeholder_page.dart';
+import 'package:filmoly/page/messages/private_conversations_page.dart';
+import 'package:filmoly/page/messages/private_chat_page.dart';
 import 'package:filmoly/page/users/account_profile_page.dart';
 import 'package:filmoly/page/home/splash_screen_page.dart';
 import 'package:filmoly/page/login/forgot_password_page.dart';
@@ -56,6 +58,22 @@ GoRouter createAppRouter(GlobalKey<NavigatorState> navigatorKey) {
       GoRoute(
         path: AppRoutes.accountProfile,
         builder: (_, __) => const AccountProfilePage(),
+      ),
+      GoRoute(
+        path: AppRoutes.conversations,
+        builder: (_, __) => const PrivateConversationsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.chat,
+        builder: (_, state) {
+          final userId = int.tryParse(state.pathParameters['userId'] ?? '') ?? 0;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return PrivateChatPage(
+            recipientId: userId,
+            recipientUsername: extra['username'] as String? ?? '',
+            recipientAvatarUrl: extra['avatarUrl'] as String? ?? '',
+          );
+        },
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

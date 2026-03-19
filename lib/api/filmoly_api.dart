@@ -5,6 +5,7 @@ import 'package:filmoly/core/global_variables.dart';
 import 'package:filmoly/core/secure_storage.dart';
 import 'package:filmoly/model/user_model.dart';
 import 'package:filmoly/model/app_status_model.dart';
+import 'package:filmoly/model/private_message_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:http/http.dart' as http;
 
@@ -353,6 +354,128 @@ class FilmolyApi {
         }),
       );
       if (response.statusCode != 200) return false;
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      return data['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // =========================================================
+  // MENSAJERÍA PRIVADA
+  // =========================================================
+
+  /// GET /messages/conversations
+  static Future<List<Conversation>> getConversations({int limit = 20, int offset = 0}) async {
+    final token = globalUserToken;
+    if (token.isEmpty) return [];
+    try {
+      final url = Uri.parse('$_baseUrl/messages/conversations?limit=$limit&offset=$offset');
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      final list = data['conversations'] as List<dynamic>? ?? [];
+      return list.map((e) => Conversation.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// GET /messages?other_user_id=X[&before_id=Y|after_created=Z]
+  static Future<List<PrivateMessage>> getMessages({
+    required int otherUserId,
+    int? beforeId,
+    String? afterCreated,
+  }) async {
+    final token = globalUserToken;
+    if (token.isEmpty) return [];
+    try {
+      final params = <String, String>{'other_user_id': '$otherUserId'};
+      if (beforeId != null) params['before_id'] = '$beforeId';
+      if (afterCreated != null) params['after_created'] = afterCreated;
+      final url = Uri.parse('$_baseUrl/messages').replace(queryParameters: params);
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      final list = data['messages'] as List<dynamic>? ?? [];
+      return list.map((e) => PrivateMessage.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// GET /messages/unread-count
+  static Future<int> getUnreadMessagesCount() async {
+    final token = globalUserToken;
+    if (token.isEmpty) return 0;
+    try {
+      final url = Uri.parse('$_baseUrl/messages/unread-count');
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      return (data['unread_count'] as num?)?.toInt() ?? 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  /// GET /messages/read-status?other_user_id=X
+  static Future<bool?> getMessageReadStatus(int otherUserId) async {
+    final token = globalUserToken;
+    if (token.isEmpty) return null;
+    try {
+      final url = Uri.parse('$_baseUrl/messages/read-status?other_user_id=$otherUserId');
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      final v = data['is_read'];
+      if (v == null) return null;
+      return v == true || v == 1;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// POST /messages/send
+  static Future<PrivateMessage?> sendMessage({required int recipientId, required String message}) async {
+    final token = globalUserToken;
+    if (token.isEmpty) return null;
+    try {
+      final url = Uri.parse('$_baseUrl/messages/send');
+      final response = await http.post(url,
+          headers: _headers(token: token),
+          body: jsonEncode({'recipient_id': recipientId, 'message': message}));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      if (data['success'] == true && data['message'] != null) {
+        return PrivateMessage.fromJson(data['message'] as Map<String, dynamic>);
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// POST /messages/edit
+  static Future<bool> editMessage({required int id, required String message}) async {
+    final token = globalUserToken;
+    if (token.isEmpty) return false;
+    try {
+      final url = Uri.parse('$_baseUrl/messages/edit');
+      final response = await http.post(url,
+          headers: _headers(token: token),
+          body: jsonEncode({'id': id, 'message': message}));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      return data['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// POST /messages/delete
+  static Future<bool> deleteMessage(int id) async {
+    final token = globalUserToken;
+    if (token.isEmpty) return false;
+    try {
+      final url = Uri.parse('$_baseUrl/messages/delete');
+      final response = await http.post(url,
+          headers: _headers(token: token),
+          body: jsonEncode({'id': id}));
       final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
       return data['success'] == true;
     } catch (_) {
