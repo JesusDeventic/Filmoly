@@ -116,65 +116,71 @@ class _FilmolyAppState extends State<FilmolyApp> {
 }
 
 // ============================================================================
-// NOTA PARA DUPLICAR ESTE PROYECTO COMO BASE DE OTRA APP
+// GUIA PARA REUTILIZAR ESTE PROYECTO (FLUTTER + WORDPRESS)
 // ============================================================================
-// Si copias este proyecto para crear otra app distinta, revisa y cambia:
+// Si usas este repo como base para otra app, revisa este checklist:
 //
-// 1) Identidad visual
-//    - Logo principal y assets:
-//      - Sustituir `assets/logo.png` por el logo de la nueva app.
-//      - Regenerar iconos con `flutter_launcher_icons` (ver sección `flutter_launcher_icons`
-//        en `pubspec.yaml` y ejecutar: `dart run flutter_launcher_icons`).
-//    - Icono de notificaciones push Android:
-//      - Reemplazar `android/app/src/main/res/drawable/ic_notification.png`
-//        por un PNG monocromo (normalmente blanco) del nuevo logo, 24–32 px.
+// 1) Identidad visual y branding
+//    - Sustituir `assets/logo.png` y los recursos de marca.
+//    - Regenerar iconos con `flutter_launcher_icons`:
+//      `dart run flutter_launcher_icons`
+//    - Revisar icono push Android:
+//      `android/app/src/main/res/drawable/ic_notification.png`
+//    - Revisar textos de marca en `lib/l10n/*.arb` (ej: `appName`).
 //
-// 2) Paquete / identificadores
-//    - Cambiar el identificador de paquete:
-//      - Android: `applicationId` en `android/app/build.gradle(.kts)` y `package_name`
-//        en `android/app/google-services.json`.
-//      - iOS: `PRODUCT_BUNDLE_IDENTIFIER` en Xcode (Runner) y `bundle_id` en
-//        `ios/Runner/GoogleService-Info.plist`.
+// 2) Identificadores de app (Android/iOS)
+//    - Android:
+//      - `applicationId` en `android/app/build.gradle(.kts)`
+//      - `package_name` en `android/app/google-services.json`
+//    - iOS:
+//      - `PRODUCT_BUNDLE_IDENTIFIER` en Xcode (Runner)
+//      - `bundle_id` en `ios/Runner/GoogleService-Info.plist`
 //
 // 3) Firebase (nuevo proyecto)
-//    - Crear proyecto Firebase nuevo y descargar:
+//    - Reemplazar:
 //      - `android/app/google-services.json`
 //      - `ios/Runner/GoogleService-Info.plist`
-//    - Para Web:
-//      - Actualizar `lib/api/firebase_web_config.dart` con la nueva config web
-//        (`apiKey`, `appId`, `projectId`, `messagingSenderId`, etc.).
-//      - Actualizar la `webVapidKey` con la Web Push key del nuevo proyecto.
+//    - Web:
+//      - Actualizar `lib/api/firebase_web_config.dart` (`apiKey`, `appId`,
+//        `projectId`, `messagingSenderId`, etc.)
+//      - Actualizar `webVapidKey`
 //
-// 4) WordPress / API backend
-//    - Cambiar la URL base en `lib/api/filmoly_api.dart`:
-//      - Constante `filmolyBaseUrl` debe apuntar al nuevo dominio / namespace REST.
-//    - Revisar endpoints específicos copiados de Filmoly:
-//      - `wordpress_backend/*.php` (login.php, usuario.php, notificaciones.php,
-//        app-status.php, recaptcha.php, etc.) y adaptar:
-//        - Prefijos (`filmoly_...`) si quieres nuevos nombres.
-//        - Rutas REST (`filmoly/v1/...`) si cambias el namespace.
+// 4) Backend WordPress / REST
+//    - Cambiar `filmolyBaseUrl` en `lib/api/filmoly_api.dart`.
+//    - Revisar rutas/prefijos en `wordpress_backend/*.php`:
+//      - Namespace REST (`filmoly/v1/...`)
+//      - Funciones/prefijos (`filmoly_...`) si quieres renombrar.
 //
-// 5) Push notifications (servidor)
-//    - Si usas FCM HTTP v1:
-//      - Generar una nueva Service Account en el proyecto Firebase nuevo.
-//      - Subir el JSON a tu servidor (ruta segura) y ajustar en `wp-config.php`:
-//        - `FILMOLY_FIREBASE_PROJECT_ID` (nuevo ID de proyecto).
-//        - `FILMOLY_FIREBASE_SERVICE_ACCOUNT_PATH` (ruta al JSON).
-//    - Revisar `wordpress_backend/notificaciones.php` y `WebPage_NotificacionesPush.php`
-//      por si quieres cambiar textos o comportamiento.
+// 5) Secretos y configuracion sensible (wp-config.php)
+//    - NO hardcodear claves en snippets o plugins.
+//    - Definir en `wp-config.php` al menos:
+//      - `FILMOLY_FIREBASE_PROJECT_ID`
+//      - `FILMOLY_FIREBASE_SERVICE_ACCOUNT_PATH`
+//      - `FILMOLY_RECAPTCHA_SECRET_KEY`
+//    - Verificar que `wordpress_backend/recaptcha.php` y `notificaciones.php`
+//      lean esas constantes.
 //
-// 6) Branding / textos específicos
-//    - Revisar ARB de localización en `lib/l10n/*.arb`:
-//      - Nombre de la app (`appName`) y cualquier referencia a "Filmoly".
-//      - FAQs, textos de contacto, políticas, etc.
-//    - Regenerar l10n con `dart run intl_utils:generate` (o desde el IDE).
+// 6) CORS (recomendado: una sola capa)
+//    - Evitar CORS duplicado entre WordPress y Nginx.
+//    - Si centralizas en Nginx:
+//      - En WP, desactivar CORS REST nativo (ver `wordpress_backend/apirest-cors.php`).
+//      - En Nginx Proxy Manager, aplicar CORS en Custom Location (no en Advanced
+//        global si tu plantilla no aplica `add_header` ahi).
 //
-// 7) Otros puntos a revisar
-//    - Tema de colores en `lib/styles/colors.dart`:
-//      - Cambiar `AppColors.primary`, `secondary`, etc. si la nueva app usa otros colores.
-//    - URLs externas (web, soporte, redes sociales) en:
+// 7) Push y notificaciones
+//    - Revisar `wordpress_backend/notificaciones.php` y
+//      `wordpress_backend/WebPage_NotificacionesPush.php`.
+//    - Confirmar que tokens FCM, envio push y textos traducidos funcionen en
+//      todos los idiomas activos.
+//
+// 8) Localizacion y generacion de codigo
+//    - Tras editar ARB, regenerar l10n:
+//      `dart run intl_utils:generate`
+//
+// 9) URLs y contenido externo
+//    - Revisar enlaces de soporte/redes/contacto, por ejemplo en:
 //      - `lib/page/users/contact_page.dart`
-//      - Cualquier otro lugar donde aparezcan dominios o paths de Filmoly.
+//      - cualquier otro punto con dominios legacy.
 //
-// Con estos cambios, este proyecto sirve como plantilla reutilizable para nuevas apps
-// que compartan la misma estructura técnica pero con otra marca / backend / Firebase.
+// Con esto, el proyecto queda listo como plantilla base reutilizable para apps
+// Flutter + WordPress con backend propio.
