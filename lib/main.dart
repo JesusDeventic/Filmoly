@@ -7,6 +7,7 @@ import 'package:filmaniak/providers/theme_provider.dart';
 import 'package:filmaniak/routes/app_router.dart';
 import 'package:filmaniak/styles/colors.dart';
 import 'package:app_links/app_links.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -104,6 +105,7 @@ class _FilmaniakAppState extends State<FilmaniakApp> {
           locale: Locale(languageProvider.currentLanguage),
           localizationsDelegates: const [
             S.delegate,
+            CountryLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,

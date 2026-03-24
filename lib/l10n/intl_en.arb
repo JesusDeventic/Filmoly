@@ -209,5 +209,27 @@
   "webBlogLabel": "Website / blog",
   "webBlogHint": "https://yoursite.com",
   "removeCountryTooltip": "Remove country",
-  "removeBirthdateTooltip": "Remove date"
+  "removeBirthdateTooltip": "Remove date",
+  "filtersTitle": "Filtros",
+  "sortByLabel": "Ordenar por",
+  "membersSortNameAsc": "Nombre (A-Z)",
+  "membersSortNameDesc": "Nombre (Z-A)",
+  "membersSortAgeAsc": "Edad (Ascendente)",
+  "membersSortAgeDesc": "Edad (Descendente)",
+  "membersSortRegisteredAsc": "Registro (más antiguo primero)",
+  "membersSortRegisteredDesc": "Registro (más reciente primero)",
+  "allLabel": "Todos",
+  "membersSearchHint": "Buscar miembro...",
+  "membersSearchApplyTooltip": "Aplicar búsqueda",
+  "membersLabel": "Miembros",
+  "membersErrorLoadTitle": "No se pudo cargar el directorio",
+  "membersEmptyTitle": "No hay miembros",
+  "membersEmptySubtitle": "Prueba con otra búsqueda o filtros",
+  "filterResetLabel": "Restablecer",
+  "filterApplyLabel": "Aplicar",
+  "membersHomeCardSubtitle": "Explora el directorio y conecta con otros usuarios",
+  "viewListLabel": "Lista",
+  "viewGridLabel": "Cuadrícula",
+  "membersCommentCount": "{count} comentarios"
+  
 }

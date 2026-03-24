@@ -1818,6 +1818,191 @@ class S {
       args: [],
     );
   }
+
+  /// `Filtros`
+  String get filtersTitle {
+    return Intl.message('Filtros', name: 'filtersTitle', desc: '', args: []);
+  }
+
+  /// `Ordenar por`
+  String get sortByLabel {
+    return Intl.message('Ordenar por', name: 'sortByLabel', desc: '', args: []);
+  }
+
+  /// `Nombre (A-Z)`
+  String get membersSortNameAsc {
+    return Intl.message(
+      'Nombre (A-Z)',
+      name: 'membersSortNameAsc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nombre (Z-A)`
+  String get membersSortNameDesc {
+    return Intl.message(
+      'Nombre (Z-A)',
+      name: 'membersSortNameDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edad (Ascendente)`
+  String get membersSortAgeAsc {
+    return Intl.message(
+      'Edad (Ascendente)',
+      name: 'membersSortAgeAsc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edad (Descendente)`
+  String get membersSortAgeDesc {
+    return Intl.message(
+      'Edad (Descendente)',
+      name: 'membersSortAgeDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registro (más antiguo primero)`
+  String get membersSortRegisteredAsc {
+    return Intl.message(
+      'Registro (más antiguo primero)',
+      name: 'membersSortRegisteredAsc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registro (más reciente primero)`
+  String get membersSortRegisteredDesc {
+    return Intl.message(
+      'Registro (más reciente primero)',
+      name: 'membersSortRegisteredDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Todos`
+  String get allLabel {
+    return Intl.message('Todos', name: 'allLabel', desc: '', args: []);
+  }
+
+  /// `Buscar miembro...`
+  String get membersSearchHint {
+    return Intl.message(
+      'Buscar miembro...',
+      name: 'membersSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aplicar búsqueda`
+  String get membersSearchApplyTooltip {
+    return Intl.message(
+      'Aplicar búsqueda',
+      name: 'membersSearchApplyTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Miembros`
+  String get membersLabel {
+    return Intl.message('Miembros', name: 'membersLabel', desc: '', args: []);
+  }
+
+  /// `No se pudo cargar el directorio`
+  String get membersErrorLoadTitle {
+    return Intl.message(
+      'No se pudo cargar el directorio',
+      name: 'membersErrorLoadTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No hay miembros`
+  String get membersEmptyTitle {
+    return Intl.message(
+      'No hay miembros',
+      name: 'membersEmptyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prueba con otra búsqueda o filtros`
+  String get membersEmptySubtitle {
+    return Intl.message(
+      'Prueba con otra búsqueda o filtros',
+      name: 'membersEmptySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restablecer`
+  String get filterResetLabel {
+    return Intl.message(
+      'Restablecer',
+      name: 'filterResetLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aplicar`
+  String get filterApplyLabel {
+    return Intl.message(
+      'Aplicar',
+      name: 'filterApplyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Explora el directorio y conecta con otros usuarios`
+  String get membersHomeCardSubtitle {
+    return Intl.message(
+      'Explora el directorio y conecta con otros usuarios',
+      name: 'membersHomeCardSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lista`
+  String get viewListLabel {
+    return Intl.message('Lista', name: 'viewListLabel', desc: '', args: []);
+  }
+
+  /// `Cuadrícula`
+  String get viewGridLabel {
+    return Intl.message(
+      'Cuadrícula',
+      name: 'viewGridLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} comentarios`
+  String membersCommentCount(Object count) {
+    return Intl.message(
+      '$count comentarios',
+      name: 'membersCommentCount',
+      desc: '',
+      args: [count],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -23,6 +23,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(seconds) =>
       "Incorrect username or password.\nPlease wait ${seconds} seconds before trying again.";
 
+  static String m3(count) => "${count} comentarios";
+
   static String m1(username) => "Profile of @${username} on Filmaniak";
 
   static String m2(username) => "QR for @${username}";
@@ -32,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "accountSettings": MessageLookupByLibrary.simpleMessage("Account settings"),
     "actionNo": MessageLookupByLibrary.simpleMessage("No"),
     "actionYes": MessageLookupByLibrary.simpleMessage("Yes"),
+    "allLabel": MessageLookupByLibrary.simpleMessage("Todos"),
     "andLabel": MessageLookupByLibrary.simpleMessage("and"),
     "appName": MessageLookupByLibrary.simpleMessage("Filmaniak"),
     "appVersion10Code": MessageLookupByLibrary.simpleMessage("v1.0.0"),
@@ -185,6 +188,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "fieldRequired": MessageLookupByLibrary.simpleMessage(
       "This field is required",
     ),
+    "filterApplyLabel": MessageLookupByLibrary.simpleMessage("Aplicar"),
+    "filterResetLabel": MessageLookupByLibrary.simpleMessage("Restablecer"),
+    "filtersTitle": MessageLookupByLibrary.simpleMessage("Filtros"),
     "forgotPassword": MessageLookupByLibrary.simpleMessage(
       "Forgot your password?",
     ),
@@ -230,6 +236,40 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginCountdownMessage": m0,
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "markAllAsRead": MessageLookupByLibrary.simpleMessage("Mark all as read"),
+    "membersCommentCount": m3,
+    "membersEmptySubtitle": MessageLookupByLibrary.simpleMessage(
+      "Prueba con otra búsqueda o filtros",
+    ),
+    "membersEmptyTitle": MessageLookupByLibrary.simpleMessage(
+      "No hay miembros",
+    ),
+    "membersErrorLoadTitle": MessageLookupByLibrary.simpleMessage(
+      "No se pudo cargar el directorio",
+    ),
+    "membersHomeCardSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Explora el directorio y conecta con otros usuarios",
+    ),
+    "membersLabel": MessageLookupByLibrary.simpleMessage("Miembros"),
+    "membersSearchApplyTooltip": MessageLookupByLibrary.simpleMessage(
+      "Aplicar búsqueda",
+    ),
+    "membersSearchHint": MessageLookupByLibrary.simpleMessage(
+      "Buscar miembro...",
+    ),
+    "membersSortAgeAsc": MessageLookupByLibrary.simpleMessage(
+      "Edad (Ascendente)",
+    ),
+    "membersSortAgeDesc": MessageLookupByLibrary.simpleMessage(
+      "Edad (Descendente)",
+    ),
+    "membersSortNameAsc": MessageLookupByLibrary.simpleMessage("Nombre (A-Z)"),
+    "membersSortNameDesc": MessageLookupByLibrary.simpleMessage("Nombre (Z-A)"),
+    "membersSortRegisteredAsc": MessageLookupByLibrary.simpleMessage(
+      "Registro (más antiguo primero)",
+    ),
+    "membersSortRegisteredDesc": MessageLookupByLibrary.simpleMessage(
+      "Registro (más reciente primero)",
+    ),
     "menuBarSectionSocial": MessageLookupByLibrary.simpleMessage(
       "Social media",
     ),
@@ -384,6 +424,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Could not open WhatsApp.",
     ),
     "socialWhatsappLabel": MessageLookupByLibrary.simpleMessage("WhatsApp"),
+    "sortByLabel": MessageLookupByLibrary.simpleMessage("Ordenar por"),
     "statusLabel": MessageLookupByLibrary.simpleMessage("Status"),
     "subjectSupport": MessageLookupByLibrary.simpleMessage("Filmaniak contact"),
     "termsAndConditionsLabel": MessageLookupByLibrary.simpleMessage(
@@ -427,6 +468,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Verification code (6 digits)",
     ),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
+    "viewGridLabel": MessageLookupByLibrary.simpleMessage("Cuadrícula"),
+    "viewListLabel": MessageLookupByLibrary.simpleMessage("Lista"),
     "webBlogHint": MessageLookupByLibrary.simpleMessage("https://yoursite.com"),
     "webBlogLabel": MessageLookupByLibrary.simpleMessage("Website / blog"),
     "weekStart": MessageLookupByLibrary.simpleMessage("Start of week"),

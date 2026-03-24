@@ -23,6 +23,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(seconds) =>
       "Usuario o contraseña incorrectos.\nPor favor espera ${seconds} segundos para intentarlo de nuevo";
 
+  static String m3(count) => "${count} comentarios";
+
   static String m1(username) => "Perfil de @${username} en Filmaniak";
 
   static String m2(username) => "QR de @${username}";
@@ -252,6 +254,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "markAllAsRead": MessageLookupByLibrary.simpleMessage(
       "Marcar todo como leído",
     ),
+    "membersCommentCount": m3,
     "menuBarSectionSocial": MessageLookupByLibrary.simpleMessage(
       "Redes sociales",
     ),

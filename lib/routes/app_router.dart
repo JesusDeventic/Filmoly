@@ -1,7 +1,7 @@
 import 'package:filmaniak/core/global_functions.dart';
 import 'package:filmaniak/core/global_variables.dart';
 import 'package:filmaniak/generated/l10n.dart';
-import 'package:filmaniak/page/home/home_placeholder_page.dart';
+import 'package:filmaniak/page/home/home_page.dart';
 import 'package:filmaniak/page/messages/private_conversations_page.dart';
 import 'package:filmaniak/page/messages/private_chat_page.dart';
 import 'package:filmaniak/page/users/account_profile_page.dart';

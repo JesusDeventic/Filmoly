@@ -1,5 +1,6 @@
 import 'dart:math' show max, min;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmaniak/core/global_functions.dart';
 import 'package:filmaniak/core/global_variables.dart';
 import 'package:filmaniak/generated/l10n.dart';
@@ -9,9 +10,21 @@ import 'package:filmaniak/providers/language_provider.dart';
 import 'package:filmaniak/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+
+/// Caché de imágenes de red (misma idea que Fitcron: disco + `stalePeriod` largo).
+class FilmaniakImageCache extends CacheManager {
+  static const key = 'filmaniakImageCache';
+  static const Duration maxAge = Duration(days: 365);
+
+  static final FilmaniakImageCache _instance = FilmaniakImageCache._();
+  factory FilmaniakImageCache() => _instance;
+
+  FilmaniakImageCache._() : super(Config(key, stalePeriod: maxAge));
+}
 
 void showCustomSnackBar(String message, {int? type}) {
   Color? backgroundColor;
@@ -162,15 +175,21 @@ Widget userAvatar(
       width: size,
       height: size,
       child: avatarUrl.isNotEmpty
-          ? Image.network(
-              avatarUrl,
+          ? CachedNetworkImage(
+              imageUrl: avatarUrl,
+              cacheManager: FilmaniakImageCache(),
               fit: BoxFit.cover,
               filterQuality: FilterQuality.high,
-              errorBuilder: (_, __, ___) => _buildInitialAvatar(
-                context,
-                username,
-                size,
-              ),
+              memCacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
+                  .round()
+                  .clamp(1, 4096),
+              memCacheHeight: (size * MediaQuery.devicePixelRatioOf(context))
+                  .round()
+                  .clamp(1, 4096),
+              placeholder: (_, __) =>
+                  _buildInitialAvatar(context, username, size),
+              errorWidget: (_, __, ___) =>
+                  _buildInitialAvatar(context, username, size),
             )
           : _buildInitialAvatar(context, username, size),
     ),
@@ -440,13 +459,24 @@ void _showAvatarModal(BuildContext context, String imageUrl, String name) {
           );
         }
         // Ancho = panel; alto según ratio real de la imagen. `contain` = nunca recorta.
-        return Image.network(
-          imageUrl,
+        return CachedNetworkImage(
+          imageUrl: imageUrl,
+          cacheManager: FilmaniakImageCache(),
           fit: BoxFit.contain,
           width: w,
           alignment: Alignment.topCenter,
           filterQuality: FilterQuality.high,
-          errorBuilder: (_, __, ___) => AspectRatio(
+          placeholder: (_, __) => SizedBox(
+            width: w,
+            height: w,
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
+          errorWidget: (_, __, ___) => AspectRatio(
             aspectRatio: 1,
             child: _buildInitialAvatar(context, name, w),
           ),

@@ -24,6 +24,9 @@ class FilmaniakUser {
   String reviewStatus;
   String reviewPromptedAt;
 
+  /// Comentarios aprobados (solo relleno típico en listado `/users`).
+  int commentCount;
+
   FilmaniakUser({
     this.id = 0,
     this.username = '',
@@ -46,6 +49,7 @@ class FilmaniakUser {
     this.lastLogin = '',
     this.reviewStatus = 'none',
     this.reviewPromptedAt = '',
+    this.commentCount = 0,
   });
 
   bool get isEmpty => id == 0 && username.isEmpty;
@@ -80,6 +84,7 @@ class FilmaniakUser {
           (json['filmaniak_review_status'] as String?) ?? 'none',
       reviewPromptedAt:
           (json['filmaniak_review_prompted_at'] as String?) ?? '',
+      commentCount: (json['comment_count'] as num?)?.toInt() ?? 0,
     );
   }
 

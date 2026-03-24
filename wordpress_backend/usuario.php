@@ -181,6 +181,37 @@ function filmaniak_get_public_user_by_username(WP_REST_Request $request) {
     ], 200);
 }
 
+/**
+ * Recuento de comentarios por user_id (wp_comments.user_id), una consulta para muchos IDs.
+ *
+ * Solo cuentan filas con user_id > 0 (comentarios hechos estando logueado; los anónimos no
+ * se asocian al usuario). Se excluyen spam y papelera; el resto de estados cuenta (incl. '1').
+ *
+ * @return array<int, int> mapa user_id => recuento
+ */
+function filmaniak_get_comment_counts_by_user_ids(array $user_ids) {
+    $user_ids = array_values(array_unique(array_filter(array_map('intval', $user_ids))));
+    if (empty($user_ids)) {
+        return [];
+    }
+    global $wpdb;
+    $in_list = implode(',', $user_ids);
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs son enteros saneados.
+    $sql = "SELECT user_id, COUNT(*) AS cnt FROM {$wpdb->comments}
+            WHERE user_id > 0 AND user_id IN ({$in_list})
+            AND comment_approved NOT IN ('spam', 'trash', 'post-trashed')
+            GROUP BY user_id";
+    $rows = $wpdb->get_results($sql, ARRAY_A);
+    if (!is_array($rows)) {
+        return [];
+    }
+    $out = [];
+    foreach ($rows as $row) {
+        $out[(int) $row['user_id']] = (int) $row['cnt'];
+    }
+    return $out;
+}
+
 function filmaniak_get_public_user_summary($user_id) {
     $user = get_userdata((int) $user_id);
     if (!$user) {
@@ -192,6 +223,8 @@ function filmaniak_get_public_user_summary($user_id) {
         return null;
     }
 
+    // Solo campos que usa la app en el directorio. Orden/filtros (edad, registro, país)
+    // se aplican en la query PHP; no hace falta repetir metas aquí.
     return [
         'id' => (int) $user->ID,
         'username' => $user->user_login,
@@ -200,8 +233,6 @@ function filmaniak_get_public_user_summary($user_id) {
             ? filmaniak_get_user_avatar_url($user->ID)
             : get_avatar_url($user->ID),
         'country' => get_user_meta($user->ID, 'filmaniak_country', true) ?: '',
-        'birthdate' => get_user_meta($user->ID, 'filmaniak_birthdate', true) ?: '',
-        'user_registered' => $user->user_registered,
     ];
 }
 
@@ -301,10 +332,15 @@ function filmaniak_get_users_list(WP_REST_Request $request) {
     $total = (int) $query->get_total();
     $total_pages = max(1, (int) ceil($total / $per_page));
 
+    $id_list = array_map('intval', (array) $ids);
+    $comment_counts = filmaniak_get_comment_counts_by_user_ids($id_list);
+
     $users = [];
     foreach ($ids as $id) {
-        $summary = filmaniak_get_public_user_summary((int) $id);
+        $uid = (int) $id;
+        $summary = filmaniak_get_public_user_summary($uid);
         if ($summary !== null) {
+            $summary['comment_count'] = (int) ($comment_counts[$uid] ?? 0);
             $users[] = $summary;
         }
     }
