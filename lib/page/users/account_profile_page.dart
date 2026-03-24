@@ -246,6 +246,7 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
         child: Image.memory(
           _newAvatarBytes!,
           fit: BoxFit.cover,
+          filterQuality: FilterQuality.high,
           width: 120,
           height: 120,
         ),

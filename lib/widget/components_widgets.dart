@@ -1,3 +1,5 @@
+import 'dart:math' show max, min;
+
 import 'package:filmaniak/core/global_functions.dart';
 import 'package:filmaniak/core/global_variables.dart';
 import 'package:filmaniak/generated/l10n.dart';
@@ -153,27 +155,25 @@ Widget userAvatar(
   required String username,
   double size = 40,
 }) {
-  return Container(
-    width: size,
-    height: size,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      border: Border.all(
-        color: Theme.of(context).colorScheme.secondary,
-        width: 1,
-      ),
+  // Para evitar "halos" de color (píxeles rosados) en imágenes con alpha,
+  // recortamos con `ClipOval` y evitamos el borde del `Container`.
+  return ClipOval(
+    child: SizedBox(
+      width: size,
+      height: size,
+      child: avatarUrl.isNotEmpty
+          ? Image.network(
+              avatarUrl,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
+              errorBuilder: (_, __, ___) => _buildInitialAvatar(
+                context,
+                username,
+                size,
+              ),
+            )
+          : _buildInitialAvatar(context, username, size),
     ),
-    clipBehavior: Clip.antiAlias,
-    child: avatarUrl.isNotEmpty
-        ? Image.network(
-            avatarUrl,
-            fit: BoxFit.cover,
-            width: size,
-            height: size,
-            errorBuilder: (_, __, ___) => _buildInitialAvatar(
-                context, username, size),
-          )
-        : _buildInitialAvatar(context, username, size),
   );
 }
 
@@ -211,9 +211,101 @@ Widget avatarWidget(
   );
 }
 
-/// Hoja inferior arrastrable con barra, cabecera [primary] y cierre (mismo
-/// patrón que el avatar en grande). Reutilizable para QR, imágenes, etc.
-Future<void> _showDraggableAppSheet(
+/// Barra tipo “pill” + cabecera primary + cerrar (compartido por hojas inferiores).
+class _DraggableAppSheetChrome extends StatelessWidget {
+  const _DraggableAppSheetChrome({
+    required this.title,
+    required this.titleFontSize,
+    required this.onClose,
+  });
+
+  final String title;
+  final double titleFontSize;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          width: 40,
+          height: 4,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.inverseSurface.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: theme.colorScheme.onPrimary,
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close_rounded,
+                  color: theme.colorScheme.onPrimary,
+                  size: 30,
+                ),
+                onPressed: onClose,
+                padding: const EdgeInsets.all(8),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Crea un [ScrollController] y lo dispone; útil en hojas sin [DraggableScrollableSheet].
+class _ScrollBodyWithController extends StatefulWidget {
+  const _ScrollBodyWithController({required this.builder});
+
+  final Widget Function(ScrollController scrollController) builder;
+
+  @override
+  State<_ScrollBodyWithController> createState() =>
+      _ScrollBodyWithControllerState();
+}
+
+class _ScrollBodyWithControllerState extends State<_ScrollBodyWithController> {
+  late final ScrollController _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.builder(_controller);
+}
+
+/// Hoja inferior con barra, cabecera [primary] y cierre (mismo patrón que avatar / QR).
+///
+/// - [intrinsicHeight] `false` (por defecto): [DraggableScrollableSheet] con fracción de pantalla.
+/// - [intrinsicHeight] `true`: altura acorde al contenido (hasta [maxIntrinsicFraction] de la
+///   altura útil); si el contenido crece, hace scroll dentro del área.
+/// - [intrinsicContentPadding]: padding del cuerpo en modo intrínseco (p. ej. `EdgeInsets.zero`
+///   para contenido a ancho completo del panel).
+Future<void> showDraggableAppSheet(
   BuildContext context, {
   required String title,
   required Widget Function(ScrollController scrollController) bodyBuilder,
@@ -221,6 +313,9 @@ Future<void> _showDraggableAppSheet(
   double minChildSize = 0.5,
   double maxChildSize = 0.9,
   double titleFontSize = 20,
+  bool intrinsicHeight = false,
+  double maxIntrinsicFraction = 0.88,
+  EdgeInsetsGeometry intrinsicContentPadding = const EdgeInsets.all(16),
 }) {
   unFocusGlobal();
   return showModalBottomSheet<void>(
@@ -228,67 +323,90 @@ Future<void> _showDraggableAppSheet(
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (BuildContext sheetCtx) {
+      final theme = Theme.of(sheetCtx);
+      final media = MediaQuery.of(sheetCtx);
+
+      if (intrinsicHeight) {
+        // Espacio para barra + cabecera primary; el resto es scroll con altura mínima razonable.
+        final maxScrollHeight = max(
+          200.0,
+          media.size.height * maxIntrinsicFraction - 110,
+        );
+        final cardWidth = min(600.0, media.size.width);
+        // Anclado abajo (no usar Center: centraba el modal en vertical).
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: media.viewInsets.bottom),
+            child: SizedBox.expand(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: cardWidth,
+                  constraints: BoxConstraints(
+                    maxHeight: media.size.height * 0.95,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.scaffoldBackgroundColor,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _DraggableAppSheetChrome(
+                        title: title,
+                        titleFontSize: titleFontSize,
+                        onClose: () => Navigator.of(sheetCtx).pop(),
+                      ),
+                      _ScrollBodyWithController(
+                        builder: (scrollController) => ConstrainedBox(
+                          constraints: BoxConstraints(maxHeight: maxScrollHeight),
+                          child: ListView(
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            padding: intrinsicContentPadding,
+                            children: [bodyBuilder(scrollController)],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
       return SafeArea(
         child: DraggableScrollableSheet(
           initialChildSize: initialChildSize,
           minChildSize: minChildSize,
           maxChildSize: maxChildSize,
           builder: (context, scrollController) {
-            final theme = Theme.of(context);
-            return Center(
+            final themeInner = Theme.of(context);
+            final w = MediaQuery.of(context).size.width;
+            return Align(
+              alignment: Alignment.bottomCenter,
               child: Container(
+                width: min(600.0, w),
                 constraints: BoxConstraints(
-                  maxWidth: 600,
                   maxHeight: MediaQuery.of(context).size.height * 0.95,
                 ),
                 decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
+                  color: themeInner.scaffoldBackgroundColor,
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(12)),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.inverseSurface
-                            .withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              title,
-                              style: TextStyle(
-                                color: theme.colorScheme.onPrimary,
-                                fontSize: titleFontSize,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close_rounded,
-                              color: theme.colorScheme.onPrimary,
-                              size: 30,
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
-                            padding: const EdgeInsets.all(8),
-                          ),
-                        ],
-                      ),
+                    _DraggableAppSheetChrome(
+                      title: title,
+                      titleFontSize: titleFontSize,
+                      onClose: () => Navigator.of(sheetCtx).pop(),
                     ),
                     Expanded(
                       child: bodyBuilder(scrollController),
@@ -305,28 +423,35 @@ Future<void> _showDraggableAppSheet(
 }
 
 void _showAvatarModal(BuildContext context, String imageUrl, String name) {
-  _showDraggableAppSheet(
+  showDraggableAppSheet(
     context,
     title: name,
-    bodyBuilder: (scrollController) => SingleChildScrollView(
-      controller: scrollController,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            width: 280,
-            height: 280,
-            child: imageUrl.isEmpty
-                ? _buildInitialAvatar(context, name, 280)
-                : Image.network(
-                    imageUrl,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) =>
-                        _buildInitialAvatar(context, name, 280),
-                  ),
+    intrinsicHeight: true,
+    intrinsicContentPadding: EdgeInsets.zero,
+    bodyBuilder: (_) => LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth.isFinite && constraints.maxWidth > 0
+            ? constraints.maxWidth
+            : min(600.0, MediaQuery.sizeOf(context).width);
+        if (imageUrl.isEmpty) {
+          return AspectRatio(
+            aspectRatio: 1,
+            child: _buildInitialAvatar(context, name, w),
+          );
+        }
+        // Ancho = panel; alto según ratio real de la imagen. `contain` = nunca recorta.
+        return Image.network(
+          imageUrl,
+          fit: BoxFit.contain,
+          width: w,
+          alignment: Alignment.topCenter,
+          filterQuality: FilterQuality.high,
+          errorBuilder: (_, __, ___) => AspectRatio(
+            aspectRatio: 1,
+            child: _buildInitialAvatar(context, name, w),
           ),
-        ),
-      ),
+        );
+      },
     ),
   );
 }
@@ -340,7 +465,7 @@ Future<void> showShareLinkWithQrBottomSheet(
   required String shareSubject,
   double qrSize = 240,
 }) {
-  return _showDraggableAppSheet(
+  return showDraggableAppSheet(
     context,
     title: title,
     initialChildSize: 0.8,
@@ -583,10 +708,11 @@ Widget rowSettingsAppAndVersion(BuildContext context) {
               context.read<ThemeProvider>().toggleTheme();
             },
             child: Consumer<ThemeProvider>(
-              builder: (_, themeProvider, __) => Icon(
+              builder: (ctx, themeProvider, __) => Icon(
                 themeProvider.isDarkMode
                     ? Icons.nightlight_round
                     : Icons.wb_sunny_rounded,
+                color: Theme.of(ctx).colorScheme.onSurface,
               ),
             ),
           ),

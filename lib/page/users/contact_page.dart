@@ -40,7 +40,7 @@ class _ContactPageState extends State<ContactPage> {
                             children: [
                               InkResponse(
                                 onTap: () async {
-                                  const url = 'https://deventic.com';
+                                  const url = 'https://filmaniak.com';
                                   if (await canLaunchUrl(Uri.parse(url))) {
                                     await launchUrl(Uri.parse(url),
                                         mode: LaunchMode.externalApplication);
@@ -118,7 +118,7 @@ class _ContactPageState extends State<ContactPage> {
                           children: [
                             InkResponse(
                               onTap: () async {
-                                const url = 'https://deventic.com';
+                                const url = 'https://filmaniak.com';
                                 if (await canLaunchUrl(Uri.parse(url))) {
                                   await launchUrl(Uri.parse(url),
                                       mode: LaunchMode.externalApplication);
@@ -216,7 +216,7 @@ class _ContactPageState extends State<ContactPage> {
             final subject = S.current.subjectSupport;
             final uri = Uri(
               scheme: 'mailto',
-              path: 'info@deventic.com',
+              path: 'info@filmaniak.com',
               queryParameters: {'subject': subject},
             );
             if (await canLaunchUrl(uri)) {
@@ -337,7 +337,7 @@ class _ContactPageState extends State<ContactPage> {
   }
 
   Widget _privacyButtons(BuildContext context) {
-    const baseUrl = 'https://deventic.com';
+    const baseUrl = 'https://filmaniak.com';
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

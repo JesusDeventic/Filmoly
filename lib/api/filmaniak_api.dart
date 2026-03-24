@@ -342,6 +342,92 @@ class FilmaniakApi {
     }
   }
 
+  /// GET /users?page=X&per_page=Y&search=...&orderby=...&order=...&country=...
+  ///
+  /// Listado ligero para directorio de miembros. El detalle completo se carga
+  /// al entrar en el perfil individual.
+  static Future<Map<String, dynamic>> getMembers({
+    int page = 1,
+    int perPage = 20,
+    String? search,
+    String? orderBy,
+    String? order,
+    String? country,
+  }) async {
+    final token = globalUserToken;
+    if (token.isEmpty) {
+      return {
+        'users': <FilmaniakUser>[],
+        'pagination': {
+          'total': 0,
+          'perPage': perPage,
+          'currentPage': page,
+          'totalPages': 0,
+        },
+      };
+    }
+
+    final params = <String, String>{
+      'page': '$page',
+      'per_page': '$perPage',
+      if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
+      if (orderBy != null && orderBy.trim().isNotEmpty) 'orderby': orderBy.trim(),
+      if (order != null && order.trim().isNotEmpty) 'order': order.trim(),
+      if (country != null && country.trim().isNotEmpty) 'country': country.trim().toUpperCase(),
+    };
+
+    try {
+      final url = Uri.parse('$_baseUrl/users').replace(queryParameters: params);
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+
+      if (response.statusCode != 200) {
+        final msg = data['message'] as String? ?? 'HTTP ${response.statusCode}';
+        return {
+          'users': <FilmaniakUser>[],
+          'pagination': {
+            'total': 0,
+            'perPage': perPage,
+            'currentPage': page,
+            'totalPages': 0,
+          },
+          'error': true,
+          'errorMessage': msg,
+        };
+      }
+
+      final list = data['users'] as List<dynamic>? ?? [];
+      final pagination = data['pagination'] as Map<String, dynamic>? ?? {};
+
+      final users = list
+          .whereType<Map>()
+          .map((e) => FilmaniakUser.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+
+      return {
+        'users': users,
+        'pagination': {
+          'total': (pagination['total'] as num?)?.toInt() ?? 0,
+          'perPage': (pagination['per_page'] as num?)?.toInt() ?? perPage,
+          'currentPage': (pagination['current_page'] as num?)?.toInt() ?? page,
+          'totalPages': (pagination['total_pages'] as num?)?.toInt() ?? 0,
+        },
+      };
+    } catch (e) {
+      return {
+        'users': <FilmaniakUser>[],
+        'pagination': {
+          'total': 0,
+          'perPage': perPage,
+          'currentPage': page,
+          'totalPages': 0,
+        },
+        'error': true,
+        'errorMessage': e.toString(),
+      };
+    }
+  }
+
   /// POST /auth/delete-account — elimina la cuenta (requiere contraseña).
   static Future<Map<String, dynamic>> deleteAccount(String password) async {
     final token = globalUserToken;

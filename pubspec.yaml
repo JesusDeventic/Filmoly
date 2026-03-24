@@ -1,5 +1,5 @@
 name: filmaniak
-description: "A new Flutter project."
+description: "A social platform for movie lovers to track, rate and review films, discover new titles, and build their own personal collection. Filmaniak brings together cinema, series and geek culture in one place."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

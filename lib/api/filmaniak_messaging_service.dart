@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:filmaniak/generated/l10n.dart';
+import 'package:filmaniak/styles/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:filmaniak/api/firebase_web_config.dart';
@@ -64,8 +66,8 @@ class FilmaniakMessagingService {
         FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
           debugPrint('Mensaje FCM en primer plano: ${message.messageId}');
 
-          final title = message.notification?.title ?? 'Filmaniak';
-          final body = message.notification?.body ?? 'Nueva notificación';
+          final title = message.notification?.title ?? S.current.appName;
+          final body = message.notification?.body ?? S.current.notificationsLabel;
 
           await _showNotification(
             title: title,
@@ -108,7 +110,7 @@ class FilmaniakMessagingService {
       priority: Priority.high,
       showWhen: true,
       icon: 'ic_notification',
-      color: Color(0xFFB8D936),
+      color: AppColors.primary,
     );
 
     const iosDetails = DarwinNotificationDetails(

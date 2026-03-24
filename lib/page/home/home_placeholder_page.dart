@@ -7,6 +7,7 @@ import 'package:filmaniak/generated/l10n.dart';
 import 'package:filmaniak/page/messages/private_conversations_page.dart';
 import 'package:filmaniak/page/users/account_profile_page.dart';
 import 'package:filmaniak/page/users/public_user_profile_page.dart';
+import 'package:filmaniak/page/users/members_list_page.dart';
 import 'package:filmaniak/page/users/contact_page.dart';
 import 'package:filmaniak/page/users/general_settings_page.dart';
 import 'package:filmaniak/page/users/faq_page.dart';
@@ -26,12 +27,15 @@ class HomePlaceholderPage extends StatefulWidget {
 class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
   int _unreadNotificationsCount = 0;
   int _unreadMessagesCount = 0;
+  int _currentMobileTab = 0;
   bool _collapseMenu = false;
   Timer? _unreadTimer;
+  late final PageController _mobilePageController;
 
   @override
   void initState() {
     super.initState();
+    _mobilePageController = PageController(initialPage: 0);
     _refreshUnreadNotifications();
     _refreshUnreadMessages();
     _unreadTimer = Timer.periodic(const Duration(seconds: 30), (_) {
@@ -43,6 +47,7 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
 
   @override
   void dispose() {
+    _mobilePageController.dispose();
     _unreadTimer?.cancel();
     super.dispose();
   }
@@ -580,6 +585,35 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
         body: SafeArea(
           child: isDesktop ? _buildDesktopBody() : _buildMobileBody(),
         ),
+        bottomNavigationBar: isDesktop
+            ? null
+            : BottomNavigationBar(
+                currentIndex: _currentMobileTab,
+                onTap: (index) {
+                  _mobilePageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: Theme.of(context).colorScheme.secondary,
+                unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home_rounded),
+                    label: 'Inicio',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person_rounded),
+                    label: 'Mi perfil',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.local_activity_rounded),
+                    label: 'Actividad',
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -597,7 +631,18 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
   }
 
   Widget _buildMobileBody() {
-    return _buildMainContent();
+    return PageView(
+      controller: _mobilePageController,
+      onPageChanged: (index) {
+        if (!mounted) return;
+        setState(() => _currentMobileTab = index);
+      },
+      children: [
+        _buildMainContent(),
+        _buildMyProfileTab(),
+        _buildActivityTab(),
+      ],
+    );
   }
 
   Widget _buildSidebar() {
@@ -780,5 +825,86 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildMyProfileTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Card(
+            child: ListTile(
+              leading: userAvatar(
+                context,
+                avatarUrl: globalCurrentUser.avatarUrl,
+                username: globalCurrentUser.username,
+                size: 44,
+              ),
+              title: Text(
+                globalCurrentUser.displayName.isNotEmpty
+                    ? globalCurrentUser.displayName
+                    : globalCurrentUser.username,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              subtitle: Text(
+                '@${globalCurrentUser.username}',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PublicUserProfilePage(
+                      username: globalCurrentUser.username,
+                      initialUser: globalCurrentUser,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.person_rounded),
+                  title: const Text('Editar perfil'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AccountProfilePage(),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.settings_rounded),
+                  title: Text(S.current.generalSettings),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GeneralSettingsPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActivityTab() {
+    return const MembersListPage();
   }
 }

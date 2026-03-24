@@ -269,7 +269,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             launchUrl(
-                                              Uri.parse('https://deventic.com/terms-and-conditions/'),
+                                              Uri.parse('https://filmaniak.com/terms-and-conditions/'),
                                               mode: LaunchMode.externalApplication,
                                             );
                                           },
@@ -283,7 +283,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             launchUrl(
-                                              Uri.parse('https://deventic.com/privacy-policy/'),
+                                              Uri.parse('https://filmaniak.com/privacy-policy/'),
                                               mode: LaunchMode.externalApplication,
                                             );
                                           },

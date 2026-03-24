@@ -75,6 +75,12 @@ add_action('rest_api_init', function () {
         'callback' => 'filmaniak_get_public_user_by_username',
         'permission_callback' => '__return_true',
     ]);
+
+    register_rest_route('filmaniak/v1', '/users', [
+        'methods' => 'GET',
+        'callback' => 'filmaniak_get_users_list',
+        'permission_callback' => '__return_true',
+    ]);
 });
 
 /**
@@ -172,6 +178,146 @@ function filmaniak_get_public_user_by_username(WP_REST_Request $request) {
     return new WP_REST_Response([
         'success' => true,
         'user' => $data,
+    ], 200);
+}
+
+function filmaniak_get_public_user_summary($user_id) {
+    $user = get_userdata((int) $user_id);
+    if (!$user) {
+        return null;
+    }
+
+    $account_status = get_user_meta($user->ID, 'filmaniak_account_status', true) ?: 'active';
+    if ($account_status !== 'active') {
+        return null;
+    }
+
+    return [
+        'id' => (int) $user->ID,
+        'username' => $user->user_login,
+        'display_name' => $user->display_name ?: '',
+        'avatar_url' => function_exists('filmaniak_get_user_avatar_url')
+            ? filmaniak_get_user_avatar_url($user->ID)
+            : get_avatar_url($user->ID),
+        'country' => get_user_meta($user->ID, 'filmaniak_country', true) ?: '',
+        'birthdate' => get_user_meta($user->ID, 'filmaniak_birthdate', true) ?: '',
+        'user_registered' => $user->user_registered,
+    ];
+}
+
+function filmaniak_get_users_list(WP_REST_Request $request) {
+    if (!function_exists('filmaniak_auth_validate_token')) {
+        return new WP_Error('auth_not_available', 'La autenticación de Filmaniak no está disponible.', ['status' => 500]);
+    }
+
+    $user_id = filmaniak_auth_validate_token($request);
+    if (is_wp_error($user_id)) {
+        return $user_id;
+    }
+
+    $account_status = get_user_meta((int) $user_id, 'filmaniak_account_status', true) ?: 'active';
+    if ($account_status !== 'active') {
+        return new WP_Error('account_not_active', 'La cuenta no está activa.', ['status' => 403]);
+    }
+
+    $page = max(1, (int) $request->get_param('page'));
+    $per_page = max(1, min(50, (int) $request->get_param('per_page')));
+    if ($per_page === 0) {
+        $per_page = 20;
+    }
+    $search = trim((string) $request->get_param('search'));
+    $country = strtoupper(trim((string) $request->get_param('country')));
+    $order_by = sanitize_key((string) $request->get_param('orderby'));
+    $order = strtoupper((string) $request->get_param('order')) === 'ASC' ? 'ASC' : 'DESC';
+
+    if ($order_by === '') {
+        $order_by = 'registered_date';
+    }
+
+    $allowed_order_by = ['name', 'registered_date', 'birth_date'];
+    if (!in_array($order_by, $allowed_order_by, true)) {
+        $order_by = 'registered_date';
+    }
+
+    // Igual que en perfiles públicos: si no existe la meta, se considera 'active'.
+    // Un meta_query estricto `= active` excluía a casi todos los usuarios legacy.
+    $meta_query = [
+        'relation' => 'AND',
+        [
+            'relation' => 'OR',
+            [
+                'key' => 'filmaniak_account_status',
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key' => 'filmaniak_account_status',
+                'value' => '',
+                'compare' => '=',
+            ],
+            [
+                'key' => 'filmaniak_account_status',
+                'value' => 'active',
+                'compare' => '=',
+            ],
+        ],
+    ];
+
+    if ($country !== '') {
+        $meta_query[] = [
+            'key' => 'filmaniak_country',
+            'value' => $country,
+            'compare' => '=',
+        ];
+    }
+
+    $args = [
+        'number' => $per_page,
+        'paged' => $page,
+        'count_total' => true,
+        'meta_query' => $meta_query,
+        'search_columns' => ['user_login', 'display_name'],
+        'fields' => 'ID',
+    ];
+
+    if ($search !== '') {
+        $args['search'] = '*' . esc_attr($search) . '*';
+    }
+
+    if ($order_by === 'name') {
+        $args['orderby'] = 'display_name';
+        $args['order'] = $order;
+    } elseif ($order_by === 'registered_date') {
+        $args['orderby'] = 'registered';
+        $args['order'] = $order;
+    } else {
+        $args['meta_key'] = 'filmaniak_birthdate';
+        $args['orderby'] = 'meta_value';
+        $args['order'] = $order;
+        $args['meta_type'] = 'DATE';
+    }
+
+    $query = new WP_User_Query($args);
+    $ids = $query->get_results();
+    $total = (int) $query->get_total();
+    $total_pages = max(1, (int) ceil($total / $per_page));
+
+    $users = [];
+    foreach ($ids as $id) {
+        $summary = filmaniak_get_public_user_summary((int) $id);
+        if ($summary !== null) {
+            $users[] = $summary;
+        }
+    }
+
+    return new WP_REST_Response([
+        'success' => true,
+        'users' => $users,
+        'pagination' => [
+            'total' => $total,
+            'per_page' => $per_page,
+            'current_page' => $page,
+            'total_pages' => $total_pages,
+        ],
     ], 200);
 }
 
