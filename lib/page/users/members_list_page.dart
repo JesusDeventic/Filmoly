@@ -453,18 +453,42 @@ class _MembersListPageState extends State<MembersListPage> {
     );
   }
 
-  void _openMemberProfile(FilmaniakUser user) {
+  void _openMemberProfile(FilmaniakUser user, int globalIndex) {
     /// Evitar que el teclado vuelva a enfocar el buscador al regresar (como Fitcron).
     unFocusGlobal();
+
+    final initialPage = (globalIndex ~/ _perPage) + 1;
+    final initialIndexInPage = globalIndex % _perPage;
+    final start = (initialPage - 1) * _perPage;
+    final endCandidate = start + _perPage;
+    final end = endCandidate > _members.length ? _members.length : endCandidate;
+    final initialPageUsers = _members.sublist(start, end);
+
+    final order = _getOrderParams();
+    final orderBy = order['orderBy'] as String;
+    final orderParam = order['order'] as String;
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => PublicUserProfilePage(username: user.username),
+        builder: (_) => PublicUserProfilePage(
+          username: user.username,
+          initialUser: user,
+          navInitialPage: initialPage,
+          navInitialIndexInPage: initialIndexInPage,
+          navInitialPageUsers: initialPageUsers,
+          navPerPage: _perPage,
+          navSearch: _searchText.isNotEmpty ? _searchText : null,
+          navCountryCode: _countryCode,
+          navOrderBy: orderBy,
+          navOrder: orderParam,
+          navTotalPages: _totalPages,
+        ),
       ),
     );
   }
 
-  Widget _buildMemberGridTile(FilmaniakUser user) {
+  Widget _buildMemberGridTile(FilmaniakUser user, int globalIndex) {
     final theme = Theme.of(context);
     final display =
         user.displayName.isNotEmpty ? user.displayName : user.username;
@@ -478,7 +502,7 @@ class _MembersListPageState extends State<MembersListPage> {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _openMemberProfile(user),
+        onTap: () => _openMemberProfile(user, globalIndex),
         child: Padding(
           padding: _listCardInnerPadding,
           child: Column(
@@ -528,7 +552,7 @@ class _MembersListPageState extends State<MembersListPage> {
   static const EdgeInsets _listCardInnerPadding =
       EdgeInsets.fromLTRB(4, 4, 4, 6);
 
-  Widget _buildMemberCard(FilmaniakUser user) {
+  Widget _buildMemberCard(FilmaniakUser user, int globalIndex) {
     final theme = Theme.of(context);
     final countryFlag = _countryFlagEmoji(user);
     final titleText =
@@ -538,7 +562,7 @@ class _MembersListPageState extends State<MembersListPage> {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _openMemberProfile(user),
+        onTap: () => _openMemberProfile(user, globalIndex),
         child: Padding(
           padding: _listCardInnerPadding,
           child: LayoutBuilder(
@@ -593,36 +617,31 @@ class _MembersListPageState extends State<MembersListPage> {
                               height: 1.0,
                             ),
                           ),
-                          Semantics(
-                            label: S.current.membersCommentCount(
-                              user.commentCount,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                FaIcon(
-                                  FontAwesomeIcons.commentDots,
-                                  size: 14,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.commentDots,
+                                size: 14,
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.5),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                '${user.commentCount}',
+                                style:
+                                    theme.textTheme.bodySmall?.copyWith(
+                                  fontSize: 12,
+                                  height: 1.0,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
                                   color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.5),
+                                      .withValues(alpha: 0.65),
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  '${user.commentCount}',
-                                  style:
-                                      theme.textTheme.bodySmall?.copyWith(
-                                    fontSize: 12,
-                                    height: 1.0,
-                                    fontFeatures: const [
-                                      FontFeature.tabularFigures(),
-                                    ],
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.65),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -654,7 +673,8 @@ class _MembersListPageState extends State<MembersListPage> {
               childAspectRatio: 0.62,
             ),
             delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildMemberGridTile(_members[index]),
+              (context, index) =>
+                  _buildMemberGridTile(_members[index], index),
               childCount: _members.length,
             ),
           ),
@@ -684,7 +704,7 @@ class _MembersListPageState extends State<MembersListPage> {
             mainAxisExtent: _listRowMainAxisExtent,
           ),
           delegate: SliverChildBuilderDelegate(
-            (context, index) => _buildMemberCard(_members[index]),
+            (context, index) => _buildMemberCard(_members[index], index),
             childCount: _members.length,
           ),
         ),

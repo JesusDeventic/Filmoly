@@ -103,7 +103,8 @@ class _LoginPageState extends State<LoginPage> {
           return;
         }
       }
-      final message = getAuthErrorMessage(result['code'] as String?);
+      final message =
+          (result['message'] as String?) ?? getAuthErrorMessage(result['code'] as String?);
       showCustomSnackBar(message, type: -1);
       _startCountDown();
     } finally {

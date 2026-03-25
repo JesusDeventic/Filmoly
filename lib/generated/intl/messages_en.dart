@@ -20,10 +20,10 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m3(count) => "${count} resultados";
+
   static String m0(seconds) =>
       "Incorrect username or password.\nPlease wait ${seconds} seconds before trying again.";
-
-  static String m3(count) => "${count} comentarios";
 
   static String m1(username) => "Profile of @${username} on Filmaniak";
 
@@ -114,6 +114,33 @@ class MessageLookup extends MessageLookupByLibrary {
       "Display name (optional)",
     ),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "errorApiBadRequest": MessageLookupByLibrary.simpleMessage(
+      "Los datos enviados no son válidos.",
+    ),
+    "errorApiEndpointUnavailable": MessageLookupByLibrary.simpleMessage(
+      "No se ha podido completar la operación. Inténtalo más tarde.",
+    ),
+    "errorApiForbidden": MessageLookupByLibrary.simpleMessage(
+      "No tienes permiso para hacer esto.",
+    ),
+    "errorApiGeneric": MessageLookupByLibrary.simpleMessage(
+      "No se ha podido completar la operación. Inténtalo más tarde.",
+    ),
+    "errorApiNetwork": MessageLookupByLibrary.simpleMessage(
+      "No se ha podido conectar con el servidor. Revisa tu conexión o inténtalo más tarde.",
+    ),
+    "errorApiNotFound": MessageLookupByLibrary.simpleMessage(
+      "No hemos encontrado lo que pedías.",
+    ),
+    "errorApiServer": MessageLookupByLibrary.simpleMessage(
+      "Ha ocurrido un error en el servidor. Inténtalo más tarde.",
+    ),
+    "errorApiSession": MessageLookupByLibrary.simpleMessage(
+      "Sesión no válida. Inicia sesión de nuevo.",
+    ),
+    "errorApiUnauthorized": MessageLookupByLibrary.simpleMessage(
+      "Sesión no válida. Vuelve a iniciar sesión.",
+    ),
     "errorAuthDeleteAccountFailed": MessageLookupByLibrary.simpleMessage(
       "Could not delete the account. Please try again.",
     ),
@@ -207,6 +234,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Settings saved successfully.",
     ),
     "goToHome": MessageLookupByLibrary.simpleMessage("Go to home"),
+    "homeProfileShortcutsTitle": MessageLookupByLibrary.simpleMessage(
+      "Tu cuenta",
+    ),
     "invalidEmail": MessageLookupByLibrary.simpleMessage("Invalid email"),
     "keepSession": MessageLookupByLibrary.simpleMessage("Keep me signed in"),
     "language": MessageLookupByLibrary.simpleMessage("Language"),
@@ -232,11 +262,65 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageUkrainian": MessageLookupByLibrary.simpleMessage("Ukrainian"),
     "lastAccessChipPrefix": MessageLookupByLibrary.simpleMessage("Last seen"),
     "legalNoticeLabel": MessageLookupByLibrary.simpleMessage("Legal notice"),
+    "libraryEmpty": MessageLookupByLibrary.simpleMessage(
+      "No hay entradas con estos filtros",
+    ),
+    "libraryEmptySubtitle": MessageLookupByLibrary.simpleMessage(
+      "Prueba a cambiar filtros o la búsqueda.",
+    ),
+    "libraryErrorLoad": MessageLookupByLibrary.simpleMessage(
+      "No se pudo cargar la biblioteca",
+    ),
+    "libraryLayoutComfortable": MessageLookupByLibrary.simpleMessage(
+      "Cuadrícula amplia",
+    ),
+    "libraryLayoutCompact": MessageLookupByLibrary.simpleMessage(
+      "Cuadrícula compacta",
+    ),
+    "libraryLayoutList": MessageLookupByLibrary.simpleMessage("Listado"),
+    "libraryOrderDate": MessageLookupByLibrary.simpleMessage(
+      "Fecha de publicación",
+    ),
+    "libraryOrderModified": MessageLookupByLibrary.simpleMessage(
+      "Fecha de modificación",
+    ),
+    "libraryOrderRatingAsc": MessageLookupByLibrary.simpleMessage(
+      "Peor valoradas",
+    ),
+    "libraryOrderRatingCount": MessageLookupByLibrary.simpleMessage(
+      "Más valoraciones",
+    ),
+    "libraryOrderRatingDesc": MessageLookupByLibrary.simpleMessage(
+      "Mejor valoradas",
+    ),
+    "libraryOrderTitle": MessageLookupByLibrary.simpleMessage("Título (A-Z)"),
+    "libraryOrderYearAsc": MessageLookupByLibrary.simpleMessage(
+      "Año (ascendente)",
+    ),
+    "libraryOrderYearDesc": MessageLookupByLibrary.simpleMessage(
+      "Año (descendente)",
+    ),
+    "libraryResultsTotal": m3,
+    "librarySearchCast": MessageLookupByLibrary.simpleMessage("Reparto"),
+    "librarySearchCrew": MessageLookupByLibrary.simpleMessage(
+      "Guión / música / fotografía",
+    ),
+    "librarySearchDirector": MessageLookupByLibrary.simpleMessage("Director"),
+    "librarySearchFieldLabel": MessageLookupByLibrary.simpleMessage(
+      "Buscar en",
+    ),
+    "librarySearchImdb": MessageLookupByLibrary.simpleMessage("IMDB ID"),
+    "librarySearchPlaceholder": MessageLookupByLibrary.simpleMessage(
+      "Texto a buscar",
+    ),
+    "librarySearchStudio": MessageLookupByLibrary.simpleMessage("Productora"),
+    "librarySearchTitle": MessageLookupByLibrary.simpleMessage("Título"),
+    "librarySearchTmdb": MessageLookupByLibrary.simpleMessage("TMDB ID"),
+    "libraryViewModeTitle": MessageLookupByLibrary.simpleMessage("Vista"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "loginCountdownMessage": m0,
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "markAllAsRead": MessageLookupByLibrary.simpleMessage("Mark all as read"),
-    "membersCommentCount": m3,
     "membersEmptySubtitle": MessageLookupByLibrary.simpleMessage(
       "Prueba con otra búsqueda o filtros",
     ),
@@ -270,10 +354,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "membersSortRegisteredDesc": MessageLookupByLibrary.simpleMessage(
       "Registro (más reciente primero)",
     ),
+    "menuActivity": MessageLookupByLibrary.simpleMessage("Actividad"),
     "menuBarSectionSocial": MessageLookupByLibrary.simpleMessage(
       "Social media",
     ),
     "menuHome": MessageLookupByLibrary.simpleMessage("Home"),
+    "menuLibrary": MessageLookupByLibrary.simpleMessage("Biblioteca"),
     "messageChangePasswordSuccess": MessageLookupByLibrary.simpleMessage(
       "Password changed successfully.",
     ),
@@ -403,6 +489,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Remove country",
     ),
     "retryPublicProfile": MessageLookupByLibrary.simpleMessage("Retry"),
+    "reviewsLabel": MessageLookupByLibrary.simpleMessage("Reseñas"),
     "sendCode": MessageLookupByLibrary.simpleMessage("Send code"),
     "sendMessageTooltip": MessageLookupByLibrary.simpleMessage("Send message"),
     "settingsLabel": MessageLookupByLibrary.simpleMessage("Settings"),

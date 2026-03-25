@@ -97,7 +97,8 @@ class _RegisterPageState extends State<RegisterPage> {
           return;
         }
       }
-      final message = getAuthErrorMessage(result['code'] as String?);
+      final message =
+          (result['message'] as String?) ?? getAuthErrorMessage(result['code'] as String?);
       showCustomSnackBar(message, type: -1);
     } finally {
       if (mounted) setState(() => _isLoading = false);

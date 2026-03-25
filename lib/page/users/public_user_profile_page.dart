@@ -16,18 +16,60 @@ class PublicUserProfilePage extends StatefulWidget {
     super.key,
     required this.username,
     this.initialUser,
+
+    // Contexto opcional para navegación tipo Fitcron (prev/next) desde el
+    // listado de miembros.
+    this.navInitialPage,
+    this.navInitialIndexInPage,
+    this.navInitialPageUsers,
+    this.navPerPage,
+    this.navSearch,
+    this.navCountryCode,
+    this.navOrderBy,
+    this.navOrder,
+    this.navTotalPages,
   });
 
   final String username;
   final FilmaniakUser? initialUser;
+
+  final int? navInitialPage;
+  final int? navInitialIndexInPage;
+  final List<FilmaniakUser>? navInitialPageUsers;
+  final int? navPerPage;
+  final String? navSearch;
+  final String? navCountryCode;
+  final String? navOrderBy;
+  final String? navOrder;
+  final int? navTotalPages;
 
   @override
   State<PublicUserProfilePage> createState() => _PublicUserProfilePageState();
 }
 
 class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
+  late String _currentUsername;
   FilmaniakUser? _user;
   bool _isLoading = false;
+
+  bool get _navEnabled =>
+      widget.navInitialPage != null &&
+      widget.navInitialIndexInPage != null &&
+      widget.navInitialPageUsers != null &&
+      widget.navPerPage != null &&
+      widget.navOrderBy != null &&
+      widget.navOrder != null;
+
+  late int _navPage;
+  late int _navIndexInPage;
+  late int _navPerPage;
+  late List<FilmaniakUser> _navPageUsers;
+  int? _navTotalPages;
+
+  String? _navSearch;
+  String? _navCountryCode;
+  late String _navOrderBy;
+  late String _navOrder;
 
   Future<void> _showShareOptions(String link, FilmaniakUser user) async {
     if (link.isEmpty) return;
@@ -44,21 +86,135 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
   @override
   void initState() {
     super.initState();
+    _currentUsername = widget.username;
     _user = widget.initialUser;
     _isLoading = _user == null;
-    _loadUser();
+    if (_navEnabled) {
+      _navPage = widget.navInitialPage!;
+      _navIndexInPage = widget.navInitialIndexInPage!;
+      _navPageUsers = widget.navInitialPageUsers!;
+      _navPerPage = widget.navPerPage!;
+      _navTotalPages = widget.navTotalPages;
+      _navSearch = widget.navSearch;
+      _navCountryCode = widget.navCountryCode;
+      _navOrderBy = widget.navOrderBy!;
+      _navOrder = widget.navOrder!;
+    }
+    _loadUser(force: false);
   }
 
-  Future<void> _loadUser() async {
-    if (_user == null) {
-      setState(() => _isLoading = true);
+  bool get _canPrev {
+    if (!_navEnabled) return false;
+    if (_navPage <= 1 && _navIndexInPage <= 0) return false;
+    return _navIndexInPage > 0 || _navPage > 1;
+  }
+
+  bool get _canNext {
+    if (!_navEnabled) return false;
+    final hasNextInPage = _navIndexInPage + 1 < _navPageUsers.length;
+    if (hasNextInPage) return true;
+    if (_navTotalPages != null && _navTotalPages! > 0) {
+      return _navPage < _navTotalPages!;
     }
-    final user = await FilmaniakApi.getPublicUserByUsername(widget.username);
+    return _navPageUsers.length >= _navPerPage;
+  }
+
+  Future<void> _loadUser({required bool force}) async {
+    // El endpoint /users devuelve solo un "summary" (sin descripción completa).
+    // Por eso, si venimos con contexto de navegación (_navEnabled), siempre
+    // cargamos el perfil completo.
+    if (!force && _user != null && !_navEnabled) {
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _user = null;
+    });
+
+    final user = await FilmaniakApi.getPublicUserByUsername(_currentUsername);
     if (!mounted) return;
     setState(() {
       _user = user ?? _user;
       _isLoading = false;
     });
+  }
+
+  Future<void> _goPrev() async {
+    if (!_navEnabled || _isLoading || !_canPrev) return;
+
+    // Dentro de la misma página.
+    if (_navIndexInPage > 0) {
+      setState(() => _navIndexInPage--);
+      _currentUsername = _navPageUsers[_navIndexInPage].username;
+      await _loadUser(force: true);
+      return;
+    }
+
+    // Página anterior.
+    final newPage = _navPage - 1;
+    final result = await FilmaniakApi.getMembers(
+      page: newPage,
+      perPage: _navPerPage,
+      search: _navSearch,
+      country: _navCountryCode,
+      orderBy: _navOrderBy,
+      order: _navOrder,
+    );
+    if (!mounted) return;
+    if (result['error'] == true) return;
+
+    final posts = (result['users'] as List<FilmaniakUser>? ?? <FilmaniakUser>[]);
+    final pagination = result['pagination'] as Map<String, dynamic>? ?? {};
+    _navTotalPages = (pagination['totalPages'] as num?)?.toInt() ?? _navTotalPages;
+
+    setState(() {
+      _navPage = newPage;
+      _navPageUsers = posts;
+      _navIndexInPage = posts.isNotEmpty ? posts.length - 1 : 0;
+      _currentUsername =
+          posts.isNotEmpty ? posts[_navIndexInPage].username : _currentUsername;
+    });
+    await _loadUser(force: true);
+  }
+
+  Future<void> _goNext() async {
+    if (!_navEnabled || _isLoading || !_canNext) return;
+
+    // Dentro de la misma página.
+    if (_navIndexInPage + 1 < _navPageUsers.length) {
+      setState(() => _navIndexInPage++);
+      _currentUsername = _navPageUsers[_navIndexInPage].username;
+      await _loadUser(force: true);
+      return;
+    }
+
+    // Página siguiente.
+    final newPage = _navPage + 1;
+    final result = await FilmaniakApi.getMembers(
+      page: newPage,
+      perPage: _navPerPage,
+      search: _navSearch,
+      country: _navCountryCode,
+      orderBy: _navOrderBy,
+      order: _navOrder,
+    );
+    if (!mounted) return;
+    if (result['error'] == true) return;
+
+    final posts = (result['users'] as List<FilmaniakUser>? ?? <FilmaniakUser>[]);
+    final pagination = result['pagination'] as Map<String, dynamic>? ?? {};
+    _navTotalPages = (pagination['totalPages'] as num?)?.toInt() ?? _navTotalPages;
+
+    setState(() {
+      _navPage = newPage;
+      _navPageUsers = posts;
+      _navIndexInPage = posts.isNotEmpty ? 0 : 0;
+      _currentUsername =
+          posts.isNotEmpty ? posts[_navIndexInPage].username : _currentUsername;
+    });
+    await _loadUser(force: true);
   }
 
   @override
@@ -86,7 +242,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton.icon(
-                  onPressed: _loadUser,
+                  onPressed: () => _loadUser(force: true),
                   icon: const Icon(Icons.refresh_rounded),
                   label: Text(S.current.retryPublicProfile),
                 ),
@@ -116,8 +272,20 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('@${user.username}'),
+        title: Text(user.username),
         actions: [
+          if (_navEnabled)
+            IconButton(
+              tooltip: 'Anterior',
+              icon: const Icon(Icons.chevron_left_rounded),
+              onPressed: _canPrev && !_isLoading ? _goPrev : null,
+            ),
+          if (_navEnabled)
+            IconButton(
+              tooltip: 'Siguiente',
+              icon: const Icon(Icons.chevron_right_rounded),
+              onPressed: _canNext && !_isLoading ? _goNext : null,
+            ),
           if (user.id != globalCurrentUser.id)
             IconButton(
               tooltip: S.current.sendMessageTooltip,
@@ -143,7 +311,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _loadUser,
+        onRefresh: () => _loadUser(force: true),
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
           children: [
@@ -162,32 +330,40 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              user.displayName.isNotEmpty
-                                  ? user.displayName 
-                                  : user.username ,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          if (countryFlag.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8, top: 0),
-                              child: Text(
-                                countryFlag,
-                                style: const TextStyle(fontSize: 20),
+                      if (user.displayName.isNotEmpty ||
+                          countryFlag.isNotEmpty) ...[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (user.displayName.isNotEmpty)
+                              Flexible(
+                                child: Text(
+                                  user.displayName,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
+                            if (countryFlag.isNotEmpty)
+                              Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                  start: user.displayName.isNotEmpty ? 8 : 0,
+                                  top: 0,
+                                ),
+                                child: Text(
+                                  countryFlag,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                      ],
                       if (ageLine.isNotEmpty)
                         Text(
                           ageLine,

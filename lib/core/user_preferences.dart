@@ -9,6 +9,7 @@ class UserPreferences {
   static const _keyTheme = 'filmaniak_theme_dark';
   static const _keyLanguage = 'filmaniak_language';
   static const _keyCachedUser = 'filmaniak_cached_user';
+  static const _keyLibraryLayout = 'filmaniak_library_layout';
 
   Future<SharedPreferences> get _prefs async =>
       await SharedPreferences.getInstance();
@@ -55,6 +56,17 @@ class UserPreferences {
   Future<void> clearCachedUser() async {
     final prefs = await _prefs;
     await prefs.remove(_keyCachedUser);
+  }
+
+  /// Vista de biblioteca: `compact` | `comfortable` | `list` (nombre del enum).
+  Future<void> setLibraryLayout(String modeName) async {
+    final prefs = await _prefs;
+    await prefs.setString(_keyLibraryLayout, modeName);
+  }
+
+  Future<String?> getLibraryLayout() async {
+    final prefs = await _prefs;
+    return prefs.getString(_keyLibraryLayout);
   }
 
   Map<String, dynamic> _userToJson(FilmaniakUser u) => {

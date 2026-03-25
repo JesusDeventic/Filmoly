@@ -7,6 +7,7 @@ import 'package:filmaniak/generated/l10n.dart';
 import 'package:filmaniak/page/messages/private_conversations_page.dart';
 import 'package:filmaniak/page/users/account_profile_page.dart';
 import 'package:filmaniak/page/users/public_user_profile_page.dart';
+import 'package:filmaniak/page/library/library_page.dart';
 import 'package:filmaniak/page/users/members_list_page.dart';
 import 'package:filmaniak/page/users/contact_page.dart';
 import 'package:filmaniak/page/users/general_settings_page.dart';
@@ -14,6 +15,7 @@ import 'package:filmaniak/page/users/faq_page.dart';
 import 'package:filmaniak/page/users/notifications_page.dart';
 import 'package:filmaniak/routes/app_routes.dart';
 import 'package:filmaniak/widget/components_widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,6 +30,8 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
   int _unreadNotificationsCount = 0;
   int _unreadMessagesCount = 0;
   int _currentMobileTab = 0;
+  /// Escritorio: 0 = inicio, 1 = biblioteca, 2 = miembros.
+  int _desktopMainIndex = 0;
   bool _collapseMenu = false;
   Timer? _unreadTimer;
   late final PageController _mobilePageController;
@@ -555,10 +559,14 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                 Flexible(
                   child: Text(
                     S.current.appName,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: isDesktop ? 30 : 22,
-                        ),
+                    style: GoogleFonts.inter(
+                      textStyle: (Theme.of(context).textTheme.titleLarge ?? const TextStyle())
+                          .copyWith(
+                            fontWeight: FontWeight.w800,
+                            fontSize: isDesktop ? 30 : 22,
+                            letterSpacing: -0.4,
+                          ),
+                    ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
@@ -599,18 +607,18 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                 type: BottomNavigationBarType.fixed,
                 selectedItemColor: Theme.of(context).colorScheme.secondary,
                 unselectedItemColor: Theme.of(context).colorScheme.onSurface,
-                items: const [
+                items: [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home_rounded),
-                    label: 'Inicio',
+                    icon: const Icon(Icons.home_rounded),
+                    label: S.current.menuHome,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person_rounded),
-                    label: 'Mi perfil',
+                    icon: const Icon(Icons.video_library_rounded),
+                    label: S.current.menuLibrary,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.local_activity_rounded),
-                    label: 'Actividad',
+                    icon: const Icon(Icons.local_activity_rounded),
+                    label: S.current.menuActivity,
                   ),
                 ],
               ),
@@ -624,7 +632,9 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
       children: [
         _buildSidebar(),
         Expanded(
-          child: _buildMainContent(),
+          child: _desktopMainIndex == 0
+              ? _buildMainContent()
+              : (_desktopMainIndex == 1 ? const LibraryPage() : const MembersListPage()),
         ),
       ],
     );
@@ -639,7 +649,7 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
       },
       children: [
         _buildMainContent(),
-        _buildMyProfileTab(),
+        const LibraryPage(),
         _buildActivityTab(),
       ],
     );
@@ -673,12 +683,16 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                     SizedBox(
                       height: 48,
                       child: ListTile(
-                        selected: true,
+                        selected: _desktopMainIndex == 0,
                         selectedTileColor: Colors.transparent,
                         selectedColor: theme.colorScheme.secondary,
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         visualDensity: VisualDensity.standard,
                         minVerticalPadding: 0,
+                        onTap: () {
+                          unFocusGlobal();
+                          setState(() => _desktopMainIndex = 0);
+                        },
                         title: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -690,7 +704,9 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                                 children: [
                                   Icon(
                                     Icons.home_rounded,
-                                    color: theme.colorScheme.secondary,
+                                    color: _desktopMainIndex == 0
+                                        ? theme.colorScheme.secondary
+                                        : theme.colorScheme.onSurface,
                                     size: 32,
                                   ),
                                   const SizedBox(width: 10),
@@ -698,7 +714,9 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                                     child: Text(
                                       S.current.menuHome,
                                       style: TextStyle(
-                                        color: theme.colorScheme.secondary,
+                                        color: _desktopMainIndex == 0
+                                            ? theme.colorScheme.secondary
+                                            : theme.colorScheme.onSurface,
                                         fontWeight: FontWeight.w600,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -713,7 +731,131 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                               opacity: _collapseMenu ? 1.0 : 0.0,
                               child: Icon(
                                 Icons.home_rounded,
-                                color: theme.colorScheme.secondary,
+                                color: _desktopMainIndex == 0
+                                    ? theme.colorScheme.secondary
+                                    : theme.colorScheme.onSurface,
+                                size: 32,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 48,
+                      child: ListTile(
+                        selected: _desktopMainIndex == 1,
+                        selectedTileColor: Colors.transparent,
+                        selectedColor: theme.colorScheme.secondary,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        visualDensity: VisualDensity.standard,
+                        minVerticalPadding: 0,
+                        onTap: () {
+                          unFocusGlobal();
+                          setState(() => _desktopMainIndex = 1);
+                        },
+                        title: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            AnimatedOpacity(
+                              duration: const Duration(milliseconds: 200),
+                              opacity: _collapseMenu ? 0.0 : 1.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.video_library_rounded,
+                                    color: _desktopMainIndex == 1
+                                        ? theme.colorScheme.secondary
+                                        : theme.colorScheme.onSurface,
+                                    size: 32,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      S.current.menuLibrary,
+                                      style: TextStyle(
+                                        color: _desktopMainIndex == 1
+                                            ? theme.colorScheme.secondary
+                                            : theme.colorScheme.onSurface,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            AnimatedOpacity(
+                              duration: const Duration(milliseconds: 200),
+                              opacity: _collapseMenu ? 1.0 : 0.0,
+                              child: Icon(
+                                Icons.video_library_rounded,
+                                color: _desktopMainIndex == 1
+                                    ? theme.colorScheme.secondary
+                                    : theme.colorScheme.onSurface,
+                                size: 32,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 48,
+                      child: ListTile(
+                        selected: _desktopMainIndex == 2,
+                        selectedTileColor: Colors.transparent,
+                        selectedColor: theme.colorScheme.secondary,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        visualDensity: VisualDensity.standard,
+                        minVerticalPadding: 0,
+                        onTap: () {
+                          unFocusGlobal();
+                          setState(() => _desktopMainIndex = 2);
+                        },
+                        title: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            AnimatedOpacity(
+                              duration: const Duration(milliseconds: 200),
+                              opacity: _collapseMenu ? 0.0 : 1.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.groups_rounded,
+                                    color: _desktopMainIndex == 2
+                                        ? theme.colorScheme.secondary
+                                        : theme.colorScheme.onSurface,
+                                    size: 32,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      S.current.membersLabel,
+                                      style: TextStyle(
+                                        color: _desktopMainIndex == 2
+                                            ? theme.colorScheme.secondary
+                                            : theme.colorScheme.onSurface,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            AnimatedOpacity(
+                              duration: const Duration(milliseconds: 200),
+                              opacity: _collapseMenu ? 1.0 : 0.0,
+                              child: Icon(
+                                Icons.groups_rounded,
+                                color: _desktopMainIndex == 2
+                                    ? theme.colorScheme.secondary
+                                    : theme.colorScheme.onSurface,
                                 size: 32,
                               ),
                             ),
@@ -796,110 +938,104 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
   }
 
   Widget _buildMainContent() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '${S.current.welcome}, ${globalCurrentUser.displayName.isNotEmpty ? globalCurrentUser.displayName : globalCurrentUser.username}',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            S.current.appName,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 32),
-          // TODO: botón de prueba — eliminar en producción
-          OutlinedButton.icon(
-            icon: const Icon(Icons.person_search_rounded),
-            label: const Text('Ver perfil de puzzleman'),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const PublicUserProfilePage(username: 'puzzleman'),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMyProfileTab() {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Card(
-            child: ListTile(
-              leading: userAvatar(
-                context,
-                avatarUrl: globalCurrentUser.avatarUrl,
-                username: globalCurrentUser.username,
-                size: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '${S.current.welcome}, ${globalCurrentUser.displayName.isNotEmpty ? globalCurrentUser.displayName : globalCurrentUser.username}',
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
               ),
-              title: Text(
-                globalCurrentUser.displayName.isNotEmpty
-                    ? globalCurrentUser.displayName
-                    : globalCurrentUser.username,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              const SizedBox(height: 12),
+              Text(
+                S.current.appName,
+                style: theme.textTheme.headlineSmall,
+                textAlign: TextAlign.center,
               ),
-              subtitle: Text(
-                '@${globalCurrentUser.username}',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              const SizedBox(height: 28),
+              Text(
+                S.current.homeProfileShortcutsTitle,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PublicUserProfilePage(
-                      username: globalCurrentUser.username,
-                      initialUser: globalCurrentUser,
-                    ),
+              const SizedBox(height: 8),
+              Card(
+                child: ListTile(
+                  leading: userAvatar(
+                    context,
+                    avatarUrl: globalCurrentUser.avatarUrl,
+                    username: globalCurrentUser.username,
+                    size: 44,
                   ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.person_rounded),
-                  title: const Text('Editar perfil'),
+                  title: Text(
+                    globalCurrentUser.displayName.isNotEmpty
+                        ? globalCurrentUser.displayName
+                        : globalCurrentUser.username,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  subtitle: Text(
+                    globalCurrentUser.username,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const AccountProfilePage(),
+                        builder: (context) => PublicUserProfilePage(
+                          username: globalCurrentUser.username,
+                          initialUser: globalCurrentUser,
+                        ),
                       ),
                     );
                   },
                 ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.settings_rounded),
-                  title: Text(S.current.generalSettings),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GeneralSettingsPage(),
-                      ),
-                    );
-                  },
+              ),
+              const SizedBox(height: 8),
+              Card(
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.person_rounded),
+                      title: Text(S.current.accountSettings),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AccountProfilePage(),
+                          ),
+                        );
+                      },
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.settings_rounded),
+                      title: Text(S.current.generalSettings),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GeneralSettingsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

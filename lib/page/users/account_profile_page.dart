@@ -235,7 +235,10 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
       return true;
     } else {
       final code = result['code'] as String?;
-      showCustomSnackBar(getAuthErrorMessage(code), type: -1);
+      showCustomSnackBar(
+        (result['message'] as String?) ?? getAuthErrorMessage(code),
+        type: -1,
+      );
       return false;
     }
   }
@@ -717,7 +720,11 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
                       if (result['success'] == true) {
                         showCustomSnackBar(S.current.passwordChanged, type: 1);
                       } else {
-                        showCustomSnackBar(getAuthErrorMessage(result['code'] as String?), type: -1);
+                        showCustomSnackBar(
+                          (result['message'] as String?) ??
+                              getAuthErrorMessage(result['code'] as String?),
+                          type: -1,
+                        );
                       }
                     },
                     child: Text(S.current.buttonConfirm),
@@ -808,7 +815,10 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
                         router.go(AppRoutes.login);
                       } else {
                         final code = result['code'] as String?;
-                        showCustomSnackBar(getAuthErrorMessage(code), type: -1);
+                        showCustomSnackBar(
+                          (result['message'] as String?) ?? getAuthErrorMessage(code),
+                          type: -1,
+                        );
                       }
                     },
                     child: Text(S.current.buttonConfirm),

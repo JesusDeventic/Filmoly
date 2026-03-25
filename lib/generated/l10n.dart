@@ -1819,6 +1819,96 @@ class S {
     );
   }
 
+  /// `No se ha podido completar la operación. Inténtalo más tarde.`
+  String get errorApiGeneric {
+    return Intl.message(
+      'No se ha podido completar la operación. Inténtalo más tarde.',
+      name: 'errorApiGeneric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No se ha podido conectar con el servidor. Revisa tu conexión o inténtalo más tarde.`
+  String get errorApiNetwork {
+    return Intl.message(
+      'No se ha podido conectar con el servidor. Revisa tu conexión o inténtalo más tarde.',
+      name: 'errorApiNetwork',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No se ha podido completar la operación. Inténtalo más tarde.`
+  String get errorApiEndpointUnavailable {
+    return Intl.message(
+      'No se ha podido completar la operación. Inténtalo más tarde.',
+      name: 'errorApiEndpointUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sesión no válida. Vuelve a iniciar sesión.`
+  String get errorApiUnauthorized {
+    return Intl.message(
+      'Sesión no válida. Vuelve a iniciar sesión.',
+      name: 'errorApiUnauthorized',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No tienes permiso para hacer esto.`
+  String get errorApiForbidden {
+    return Intl.message(
+      'No tienes permiso para hacer esto.',
+      name: 'errorApiForbidden',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No hemos encontrado lo que pedías.`
+  String get errorApiNotFound {
+    return Intl.message(
+      'No hemos encontrado lo que pedías.',
+      name: 'errorApiNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ha ocurrido un error en el servidor. Inténtalo más tarde.`
+  String get errorApiServer {
+    return Intl.message(
+      'Ha ocurrido un error en el servidor. Inténtalo más tarde.',
+      name: 'errorApiServer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Los datos enviados no son válidos.`
+  String get errorApiBadRequest {
+    return Intl.message(
+      'Los datos enviados no son válidos.',
+      name: 'errorApiBadRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sesión no válida. Inicia sesión de nuevo.`
+  String get errorApiSession {
+    return Intl.message(
+      'Sesión no válida. Inicia sesión de nuevo.',
+      name: 'errorApiSession',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Filtros`
   String get filtersTitle {
     return Intl.message('Filtros', name: 'filtersTitle', desc: '', args: []);
@@ -1994,13 +2084,278 @@ class S {
     );
   }
 
-  /// `{count} comentarios`
-  String membersCommentCount(Object count) {
+  /// `Reseñas`
+  String get reviewsLabel {
+    return Intl.message('Reseñas', name: 'reviewsLabel', desc: '', args: []);
+  }
+
+  /// `Actividad`
+  String get menuActivity {
+    return Intl.message('Actividad', name: 'menuActivity', desc: '', args: []);
+  }
+
+  /// `Biblioteca`
+  String get menuLibrary {
+    return Intl.message('Biblioteca', name: 'menuLibrary', desc: '', args: []);
+  }
+
+  /// `Vista`
+  String get libraryViewModeTitle {
     return Intl.message(
-      '$count comentarios',
-      name: 'membersCommentCount',
+      'Vista',
+      name: 'libraryViewModeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cuadrícula compacta`
+  String get libraryLayoutCompact {
+    return Intl.message(
+      'Cuadrícula compacta',
+      name: 'libraryLayoutCompact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cuadrícula amplia`
+  String get libraryLayoutComfortable {
+    return Intl.message(
+      'Cuadrícula amplia',
+      name: 'libraryLayoutComfortable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Listado`
+  String get libraryLayoutList {
+    return Intl.message(
+      'Listado',
+      name: 'libraryLayoutList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No se pudo cargar la biblioteca`
+  String get libraryErrorLoad {
+    return Intl.message(
+      'No se pudo cargar la biblioteca',
+      name: 'libraryErrorLoad',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No hay entradas con estos filtros`
+  String get libraryEmpty {
+    return Intl.message(
+      'No hay entradas con estos filtros',
+      name: 'libraryEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prueba a cambiar filtros o la búsqueda.`
+  String get libraryEmptySubtitle {
+    return Intl.message(
+      'Prueba a cambiar filtros o la búsqueda.',
+      name: 'libraryEmptySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} resultados`
+  String libraryResultsTotal(Object count) {
+    return Intl.message(
+      '$count resultados',
+      name: 'libraryResultsTotal',
       desc: '',
       args: [count],
+    );
+  }
+
+  /// `Texto a buscar`
+  String get librarySearchPlaceholder {
+    return Intl.message(
+      'Texto a buscar',
+      name: 'librarySearchPlaceholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buscar en`
+  String get librarySearchFieldLabel {
+    return Intl.message(
+      'Buscar en',
+      name: 'librarySearchFieldLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fecha de publicación`
+  String get libraryOrderDate {
+    return Intl.message(
+      'Fecha de publicación',
+      name: 'libraryOrderDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fecha de modificación`
+  String get libraryOrderModified {
+    return Intl.message(
+      'Fecha de modificación',
+      name: 'libraryOrderModified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Título (A-Z)`
+  String get libraryOrderTitle {
+    return Intl.message(
+      'Título (A-Z)',
+      name: 'libraryOrderTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Año (ascendente)`
+  String get libraryOrderYearAsc {
+    return Intl.message(
+      'Año (ascendente)',
+      name: 'libraryOrderYearAsc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Año (descendente)`
+  String get libraryOrderYearDesc {
+    return Intl.message(
+      'Año (descendente)',
+      name: 'libraryOrderYearDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mejor valoradas`
+  String get libraryOrderRatingDesc {
+    return Intl.message(
+      'Mejor valoradas',
+      name: 'libraryOrderRatingDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Peor valoradas`
+  String get libraryOrderRatingAsc {
+    return Intl.message(
+      'Peor valoradas',
+      name: 'libraryOrderRatingAsc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Más valoraciones`
+  String get libraryOrderRatingCount {
+    return Intl.message(
+      'Más valoraciones',
+      name: 'libraryOrderRatingCount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Título`
+  String get librarySearchTitle {
+    return Intl.message(
+      'Título',
+      name: 'librarySearchTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Director`
+  String get librarySearchDirector {
+    return Intl.message(
+      'Director',
+      name: 'librarySearchDirector',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reparto`
+  String get librarySearchCast {
+    return Intl.message(
+      'Reparto',
+      name: 'librarySearchCast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Productora`
+  String get librarySearchStudio {
+    return Intl.message(
+      'Productora',
+      name: 'librarySearchStudio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guión / música / fotografía`
+  String get librarySearchCrew {
+    return Intl.message(
+      'Guión / música / fotografía',
+      name: 'librarySearchCrew',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TMDB ID`
+  String get librarySearchTmdb {
+    return Intl.message(
+      'TMDB ID',
+      name: 'librarySearchTmdb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `IMDB ID`
+  String get librarySearchImdb {
+    return Intl.message(
+      'IMDB ID',
+      name: 'librarySearchImdb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tu cuenta`
+  String get homeProfileShortcutsTitle {
+    return Intl.message(
+      'Tu cuenta',
+      name: 'homeProfileShortcutsTitle',
+      desc: '',
+      args: [],
     );
   }
 }

@@ -26,6 +26,221 @@ class FilmaniakImageCache extends CacheManager {
   FilmaniakImageCache._() : super(Config(key, stalePeriod: maxAge));
 }
 
+Widget _filmaniakPosterLoading(ThemeData theme) {
+  return Container(
+    color: theme.colorScheme.surfaceContainerHighest,
+    alignment: Alignment.center,
+    child: const SizedBox(
+      width: 28,
+      height: 28,
+      child: CircularProgressIndicator(strokeWidth: 2),
+    ),
+  );
+}
+
+Widget _filmaniakPosterError(ThemeData theme) {
+  return Container(
+    color: theme.colorScheme.surfaceContainerHighest,
+    alignment: Alignment.center,
+    child: Icon(
+      Icons.movie_outlined,
+      color: theme.colorScheme.outline,
+      size: 40,
+    ),
+  );
+}
+
+/// Miniatura / póster de contenido (biblioteca, fichas, etc.): misma caché de disco
+/// que [userAvatar] ([FilmaniakImageCache], como en Fitcron).
+///
+/// Si [imageUrl] está vacío, muestra el placeholder de error.
+Widget filmaniakPosterImage(
+  BuildContext context, {
+  required String imageUrl,
+  int? memCacheWidth,
+  int? memCacheHeight,
+  BoxFit fit = BoxFit.cover,
+  FilterQuality filterQuality = FilterQuality.medium,
+}) {
+  final theme = Theme.of(context);
+  final clean = imageUrl.trim();
+  if (clean.isEmpty) {
+    return _filmaniakPosterError(theme);
+  }
+  // Mantener un fondo consistente también cuando usamos `contain` (letterbox).
+  return Container(
+    color: theme.colorScheme.surfaceContainerHighest,
+    child: CachedNetworkImage(
+      imageUrl: clean,
+      cacheManager: FilmaniakImageCache(),
+      fit: fit,
+      filterQuality: filterQuality,
+      memCacheWidth: memCacheWidth,
+      memCacheHeight: memCacheHeight,
+      placeholder: (_, __) => _filmaniakPosterLoading(theme),
+      errorWidget: (_, __, ___) => _filmaniakPosterError(theme),
+    ),
+  );
+}
+
+/// Una estrella de la escala 0–10: [fill] es 0…1.
+/// El relleno parcial usa [ShaderMask] + gradiente (misma silueta `star_rounded`);
+/// recortar un icono distinto al contorno desalineaba el glifo.
+Widget _filmaniakStarSlot10(
+  double fill, {
+  required Color emptyOutlineColor,
+  double size = 13.0,
+}) {
+  const gold = Color(0xFFFFD700);
+  if (fill <= 0) {
+    return Icon(Icons.star_outline_rounded, size: size, color: emptyOutlineColor);
+  }
+  if (fill >= 1) {
+    return Icon(Icons.star_rounded, size: size, color: gold);
+  }
+  return SizedBox(
+    width: size,
+    height: size,
+    child: Stack(
+      alignment: Alignment.center,
+      clipBehavior: Clip.none,
+      fit: StackFit.expand,
+      children: [
+        Icon(Icons.star_outline_rounded, size: size, color: emptyOutlineColor),
+        ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (Rect bounds) {
+            final f = fill.clamp(0.0, 1.0);
+            return LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: const [
+                gold,
+                gold,
+                Color(0x00000000),
+                Color(0x00000000),
+              ],
+              stops: [0, f, f, 1],
+            ).createShader(bounds);
+          },
+          child: Icon(Icons.star_rounded, size: size, color: Colors.white),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _filmaniakRatingStarsRow(
+  BuildContext context, {
+  required double rating,
+  int? voteCount,
+  required Color emptyOutlineColor,
+  required Color voteCountColor,
+  required bool inline,
+}) {
+  final r = rating;
+  final expandToWidth = !inline;
+
+  final Widget stars;
+  if (expandToWidth) {
+    stars = LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final slotW = w / 10;
+        final starSize = (slotW * 0.82).clamp(7.0, 28.0);
+        return Row(
+          children: List.generate(10, (i) {
+            final fill = (r - i).clamp(0.0, 1.0);
+            return SizedBox(
+              width: slotW,
+              child: Center(
+                child: _filmaniakStarSlot10(
+                  fill,
+                  emptyOutlineColor: emptyOutlineColor,
+                  size: starSize,
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  } else {
+    stars = FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(10, (i) {
+          final fill = (r - i).clamp(0.0, 1.0);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0.5),
+            child: _filmaniakStarSlot10(
+              fill,
+              emptyOutlineColor: emptyOutlineColor,
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  return Row(
+    children: [
+      if (expandToWidth) Expanded(child: stars) else stars,
+      if (voteCount != null && voteCount > 0)
+        Padding(
+          padding: EdgeInsets.only(left: expandToWidth ? 4 : 6),
+          child: Text(
+            '($voteCount)',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: voteCountColor,
+                  fontSize: 10,
+                ),
+          ),
+        ),
+    ],
+  );
+}
+
+/// Puntuación 0–10 en estrellas (decimales = relleno parcial).
+///
+/// [inline] `false`: franja con fondo [ColorScheme.surface] (cards en cuadrícula).
+/// [inline] `true`: solo la fila de estrellas, alineada al inicio (p. ej. sobre el título en lista).
+Widget filmaniakRatingBar10(
+  BuildContext context,
+  double rating, {
+  int? voteCount,
+  bool inline = false,
+}) {
+  final theme = Theme.of(context);
+  final double r =
+      rating.isFinite ? rating.clamp(0.0, 10.0) : 0.0;
+  final outline =
+      theme.colorScheme.onSurface.withValues(alpha: 0.5);
+  final voteColor = theme.colorScheme.onSurfaceVariant;
+  final content = Padding(
+    padding: EdgeInsets.symmetric(
+      vertical: inline ? 0 : 3,
+      horizontal: inline ? 0 : 4,
+    ),
+    child: _filmaniakRatingStarsRow(
+      context,
+      rating: r,
+      voteCount: voteCount,
+      emptyOutlineColor: outline,
+      voteCountColor: voteColor,
+      inline: inline,
+    ),
+  );
+  if (inline) return content;
+  return Material(
+    color: theme.colorScheme.surface,
+    child: content,
+  );
+}
+
 void showCustomSnackBar(String message, {int? type}) {
   Color? backgroundColor;
   Color? textColor;

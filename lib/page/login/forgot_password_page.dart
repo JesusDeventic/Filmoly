@@ -74,7 +74,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         showCustomSnackBar(S.current.codeSent, type: 1);
         RecaptchaService.hideBadge();
       } else {
-        showCustomSnackBar(getAuthErrorMessage(result['code'] as String?), type: -1);
+        showCustomSnackBar(
+          (result['message'] as String?) ?? getAuthErrorMessage(result['code'] as String?),
+          type: -1,
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoadingSend = false);
@@ -101,7 +104,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         showCustomSnackBar(S.current.passwordChanged, type: 1);
         context.go(AppRoutes.login);
       } else {
-        showCustomSnackBar(getAuthErrorMessage(result['code'] as String?), type: -1);
+        showCustomSnackBar(
+          (result['message'] as String?) ?? getAuthErrorMessage(result['code'] as String?),
+          type: -1,
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoadingConfirm = false);

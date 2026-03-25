@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
+import 'package:filmaniak/core/api_error_messages.dart';
 import 'package:filmaniak/core/global_variables.dart';
 import 'package:filmaniak/core/secure_storage.dart';
+import 'package:filmaniak/model/library_entry_model.dart';
 import 'package:filmaniak/model/user_model.dart';
 import 'package:filmaniak/model/app_status_model.dart';
 import 'package:filmaniak/model/private_message_model.dart';
@@ -93,9 +94,13 @@ class FilmaniakApi {
       return data;
     }
     // Error: WP_Error style { code, message } o similar
-    final message = data['message'] as String? ?? 'Error de registro';
     final code = data['code'] as String?;
-    return {'success': false, 'message': message, 'code': code, 'data': data};
+    return {
+      'success': false,
+      'message': mapJsonErrorToUserMessage(response.statusCode, data),
+      'code': code,
+      'data': data,
+    };
   }
 
   /// POST /auth/login
@@ -113,9 +118,13 @@ class FilmaniakApi {
     if (response.statusCode == 200 && (data['success'] == true)) {
       return data;
     }
-    final message = data['message'] as String? ?? 'Credenciales incorrectas';
     final code = data['code'] as String?;
-    return {'success': false, 'message': message, 'code': code, 'data': data};
+    return {
+      'success': false,
+      'message': mapJsonErrorToUserMessage(response.statusCode, data),
+      'code': code,
+      'data': data,
+    };
   }
 
   /// GET /auth/me — valida token y devuelve usuario o null.
@@ -153,7 +162,9 @@ class FilmaniakApi {
     );
     final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
     final success = response.statusCode == 200 && (data['success'] == true);
-    final message = data['message'] as String? ?? (success ? 'OK' : 'Error');
+    final message = success
+        ? (data['message'] as String? ?? 'OK')
+        : mapJsonErrorToUserMessage(response.statusCode, data);
     final code = data['code'] as String?;
     return {'success': success, 'message': message, 'code': code};
   }
@@ -176,7 +187,9 @@ class FilmaniakApi {
     );
     final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
     final success = response.statusCode == 200 && (data['success'] == true);
-    final message = data['message'] as String? ?? (success ? 'OK' : 'Error');
+    final message = success
+        ? (data['message'] as String? ?? 'OK')
+        : mapJsonErrorToUserMessage(response.statusCode, data);
     final errorCode = data['code'] as String?;
     return {'success': success, 'message': message, 'code': errorCode};
   }
@@ -274,7 +287,13 @@ class FilmaniakApi {
     String avatarFilename = 'avatar.jpg',
   }) async {
     final token = globalUserToken;
-    if (token.isEmpty) return {'success': false, 'message': 'No token', 'code': 'missing_token'};
+    if (token.isEmpty) {
+      return {
+        'success': false,
+        'message': getAuthErrorMessage('missing_token'),
+        'code': 'missing_token',
+      };
+    }
 
     final url = Uri.parse('$_baseUrl/user/update');
     final request = http.MultipartRequest('POST', url);
@@ -312,11 +331,19 @@ class FilmaniakApi {
       if (response.statusCode == 200 && (data['success'] == true)) {
         return data;
       }
-      final message = data['message'] as String? ?? 'Error al actualizar';
       final code = data['code'] as String?;
-      return {'success': false, 'message': message, 'code': code, 'data': data};
+      return {
+        'success': false,
+        'message': mapJsonErrorToUserMessage(response.statusCode, data),
+        'code': code,
+        'data': data,
+      };
     } catch (e) {
-      return {'success': false, 'message': e.toString(), 'code': 'network_error'};
+      return {
+        'success': false,
+        'message': userFacingNetworkError(e),
+        'code': 'network_error',
+      };
     }
   }
 
@@ -382,7 +409,7 @@ class FilmaniakApi {
       final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
 
       if (response.statusCode != 200) {
-        final msg = data['message'] as String? ?? 'HTTP ${response.statusCode}';
+        final msg = userFacingMessageFromHttp(response.statusCode, response.body);
         return {
           'users': <FilmaniakUser>[],
           'pagination': {
@@ -423,7 +450,70 @@ class FilmaniakApi {
           'totalPages': 0,
         },
         'error': true,
-        'errorMessage': e.toString(),
+        'errorMessage': userFacingNetworkError(e),
+      };
+    }
+  }
+
+  /// GET /library — entradas publicadas (biblioteca), mismos filtros que el buscador web.
+  ///
+  /// [query] claves como `orderby`, `texto_busqueda`, `opcion_busqueda`, `categoria`,
+  /// `genero`, `year_min`, `year_max`, etc.
+  static Future<Map<String, dynamic>> getLibrary({
+    int page = 1,
+    int perPage = 24,
+    Map<String, String>? query,
+  }) async {
+    final token = globalUserToken;
+    if (token.isEmpty) {
+      return {
+        'posts': <LibraryEntry>[],
+        'pagination': <String, dynamic>{},
+        'error': true,
+        'errorMessage': getAuthErrorMessage('missing_token'),
+      };
+    }
+
+    final params = <String, String>{
+      'page': '$page',
+      'per_page': '$perPage',
+      ...?query,
+    };
+
+    try {
+      final url = Uri.parse('$_baseUrl/library').replace(queryParameters: params);
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+
+      if (response.statusCode != 200 || data['success'] != true) {
+        final msg = mapJsonErrorToUserMessage(response.statusCode, data);
+        return {
+          'posts': <LibraryEntry>[],
+          'pagination': data['pagination'] as Map<String, dynamic>? ?? {},
+          'error': true,
+          'errorMessage': msg,
+        };
+      }
+
+      final list = data['posts'] as List<dynamic>? ?? [];
+      final posts = list
+          .whereType<Map>()
+          .map((e) => LibraryEntry.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+
+      final pagination = data['pagination'] as Map<String, dynamic>? ?? {};
+
+      return {
+        'posts': posts,
+        'pagination': pagination,
+        'viewer': data['viewer'],
+      };
+    } catch (e) {
+      return {
+        'posts': <LibraryEntry>[],
+        'pagination': <String, dynamic>{},
+        'error': true,
+        'errorMessage': userFacingNetworkError(e),
       };
     }
   }
@@ -431,7 +521,13 @@ class FilmaniakApi {
   /// POST /auth/delete-account — elimina la cuenta (requiere contraseña).
   static Future<Map<String, dynamic>> deleteAccount(String password) async {
     final token = globalUserToken;
-    if (token.isEmpty) return {'success': false, 'message': 'No token', 'code': 'missing_token'};
+    if (token.isEmpty) {
+      return {
+        'success': false,
+        'message': getAuthErrorMessage('missing_token'),
+        'code': 'missing_token',
+      };
+    }
 
     final url = Uri.parse('$_baseUrl/auth/delete-account');
     final response = await http.post(
@@ -443,9 +539,13 @@ class FilmaniakApi {
     if (response.statusCode == 200 && (data['success'] == true)) {
       return data;
     }
-    final message = data['message'] as String? ?? 'Error al eliminar';
     final code = data['code'] as String?;
-    return {'success': false, 'message': message, 'code': code, 'data': data};
+    return {
+      'success': false,
+      'message': mapJsonErrorToUserMessage(response.statusCode, data),
+      'code': code,
+      'data': data,
+    };
   }
 
   /// POST /auth/change-password — cambia la contraseña del usuario autenticado.
@@ -454,7 +554,13 @@ class FilmaniakApi {
     required String newPassword,
   }) async {
     final token = globalUserToken;
-    if (token.isEmpty) return {'success': false, 'code': 'missing_token'};
+    if (token.isEmpty) {
+      return {
+        'success': false,
+        'code': 'missing_token',
+        'message': getAuthErrorMessage('missing_token'),
+      };
+    }
 
     final url = Uri.parse('$_baseUrl/auth/change-password');
     try {
@@ -466,9 +572,17 @@ class FilmaniakApi {
       final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
       if (response.statusCode == 200 && data['success'] == true) return data;
       final code = data['code'] as String?;
-      return {'success': false, 'code': code, 'message': data['message']};
+      return {
+        'success': false,
+        'code': code,
+        'message': mapJsonErrorToUserMessage(response.statusCode, data),
+      };
     } catch (e) {
-      return {'success': false, 'code': 'network_error', 'message': e.toString()};
+      return {
+        'success': false,
+        'code': 'network_error',
+        'message': userFacingNetworkError(e),
+      };
     }
   }
 
