@@ -76,6 +76,12 @@ add_action('rest_api_init', function () {
         'permission_callback' => '__return_true',
     ]);
 
+    register_rest_route('filmaniak/v1', '/user/public-id/(?P<id>\d+)', [
+        'methods' => 'GET',
+        'callback' => 'filmaniak_get_public_user_by_id',
+        'permission_callback' => '__return_true',
+    ]);
+
     register_rest_route('filmaniak/v1', '/users', [
         'methods' => 'GET',
         'callback' => 'filmaniak_get_users_list',
@@ -181,6 +187,33 @@ function filmaniak_get_public_user_by_username(WP_REST_Request $request) {
     ], 200);
 }
 
+function filmaniak_get_public_user_by_id(WP_REST_Request $request) {
+    $user_id = (int) $request->get_param('id');
+    if ($user_id <= 0) {
+        return new WP_Error('invalid_user_id', 'ID de usuario no válido.', ['status' => 400]);
+    }
+
+    $user = get_userdata($user_id);
+    if (!$user) {
+        return new WP_Error('user_not_found', 'Usuario no encontrado.', ['status' => 404]);
+    }
+
+    $account_status = get_user_meta($user->ID, 'filmaniak_account_status', true) ?: 'active';
+    if ($account_status !== 'active') {
+        return new WP_Error('user_not_available', 'Perfil no disponible.', ['status' => 404]);
+    }
+
+    $data = filmaniak_get_full_user_data($user->ID);
+    if (!$data) {
+        return new WP_Error('user_not_found', 'Usuario no encontrado.', ['status' => 404]);
+    }
+
+    return new WP_REST_Response([
+        'success' => true,
+        'user' => $data,
+    ], 200);
+}
+
 /**
  * Recuento de comentarios por user_id (wp_comments.user_id), una consulta para muchos IDs.
  *
@@ -252,7 +285,7 @@ function filmaniak_get_users_list(WP_REST_Request $request) {
     }
 
     $page = max(1, (int) $request->get_param('page'));
-    $per_page = max(1, min(50, (int) $request->get_param('per_page')));
+    $per_page = max(1, min(128, (int) $request->get_param('per_page')));
     if ($per_page === 0) {
         $per_page = 20;
     }

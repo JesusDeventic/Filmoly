@@ -267,5 +267,7 @@
   "librarySearchCrew": "Guión / música / fotografía",
   "librarySearchTmdb": "TMDB ID",
   "librarySearchImdb": "IMDB ID",
-  "homeProfileShortcutsTitle": "Tu cuenta"
+  "homeProfileShortcutsTitle": "Tu cuenta",
+  "previousLabel": "Anterior",
+  "nextLabel": "Siguiente"
 }

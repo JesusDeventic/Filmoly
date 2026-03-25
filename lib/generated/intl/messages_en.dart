@@ -407,6 +407,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Write a message...",
     ),
     "newPassword": MessageLookupByLibrary.simpleMessage("New password"),
+    "nextLabel": MessageLookupByLibrary.simpleMessage("Siguiente"),
     "noMoreRecords": MessageLookupByLibrary.simpleMessage("No more items."),
     "notificationDeleteAllAsk": MessageLookupByLibrary.simpleMessage(
       "Delete all notifications?",
@@ -457,6 +458,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordMismatch": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
     ),
+    "previousLabel": MessageLookupByLibrary.simpleMessage("Anterior"),
     "privacyPoliciesLabel": MessageLookupByLibrary.simpleMessage(
       "Privacy policy",
     ),

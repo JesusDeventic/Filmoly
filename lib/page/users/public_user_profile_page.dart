@@ -17,6 +17,11 @@ class PublicUserProfilePage extends StatefulWidget {
     required this.username,
     this.initialUser,
 
+    // Modo Fitcron: navegar solo entre los miembros ya cargados en la
+    // pantalla de "Members" (sin pedir páginas extra al hacer swipe).
+    this.allLoadedMembers,
+    this.initialLoadedIndex,
+
     // Contexto opcional para navegación tipo Fitcron (prev/next) desde el
     // listado de miembros.
     this.navInitialPage,
@@ -28,10 +33,14 @@ class PublicUserProfilePage extends StatefulWidget {
     this.navOrderBy,
     this.navOrder,
     this.navTotalPages,
+    this.navTotalUsers,
   });
 
   final String username;
   final FilmaniakUser? initialUser;
+
+  final List<FilmaniakUser>? allLoadedMembers;
+  final int? initialLoadedIndex;
 
   final int? navInitialPage;
   final int? navInitialIndexInPage;
@@ -42,6 +51,7 @@ class PublicUserProfilePage extends StatefulWidget {
   final String? navOrderBy;
   final String? navOrder;
   final int? navTotalPages;
+  final int? navTotalUsers;
 
   @override
   State<PublicUserProfilePage> createState() => _PublicUserProfilePageState();
@@ -49,8 +59,17 @@ class PublicUserProfilePage extends StatefulWidget {
 
 class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
   late String _currentUsername;
+  int _currentUserId = 0;
   FilmaniakUser? _user;
   bool _isLoading = false;
+  PageController? _profileCarouselController;
+  bool _carouselBusy = false;
+  int _carouselPageIndex = 0;
+  int _profileLoadSeq = 0;
+
+  bool get _useLoadedMembersCarousel =>
+      widget.allLoadedMembers != null &&
+      widget.allLoadedMembers!.length > 1;
 
   bool get _navEnabled =>
       widget.navInitialPage != null &&
@@ -87,6 +106,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
   void initState() {
     super.initState();
     _currentUsername = widget.username;
+    _currentUserId = widget.initialUser?.id ?? 0;
     _user = widget.initialUser;
     _isLoading = _user == null;
     if (_navEnabled) {
@@ -100,7 +120,32 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
       _navOrderBy = widget.navOrderBy!;
       _navOrder = widget.navOrder!;
     }
-    _loadUser(force: false);
+    if (_useLoadedMembersCarousel) {
+      final total = widget.allLoadedMembers!.length;
+      // Igual que Fitcron: el índice correcto es el que viene del listado
+      // (posición real del item pulsado), no "reconstruir" buscando por username.
+      _carouselPageIndex =
+          (widget.initialLoadedIndex ?? 0).clamp(0, total - 1);
+      _carouselPageIndex = _carouselPageIndex.clamp(0, total - 1);
+      final selected = widget.allLoadedMembers![_carouselPageIndex];
+      _currentUsername = selected.username;
+      _currentUserId = selected.id;
+      _user = selected;
+    } else {
+      // Usamos un PageView para que el contenido se mueva con el dedo
+      // como en Fitcron. El índice actual lo mantenemos estable para que,
+      // si cambia itemCount (primer/último), no nos quedemos en un slot que
+      // ya no existe.
+      _carouselPageIndex = _carouselItemCount == 3
+          ? 1
+          : (_canPrev ? 1 : 0); // itemCount==2 => prev existe? (último) =>1 :0
+    }
+
+    _profileCarouselController =
+        PageController(initialPage: _carouselPageIndex);
+    // En modo Fitcron queremos comportamiento idéntico: cargar siempre
+    // el perfil completo (no solo el "summary" que trae el listado).
+    _loadUser(force: _useLoadedMembersCarousel);
   }
 
   bool get _canPrev {
@@ -119,6 +164,19 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
     return _navPageUsers.length >= _navPerPage;
   }
 
+  // Fitcron no deja deslizar más si estás en el primero/último.
+  // Para imitarlo, el PageView en móvil tiene solo las páginas "reales":
+  // - 3 slots si existen prev y next
+  // - 2 slots si solo existe uno de los lados
+  // - 1 slot si no existe ninguno
+  int get _carouselItemCount {
+    if (_useLoadedMembersCarousel) return widget.allLoadedMembers!.length;
+    if (!_navEnabled) return 1;
+    if (!_canPrev && !_canNext) return 1;
+    if (_canPrev && _canNext) return 3;
+    return 2;
+  }
+
   Future<void> _loadUser({required bool force}) async {
     // El endpoint /users devuelve solo un "summary" (sin descripción completa).
     // Por eso, si venimos con contexto de navegación (_navEnabled), siempre
@@ -128,13 +186,21 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
       return;
     }
 
+    final loadSeq = ++_profileLoadSeq;
+
     setState(() {
       _isLoading = true;
-      _user = null;
     });
 
-    final user = await FilmaniakApi.getPublicUserByUsername(_currentUsername);
+    final FilmaniakUser? user = _useLoadedMembersCarousel && _currentUserId > 0
+        ? await FilmaniakApi.getPublicUserById(_currentUserId)
+        : await FilmaniakApi.getPublicUserByUsername(_currentUsername);
     if (!mounted) return;
+    if (loadSeq != _profileLoadSeq) {
+      // Se disparó un load más nuevo antes de terminar este.
+      return;
+    }
+
     setState(() {
       _user = user ?? _user;
       _isLoading = false;
@@ -148,6 +214,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
     if (_navIndexInPage > 0) {
       setState(() => _navIndexInPage--);
       _currentUsername = _navPageUsers[_navIndexInPage].username;
+      _currentUserId = _navPageUsers[_navIndexInPage].id;
       await _loadUser(force: true);
       return;
     }
@@ -175,6 +242,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
       _navIndexInPage = posts.isNotEmpty ? posts.length - 1 : 0;
       _currentUsername =
           posts.isNotEmpty ? posts[_navIndexInPage].username : _currentUsername;
+      _currentUserId = posts.isNotEmpty ? posts[_navIndexInPage].id : _currentUserId;
     });
     await _loadUser(force: true);
   }
@@ -186,6 +254,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
     if (_navIndexInPage + 1 < _navPageUsers.length) {
       setState(() => _navIndexInPage++);
       _currentUsername = _navPageUsers[_navIndexInPage].username;
+      _currentUserId = _navPageUsers[_navIndexInPage].id;
       await _loadUser(force: true);
       return;
     }
@@ -213,18 +282,13 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
       _navIndexInPage = posts.isNotEmpty ? 0 : 0;
       _currentUsername =
           posts.isNotEmpty ? posts[_navIndexInPage].username : _currentUsername;
+      _currentUserId = posts.isNotEmpty ? posts[_navIndexInPage].id : _currentUserId;
     });
     await _loadUser(force: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     if (_user == null) {
       return Scaffold(
         appBar: AppBar(title: Text(S.current.publicProfileAppBarTitle)),
@@ -254,6 +318,23 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
     }
 
     final user = _user!;
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 650;
+    final bool useLoadedMembersCarousel = _useLoadedMembersCarousel;
+    final int membersTotalUsers = useLoadedMembersCarousel
+        ? widget.allLoadedMembers!.length
+        : (widget.navTotalUsers ?? 0);
+    final int? membersCurrentIndex = useLoadedMembersCarousel
+        ? (_carouselPageIndex + 1)
+        : (_navEnabled
+            ? ((_navPage - 1) * _navPerPage + _navIndexInPage + 1)
+            : null);
+    final bool showMembersCounterChip =
+        (membersTotalUsers > 0) && membersCurrentIndex != null;
+
+    // Como Fitcron, en móvil el swipe manda; en escritorio mostramos flechas.
+    final bool showNavButtons = (useLoadedMembersCarousel ? width > 800 : _navEnabled) &&
+        !isMobile;
     final publicUrl = FilmaniakApi.buildPublicProfileUrl(user.username);
     final website = user.websiteUrl.trim();
     final fullName = [user.firstName, user.lastName]
@@ -272,19 +353,61 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.username),
+        title: Text(_isLoading ? S.current.loading : user.username),
         actions: [
-          if (_navEnabled)
-            IconButton(
-              tooltip: 'Anterior',
-              icon: const Icon(Icons.chevron_left_rounded),
-              onPressed: _canPrev && !_isLoading ? _goPrev : null,
+          if (showMembersCounterChip)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .tertiary
+                    .withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Theme.of(context).colorScheme.primary),
+              ),
+              child: Text(
+                '$membersCurrentIndex / $membersTotalUsers',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primaryFixed,
+                ),
+              ),
             ),
-          if (_navEnabled)
+          if (showNavButtons)
             IconButton(
-              tooltip: 'Siguiente',
+              tooltip: S.current.previousLabel,
+              icon: const Icon(Icons.chevron_left_rounded),
+              onPressed: !_isLoading
+                  ? (useLoadedMembersCarousel
+                      ? (_carouselPageIndex > 0
+                          ? () {
+                              _profileCarouselController!.previousPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          : null)
+                      : (_canPrev ? () => _goPrev() : null))
+                  : null,
+            ),
+          if (showNavButtons)
+            IconButton(
+              tooltip: S.current.nextLabel,
               icon: const Icon(Icons.chevron_right_rounded),
-              onPressed: _canNext && !_isLoading ? _goNext : null,
+              onPressed: !_isLoading
+                  ? (useLoadedMembersCarousel
+                      ? (_carouselPageIndex + 1 < membersTotalUsers
+                          ? () {
+                              _profileCarouselController!.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          : null)
+                      : (_canNext ? () => _goNext() : null))
+                  : null,
             ),
           if (user.id != globalCurrentUser.id)
             IconButton(
@@ -310,11 +433,32 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _loadUser(force: true),
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      body: PageView.builder(
+        controller: _profileCarouselController!,
+        itemCount: _carouselItemCount,
+        physics: _carouselItemCount > 1
+            ? const PageScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
+        onPageChanged: (index) => _onProfileCarouselPageChanged(index),
+        itemBuilder: (context, index) {
+          if (index == _carouselPageIndex) {
+            if (_isLoading) {
+              return _buildProfileCarouselPlaceholder();
+            }
+            return Stack(
           children: [
+            RefreshIndicator(
+              onRefresh: () => _loadUser(force: true),
+              child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 180),
+                  opacity: _isLoading ? 0.65 : 1.0,
+                  child: ListView(
+                key: ValueKey(user.username),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 18,
+                ),
+                children: [
             // Header tipo Letterboxd: avatar + nombre + detalles compactos.
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -426,7 +570,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
                     textDecoration: TextDecoration.underline,
                   ),
                 },
-                onLinkTap: (url, _, __) async {
+                onLinkTap: (url, _, _) async {
                   final uri = Uri.tryParse(url ?? '');
                   if (uri == null) return;
                   await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -477,10 +621,98 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
             ],
 
             const SizedBox(height: 6),
+                  ],
+                  ),
+                ),
+              ),
+            if (_isLoading)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Container(
+                    color: Theme.of(context).colorScheme.surface.withValues(
+                          alpha: 0.15,
+                        ),
+                    alignment: Alignment.center,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              ),
+          ],
+            );
+          }
+          return _buildProfileCarouselPlaceholder();
+        },
+      ),
+    );
+  }
+
+  Future<void> _onProfileCarouselPageChanged(int index) async {
+    if (index == _carouselPageIndex) return;
+    if (index < 0 || index >= _carouselItemCount) return;
+
+    // Modo Fitcron: permite swipes encadenados incluso si todavía está cargando.
+    if (_useLoadedMembersCarousel) {
+      final members = widget.allLoadedMembers!;
+      setState(() {
+        _carouselPageIndex = index;
+        _currentUsername = members[index].username;
+        _currentUserId = members[index].id;
+      });
+
+      // Fitcron: simplemente recargamos para el índice actual.
+      // El guard con `_profileLoadSeq` evita que respuestas viejas
+      // se apliquen después.
+      await _loadUser(force: true);
+      return;
+    }
+
+    // Modo paginado clásico (prev/next via API).
+    if (_carouselBusy || _isLoading) return;
+
+    _carouselBusy = true;
+    try {
+      final prevIndex = _carouselPageIndex;
+      setState(() {
+        _carouselPageIndex = index;
+      });
+
+      if (index < prevIndex) {
+        await _goPrev();
+      } else {
+        await _goNext();
+      }
+    } finally {
+      _carouselBusy = false;
+    }
+
+    if (!mounted) return;
+    final maxIndex = _carouselItemCount - 1;
+    if (_carouselPageIndex > maxIndex) {
+      setState(() {
+        _carouselPageIndex = maxIndex.clamp(0, _carouselItemCount - 1);
+      });
+    }
+  }
+
+  Widget _buildProfileCarouselPlaceholder() {
+    return SafeArea(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(strokeWidth: 2),
+            const SizedBox(height: 12),
+            Text(S.current.loading),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _profileCarouselController?.dispose();
+    super.dispose();
   }
 
   String _formatDateForUser(String input, String dateFormat) {

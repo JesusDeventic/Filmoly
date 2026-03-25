@@ -39,6 +39,7 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
   final TextEditingController _birthdateController = TextEditingController();
 
   String? _countryCode;
+  bool _canUseLocalizedCountryName = false;
   bool _marketingConsent = false;
   bool _isEditing = false;
 
@@ -46,6 +47,15 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
   void initState() {
     super.initState();
     _loadFields();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_canUseLocalizedCountryName) {
+      _canUseLocalizedCountryName = true;
+      _updateCountryDisplayName();
+    }
   }
 
   void _loadFields() {
@@ -69,7 +79,11 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
     if (_countryCode != null) {
       try {
         final country = Country.parse(_countryCode!);
-        _countryController.text = country.displayNameNoCountryCode;
+        final translatedName =
+            _canUseLocalizedCountryName ? country.getTranslatedName(context) : null;
+        _countryController.text = (translatedName != null && translatedName.trim().isNotEmpty)
+            ? translatedName
+            : country.displayNameNoCountryCode;
       } catch (_) {
         _countryController.text = '';
       }
@@ -474,7 +488,7 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
                       onSelect: (Country country) {
                         setState(() {
                           _countryCode = country.countryCode;
-                          _countryController.text = country.displayNameNoCountryCode;
+                          _updateCountryDisplayName();
                         });
                       },
                     );

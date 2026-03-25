@@ -2358,6 +2358,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Anterior`
+  String get previousLabel {
+    return Intl.message('Anterior', name: 'previousLabel', desc: '', args: []);
+  }
+
+  /// `Siguiente`
+  String get nextLabel {
+    return Intl.message('Siguiente', name: 'nextLabel', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

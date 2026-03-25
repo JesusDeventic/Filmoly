@@ -13,6 +13,8 @@ class LibraryEntryNavigatorPage extends StatefulWidget {
     required this.initialPageEntries,
     required this.perPage,
     required this.query,
+    this.allLoadedEntries,
+    this.initialLoadedIndex,
   });
 
   final LibraryEntry initialEntry;
@@ -21,6 +23,8 @@ class LibraryEntryNavigatorPage extends StatefulWidget {
   final List<LibraryEntry> initialPageEntries;
   final int perPage;
   final Map<String, String> query;
+  final List<LibraryEntry>? allLoadedEntries;
+  final int? initialLoadedIndex;
 
   @override
   State<LibraryEntryNavigatorPage> createState() =>
@@ -45,6 +49,8 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
 
   /// -1 = desconocido (aún no hemos consultado total_pages).
   int _totalPages = -1;
+  bool get _localLoadedMode =>
+      widget.allLoadedEntries != null && widget.initialLoadedIndex != null;
 
   final FocusNode _focusNode = FocusNode(debugLabel: 'LibraryEntryNavigator');
 
@@ -59,6 +65,7 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
 
   bool get _canNext {
     if (_pageEntries.isEmpty) return false;
+    if (_localLoadedMode) return _indexInPage + 1 < _pageEntries.length;
     final hasNextInPage = _indexInPage + 1 < _pageEntries.length;
     if (hasNextInPage) return true;
     // Si la página está completa (perPage), es razonable intentar siguiente.
@@ -71,13 +78,23 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
   @override
   void initState() {
     super.initState();
-    _page = widget.initialPage;
-    _indexInPage = widget.initialIndexInPage;
-    _pageEntries = widget.initialPageEntries;
+    if (_localLoadedMode) {
+      _page = 1;
+      _pageEntries = widget.allLoadedEntries!;
+      _indexInPage = _pageEntries.isEmpty
+          ? 0
+          : widget.initialLoadedIndex!.clamp(0, _pageEntries.length - 1);
+      _totalPages = -1;
+      _loading = false;
+    } else {
+      _page = widget.initialPage;
+      _indexInPage = widget.initialIndexInPage;
+      _pageEntries = widget.initialPageEntries;
 
-    // Mostramos rápido la entrada ya existente y actualizamos total/pages/consistencia.
-    _loading = false;
-    _refreshPage();
+      // Mostramos rápido la entrada ya existente y actualizamos total/pages/consistencia.
+      _loading = false;
+      _refreshPage();
+    }
   }
 
   @override
@@ -87,6 +104,7 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
   }
 
   Future<void> _refreshPage() async {
+    if (_localLoadedMode) return;
     setState(() {
       _loading = true;
       _error = null;
@@ -122,6 +140,7 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
   }
 
   Future<void> _loadPage(int newPage, {required int targetIndex}) async {
+    if (_localLoadedMode) return;
     if (newPage < 1) return;
     setState(() {
       _loading = true;
@@ -168,6 +187,10 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
 
   Future<void> _goPrev() async {
     if (!_canPrev) return;
+    if (_localLoadedMode) {
+      setState(() => _indexInPage--);
+      return;
+    }
     if (_indexInPage > 0) {
       setState(() => _indexInPage--);
       return;
@@ -177,6 +200,10 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
 
   Future<void> _goNext() async {
     if (!_canNext) return;
+    if (_localLoadedMode) {
+      setState(() => _indexInPage++);
+      return;
+    }
 
     final hasNextInPage = _indexInPage + 1 < _pageEntries.length;
     if (hasNextInPage) {
@@ -200,6 +227,42 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
+            if (_localLoadedMode)
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiary.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: theme.colorScheme.primary),
+                ),
+                child: Text(
+                  '${_indexInPage + 1} / ${_pageEntries.length}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.primaryFixed,
+                  ),
+                ),
+              ),
+            if (!_localLoadedMode && _totalPages != -1)
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiary.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: theme.colorScheme.primary),
+                ),
+                child: Text(
+                  'Página $_page / $_totalPages',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.primaryFixed,
+                  ),
+                ),
+              ),
             IconButton(
               icon: const Icon(Icons.chevron_left_rounded),
               onPressed: _canPrev && !_loading ? _goPrev : null,
@@ -285,7 +348,16 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
                                   ),
                                 ),
                               const SizedBox(height: 18),
-                              if (_totalPages != -1)
+                              if (_localLoadedMode)
+                                Center(
+                                  child: Text(
+                                    'Entrada ${_indexInPage + 1} de ${_pageEntries.length}',
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                )
+                              else if (_totalPages != -1)
                                 Center(
                                   child: Text(
                                     'Página $_page de $_totalPages',

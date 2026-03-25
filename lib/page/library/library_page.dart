@@ -53,7 +53,7 @@ class _LibraryPageState extends State<LibraryPage> {
   String? _draftCountryCode;
   final TextEditingController _draftCountryFieldController = TextEditingController();
 
-  static const int _perPage = 24;
+  static const int _perPage = 64;
 
   /// Vista lista: columnas según ancho (misma idea que [MembersListPage] en modo lista).
   static const double _libraryListMaxCrossAxisExtent = 450;
@@ -431,6 +431,8 @@ class _LibraryPageState extends State<LibraryPage> {
           initialPageEntries: initialPageEntries,
           perPage: _perPage,
           query: queryParams,
+          allLoadedEntries: List<LibraryEntry>.from(_entries),
+          initialLoadedIndex: globalIndex,
         ),
       ),
     );
@@ -663,6 +665,7 @@ class _LibraryListRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final countriesLine = _formatCountriesForUi(context, entry.pais);
     return LayoutBuilder(
       builder: (ctx, constraints) {
         final maxH = constraints.hasBoundedHeight ? constraints.maxHeight : 140.0;
@@ -700,13 +703,13 @@ class _LibraryListRow extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
                         if (entry.rfAverage != null) ...[
                           filmaniakRatingBar10(
                             context,
@@ -729,29 +732,40 @@ class _LibraryListRow extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 2),
                             child: Text(
-                              entry.year,
+                              entry.year,                              
                               style: theme.textTheme.bodySmall?.copyWith(
                                 fontSize: 11,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        if (entry.director.isNotEmpty || entry.pais.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Text(
-                              [
-                                if (entry.director.isNotEmpty) entry.director,
-                                if (entry.pais.isNotEmpty) entry.pais,
-                              ].join(' · '),
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                      ],
+                        if (countriesLine.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              countriesLine,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 11,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        if (entry.director.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              entry.director,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 11,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -762,6 +776,32 @@ class _LibraryListRow extends StatelessWidget {
       },
     );
   }
+}
+
+String _formatCountriesForUi(BuildContext context, String rawPais) {
+  final raw = rawPais.trim();
+  if (raw.isEmpty) return '';
+
+  final parts = raw
+      .split(RegExp(r'[,;|]'))
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toList();
+  if (parts.isEmpty) return '';
+
+  final translated = <String>[];
+  for (final part in parts) {
+    final code = part.toUpperCase();
+    final country = Country.tryParse(code);
+    if (country != null) {
+      final localizedName =
+          country.getTranslatedName(context) ?? country.displayNameNoCountryCode;
+      translated.add('${country.flagEmoji} $localizedName');
+    } else {
+      translated.add(part);
+    }
+  }
+  return translated.join(' · ');
 }
 
 class _LibraryTile extends StatelessWidget {

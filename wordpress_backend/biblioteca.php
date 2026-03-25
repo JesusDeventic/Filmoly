@@ -105,7 +105,7 @@ function filmaniak_library_build_query_args(WP_REST_Request $request, $viewer_us
     if ($per_page < 1) {
         $per_page = 24;
     }
-    $per_page = min(64, $per_page);
+    $per_page = min(128, $per_page);
 
     $args = [
         'post_type' => 'post',
@@ -406,18 +406,19 @@ function filmaniak_rest_get_library(WP_REST_Request $request) {
             $director = implode(', ', $names);
         }
 
-        // País (taxonomy: paises)
+        // País (taxonomy: paises) -> devolvemos slugs ISO para que la app
+        // traduzca al idioma del usuario con country_picker.
         $pais = '';
         $pais_terms = get_the_terms($post_id, 'paises');
         if ($pais_terms && !is_wp_error($pais_terms)) {
-            $names = [];
+            $codes = [];
             foreach ($pais_terms as $t) {
-                $name = isset($t->name) ? (string) $t->name : '';
-                if ($name !== '') {
-                    $names[] = $name;
+                $slug = isset($t->slug) ? strtolower((string) $t->slug) : '';
+                if ($slug !== '') {
+                    $codes[] = $slug;
                 }
             }
-            $pais = implode(', ', $names);
+            $pais = implode(',', $codes);
         }
 
         $posts_out[] = [

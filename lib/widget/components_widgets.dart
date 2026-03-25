@@ -561,10 +561,11 @@ Future<void> showDraggableAppSheet(
       final media = MediaQuery.of(sheetCtx);
 
       if (intrinsicHeight) {
+        final availableHeight = media.size.height - media.viewInsets.bottom;
         // Espacio para barra + cabecera primary; el resto es scroll con altura mínima razonable.
         final maxScrollHeight = max(
           200.0,
-          media.size.height * maxIntrinsicFraction - 110,
+          availableHeight * maxIntrinsicFraction - 110,
         );
         final cardWidth = min(600.0, media.size.width);
         // Anclado abajo (no usar Center: centraba el modal en vertical).
@@ -577,7 +578,7 @@ Future<void> showDraggableAppSheet(
                 child: Container(
                   width: cardWidth,
                   constraints: BoxConstraints(
-                    maxHeight: media.size.height * 0.95,
+                    maxHeight: availableHeight * 0.95,
                   ),
                   decoration: BoxDecoration(
                     color: theme.scaffoldBackgroundColor,
@@ -593,15 +594,17 @@ Future<void> showDraggableAppSheet(
                         titleFontSize: titleFontSize,
                         onClose: () => Navigator.of(sheetCtx).pop(),
                       ),
-                      _ScrollBodyWithController(
-                        builder: (scrollController) => ConstrainedBox(
-                          constraints: BoxConstraints(maxHeight: maxScrollHeight),
-                          child: ListView(
-                            controller: scrollController,
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
-                            padding: intrinsicContentPadding,
-                            children: [bodyBuilder(scrollController)],
+                      Flexible(
+                        child: _ScrollBodyWithController(
+                          builder: (scrollController) => ConstrainedBox(
+                            constraints: BoxConstraints(maxHeight: maxScrollHeight),
+                            child: ListView(
+                              controller: scrollController,
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: intrinsicContentPadding,
+                              children: [bodyBuilder(scrollController)],
+                            ),
                           ),
                         ),
                       ),
@@ -713,92 +716,88 @@ Future<void> showShareLinkWithQrBottomSheet(
   return showDraggableAppSheet(
     context,
     title: title,
-    initialChildSize: 0.8,
-    minChildSize: 0.4,
-    maxChildSize: 0.8,
+    intrinsicHeight: true,
+    intrinsicContentPadding: EdgeInsets.zero,
     titleFontSize: 18,
-    bodyBuilder: (scrollController) => SingleChildScrollView(
-      controller: scrollController,
-      child: Builder(
-        builder: (ctx) {
-          // Mismo criterio en claro y oscuro: color de marca sobre blanco
-          // (estándar para lectores; el primary en oscuro sobre fondo oscuro no se vería).
-          final moduleColor = Colors.black;
-          const qrBg = Colors.white;
-          final logoSize = qrSize * 0.24;
+    bodyBuilder: (_) => Builder(
+      builder: (ctx) {
+        // Mismo criterio en claro y oscuro: color de marca sobre blanco
+        // (estándar para lectores; el primary en oscuro sobre fondo oscuro no se vería).
+        final moduleColor = Colors.black;
+        const qrBg = Colors.white;
+        final logoSize = qrSize * 0.24;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SizedBox(
-                    width: qrSize,
-                    height: qrSize,
-                    child: QrImageView(
-                      data: link,
-                      version: QrVersions.auto,
-                      size: qrSize,
-                      padding: const EdgeInsets.all(6),
-                      gapless: true,
-                      // Nivel H para poder incrustar logo y seguir siendo legible.
-                      errorCorrectionLevel: QrErrorCorrectLevel.H,
-                      backgroundColor: qrBg,
-                      eyeStyle: QrEyeStyle(
-                        eyeShape: QrEyeShape.circle,                            
-                        color: moduleColor,
-                      ),
-                      dataModuleStyle: QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.circle,
-                        color: moduleColor,
-                      ),
-                      embeddedImage: const AssetImage('assets/logo.png'),
-                      embeddedImageStyle: QrEmbeddedImageStyle(
-                        size: Size(logoSize, logoSize),
-                      ),
-                      embeddedImageEmitsError: false,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  width: qrSize,
+                  height: qrSize,
+                  child: QrImageView(
+                    data: link,
+                    version: QrVersions.auto,
+                    size: qrSize,
+                    padding: const EdgeInsets.all(6),
+                    gapless: true,
+                    // Nivel H para poder incrustar logo y seguir siendo legible.
+                    errorCorrectionLevel: QrErrorCorrectLevel.H,
+                    backgroundColor: qrBg,
+                    eyeStyle: QrEyeStyle(
+                      eyeShape: QrEyeShape.circle,
+                      color: moduleColor,
                     ),
+                    dataModuleStyle: QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.circle,
+                      color: moduleColor,
+                    ),
+                    embeddedImage: const AssetImage('assets/logo.png'),
+                    embeddedImageStyle: QrEmbeddedImageStyle(
+                      size: Size(logoSize, logoSize),
+                    ),
+                    embeddedImageEmitsError: false,
                   ),
                 ),
               ),
-              Divider(
-                height: 1,
-                color: Theme.of(ctx).colorScheme.outlineVariant,
-              ),
-              ListTile(
-                leading: const Icon(Icons.copy_rounded),
-                title: Text(S.current.copyProfileLink),
-                onTap: () async {
-                  await Clipboard.setData(ClipboardData(text: link));
-                  if (ctx.mounted) {
-                    Navigator.of(ctx).pop();
-                  }
-                  showCustomSnackBar(
-                    S.current.copiedProfileLinkSnackbar,
-                    type: 1,
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.share_rounded),
-                title: Text(S.current.shareOption),
-                onTap: () async {
+            ),
+            Divider(
+              height: 1,
+              color: Theme.of(ctx).colorScheme.outlineVariant,
+            ),
+            ListTile(
+              leading: const Icon(Icons.copy_rounded),
+              title: Text(S.current.copyProfileLink),
+              onTap: () async {
+                await Clipboard.setData(ClipboardData(text: link));
+                if (ctx.mounted) {
                   Navigator.of(ctx).pop();
-                  await SharePlus.instance.share(
-                    ShareParams(
-                      text: link,
-                      subject: shareSubject,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-            ],
-          );
-        },
-      ),
+                }
+                showCustomSnackBar(
+                  S.current.copiedProfileLinkSnackbar,
+                  type: 1,
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share_rounded),
+              title: Text(S.current.shareOption),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                await SharePlus.instance.share(
+                  ShareParams(
+                    text: link,
+                    subject: shareSubject,
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+          ],
+        );
+      },
     ),
   );
 }

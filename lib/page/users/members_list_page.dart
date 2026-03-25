@@ -38,6 +38,26 @@ class _MembersListPageState extends State<MembersListPage> {
     return Country.tryParse(user.country)?.flagEmoji ?? '';
   }
 
+  Widget _buildAppliedCountryChipLabel() {
+    final code = _countryCode;
+    if (code == null || code.isEmpty) return const SizedBox.shrink();
+    final country = Country.tryParse(code);
+    if (country == null) return Text(code);
+    final localizedName = country.getTranslatedName(context);
+    final displayName =
+        (localizedName != null && localizedName.trim().isNotEmpty)
+            ? localizedName
+            : country.displayNameNoCountryCode;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(country.flagEmoji),
+        const SizedBox(width: 6),
+        Text(displayName),
+      ],
+    );
+  }
+
   /// Bandera sobre la imagen, esquina inferior izquierda (lista y grid).
   Widget _countryFlagOnAvatarCorner(String flag) {
     if (flag.isEmpty) return const SizedBox.shrink();
@@ -51,7 +71,7 @@ class _MembersListPageState extends State<MembersListPage> {
     );
   }
 
-  final int _perPage = 24;
+  final int _perPage = 128;
   String _searchText = '';
   /// Filtro de país aplicado (API + chip bajo el buscador).
   String? _countryCode;
@@ -97,8 +117,12 @@ class _MembersListPageState extends State<MembersListPage> {
       return;
     }
     try {
+      final country = Country.parse(_filterDraftCountry!);
+      final localizedName = country.getTranslatedName(context);
       _filterCountryFieldController.text =
-          Country.parse(_filterDraftCountry!).displayNameNoCountryCode;
+          (localizedName != null && localizedName.trim().isNotEmpty)
+              ? localizedName
+              : country.displayNameNoCountryCode;
     } catch (_) {
       _filterCountryFieldController.text = _filterDraftCountry!;
     }
@@ -358,8 +382,12 @@ class _MembersListPageState extends State<MembersListPage> {
                       showPhoneCode: false,
                       onSelect: (country) {
                         _filterDraftCountry = country.countryCode;
+                        final localizedName = country.getTranslatedName(context);
                         _filterCountryFieldController.text =
-                            country.displayNameNoCountryCode;
+                            (localizedName != null &&
+                                    localizedName.trim().isNotEmpty)
+                                ? localizedName
+                                : country.displayNameNoCountryCode;
                         setModalState(() {});
                       },
                     );
@@ -457,32 +485,14 @@ class _MembersListPageState extends State<MembersListPage> {
     /// Evitar que el teclado vuelva a enfocar el buscador al regresar (como Fitcron).
     unFocusGlobal();
 
-    final initialPage = (globalIndex ~/ _perPage) + 1;
-    final initialIndexInPage = globalIndex % _perPage;
-    final start = (initialPage - 1) * _perPage;
-    final endCandidate = start + _perPage;
-    final end = endCandidate > _members.length ? _members.length : endCandidate;
-    final initialPageUsers = _members.sublist(start, end);
-
-    final order = _getOrderParams();
-    final orderBy = order['orderBy'] as String;
-    final orderParam = order['order'] as String;
-
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => PublicUserProfilePage(
           username: user.username,
           initialUser: user,
-          navInitialPage: initialPage,
-          navInitialIndexInPage: initialIndexInPage,
-          navInitialPageUsers: initialPageUsers,
-          navPerPage: _perPage,
-          navSearch: _searchText.isNotEmpty ? _searchText : null,
-          navCountryCode: _countryCode,
-          navOrderBy: orderBy,
-          navOrder: orderParam,
-          navTotalPages: _totalPages,
+          allLoadedMembers: List<FilmaniakUser>.from(_members),
+          initialLoadedIndex: globalIndex,
         ),
       ),
     );
@@ -506,7 +516,6 @@ class _MembersListPageState extends State<MembersListPage> {
         child: Padding(
           padding: _listCardInnerPadding,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AspectRatio(
@@ -531,13 +540,16 @@ class _MembersListPageState extends State<MembersListPage> {
                   },
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                display,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: nameStyle,
+              Expanded(
+                child: Center(
+                  child: Text(
+                    display,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: nameStyle,
+                  ),
+                ),
               ),
             ],
           ),
@@ -670,7 +682,7 @@ class _MembersListPageState extends State<MembersListPage> {
               maxCrossAxisExtent: _gridMaxCrossAxisExtent(w),
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-              childAspectRatio: 0.62,
+              childAspectRatio: 0.70,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) =>
@@ -759,7 +771,7 @@ class _MembersListPageState extends State<MembersListPage> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Chip(
-                      label: Text(_countryCode!),
+                      label: _buildAppliedCountryChipLabel(),
                       onDeleted: () {
                         unFocusGlobal();
                         setState(() => _countryCode = null);

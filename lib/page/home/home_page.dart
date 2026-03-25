@@ -559,7 +559,7 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
                 Flexible(
                   child: Text(
                     S.current.appName,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.nunito( //quicksand muy chula tambien
                       textStyle: (Theme.of(context).textTheme.titleLarge ?? const TextStyle())
                           .copyWith(
                             fontWeight: FontWeight.w800,

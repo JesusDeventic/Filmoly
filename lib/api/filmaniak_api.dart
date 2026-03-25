@@ -369,6 +369,27 @@ class FilmaniakApi {
     }
   }
 
+  /// GET /user/public-id/{id}
+  static Future<FilmaniakUser?> getPublicUserById(int userId) async {
+    if (userId <= 0) return null;
+
+    final url = Uri.parse('$_baseUrl/user/public-id/$userId');
+    try {
+      final response = await http.get(
+        url,
+        headers: _headers(),
+      );
+      if (response.statusCode != 200) return null;
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      if (data['success'] != true) return null;
+      final userJson = data['user'];
+      if (userJson is! Map<String, dynamic>) return null;
+      return FilmaniakUser.fromJson(userJson);
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// GET /users?page=X&per_page=Y&search=...&orderby=...&order=...&country=...
   ///
   /// Listado ligero para directorio de miembros. El detalle completo se carga
