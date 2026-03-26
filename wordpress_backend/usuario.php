@@ -103,9 +103,6 @@ function filmaniak_get_full_user_data($user_id) {
         return null;
     }
 
-    $retroteca_vip = get_user_meta($user->ID, 'filmaniak_retroteca_vip', false);
-    $retroteca_vip = ($retroteca_vip === '') ? 1 : $retroteca_vip;
-
     // Último login desde wp_filmaniak_sessions (MAX created_at)
     $sessions_table = $wpdb->prefix . 'filmaniak_sessions';
     $last_login = $wpdb->get_var($wpdb->prepare(
@@ -127,11 +124,12 @@ function filmaniak_get_full_user_data($user_id) {
             ? filmaniak_get_user_avatar_url($user->ID)
             : get_avatar_url($user->ID),
         'language' => get_user_meta($user->ID, 'filmaniak_language', true) ?: 'es',
+        'title_display_preference' => get_user_meta($user->ID, 'filmaniak_title_display_preference', true) ?: 'localized',
         'start_day_week' => get_user_meta($user->ID, 'filmaniak_start_day_week', true) ?: 'monday',
         'date_format' => get_user_meta($user->ID, 'filmaniak_date_format', true) ?: 'dd/MM/yyyy',
         'country' => get_user_meta($user->ID, 'filmaniak_country', true) ?: '',
         'birthdate' => get_user_meta($user->ID, 'filmaniak_birthdate', true) ?: '',
-        'filmaniak_retroteca_vip' => (bool) $retroteca_vip,
+        'filmaniak_retroteca_user' => (bool) get_user_meta($user->ID, 'filmaniak_retroteca_user', true),
         'marketing_consent' => (bool) get_user_meta($user->ID, 'filmaniak_marketing_consent', true),
         'account_status' => get_user_meta($user->ID, 'filmaniak_account_status', true) ?: 'active',
         'filmaniak_last_login' => $last_login ?: '',
@@ -507,6 +505,13 @@ function filmaniak_update_user(WP_REST_Request $request) {
 
     if (isset($_POST['language'])) {
         update_user_meta($user_id, 'filmaniak_language', sanitize_text_field(wp_unslash($_POST['language'])));
+    }
+
+    if (isset($_POST['title_display_preference'])) {
+        $title_display_preference = sanitize_text_field(wp_unslash($_POST['title_display_preference']));
+        if (in_array($title_display_preference, ['localized', 'original'], true)) {
+            update_user_meta($user_id, 'filmaniak_title_display_preference', $title_display_preference);
+        }
     }
 
     if (isset($_POST['start_day_week'])) {

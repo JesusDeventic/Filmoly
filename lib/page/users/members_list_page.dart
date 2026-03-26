@@ -7,6 +7,7 @@ import 'package:filmaniak/page/users/public_user_profile_page.dart';
 import 'package:filmaniak/widget/components_widgets.dart';
 import 'package:filmaniak/widget/filmaniak_country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MembersListPage extends StatefulWidget {
@@ -445,6 +446,9 @@ class _MembersListPageState extends State<MembersListPage> {
           Expanded(
             child: TextField(
               controller: _searchController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(40),
+              ],
               decoration: InputDecoration(
                 hintText: S.current.membersSearchHint,
                 prefixIcon: const Icon(Icons.search_rounded),

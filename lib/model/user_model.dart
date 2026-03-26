@@ -13,11 +13,12 @@ class FilmaniakUser {
   String description;
   String avatarUrl;
   String language;
+  String titleDisplayPreference;
   String dateFormat;
   String weekStart;
   String country;
   String birthdate;
-  bool isRetrotecaVip;
+  bool isRetrotecaUser;
   bool marketingConsent;
   String accountStatus;
   String lastLogin;
@@ -39,11 +40,12 @@ class FilmaniakUser {
     this.description = '',
     this.avatarUrl = '',
     this.language = 'en',
+    this.titleDisplayPreference = 'localized',
     this.dateFormat = 'dd/MM/yyyy',
     this.weekStart = 'monday',
     this.country = '',
     this.birthdate = '',
-    this.isRetrotecaVip = false,
+    this.isRetrotecaUser = false,
     this.marketingConsent = false,
     this.accountStatus = 'active',
     this.lastLogin = '',
@@ -70,12 +72,14 @@ class FilmaniakUser {
       description: (json['description'] as String?) ?? '',
       avatarUrl: (json['avatar_url'] as String?) ?? '',
       language: (json['language'] as String?) ?? 'es',
+      titleDisplayPreference:
+          (json['title_display_preference'] as String?) ?? 'localized',
       dateFormat: (json['date_format'] as String?) ?? 'dd/MM/yyyy',
       weekStart: (json['start_day_week'] as String?) ?? 'monday',
       country: (json['country'] as String?) ?? '',
       birthdate: (json['birthdate'] as String?) ?? '',
-      isRetrotecaVip:
-          (json['filmaniak_retroteca_vip'] as bool?) ?? false,
+      isRetrotecaUser:
+          (json['filmaniak_retroteca_user'] as bool?) ?? false,
       marketingConsent:
           (json['marketing_consent'] as bool?) ?? false,
       accountStatus: (json['account_status'] as String?) ?? 'active',
@@ -99,10 +103,12 @@ class FilmaniakUser {
         'last_name': lastName,
         'description': description,
         'language': language,
+        'title_display_preference': titleDisplayPreference,
         'date_format': dateFormat,
         'start_day_week': weekStart,
         'country': country,
         'birthdate': birthdate,
+        'filmaniak_retroteca_user': isRetrotecaUser,
         'marketing_consent': marketingConsent,
       };
 }

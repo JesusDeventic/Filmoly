@@ -81,7 +81,6 @@ class UserPreferences {
         'start_day_week': u.weekStart,
         'country': u.country,
         'birthdate': u.birthdate,
-        'filmaniak_retroteca_vip': u.isRetrotecaVip,
         'marketing_consent': u.marketingConsent,
       };
 }

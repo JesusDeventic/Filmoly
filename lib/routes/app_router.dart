@@ -2,6 +2,7 @@ import 'package:filmaniak/core/global_functions.dart';
 import 'package:filmaniak/core/global_variables.dart';
 import 'package:filmaniak/generated/l10n.dart';
 import 'package:filmaniak/page/home/home_page.dart';
+import 'package:filmaniak/page/library/library_entry_navigator_page.dart';
 import 'package:filmaniak/page/messages/private_conversations_page.dart';
 import 'package:filmaniak/page/messages/private_chat_page.dart';
 import 'package:filmaniak/page/users/account_profile_page.dart';
@@ -58,6 +59,13 @@ GoRouter createAppRouter(GlobalKey<NavigatorState> navigatorKey) {
       GoRoute(
         path: AppRoutes.home,
         builder: (_, __) => const HomePlaceholderPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.libraryEntry,
+        builder: (_, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return LibraryEntryNavigatorPage(initialEntryId: id);
+        },
       ),
       GoRoute(
         path: AppRoutes.accountProfile,

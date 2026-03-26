@@ -31,7 +31,7 @@ if ( !is_user_logged_in() ) {
                 $old_tmdb_id = get_field( 'field_6140b6074b100', $post_id );
                 $old_imdb_id = get_field( 'field_61420601ee84f', $post_id );
                 $old_titulo_spanish = get_field( 'field_6140b6a355c52', $post_id );
-                $old_titulo_original = get_field( 'field_6140b7ea720f3', $post_id );
+                $old_titulo_original = get_the_title( $post_id );
                 $old_titulos_alternativos = get_field( 'field_6140b8c510b0c', $post_id );
                 $old_paises = strip_tags( get_the_term_list( $post_id, 'paises', '', ', ' ) );
                 $old_productoras = strip_tags( get_the_term_list( $post_id, 'productoras', '', ', ' ) );
@@ -61,8 +61,6 @@ if ( !is_user_logged_in() ) {
                 $old_modificacion = get_field( 'field_5d00d90c1c9b0', $post_id );
                 $old_rango = get_field( 'field_5d00d80aec1ab', $post_id );
                 $old_informacion = get_field( 'field_5d07b0cc888a6', $post_id );
-                $old_private = get_field( 'private', $post_id );
-                $old_private = $old_private == 'true' ? 1 : 0;
 
                 echo '<h1>EDITAR FICHA</h1>';
                 echo 'POST: ' . $post_id . '<br>';
@@ -314,8 +312,6 @@ echo '<div class="edicion-datos-tecnicos">';
                 echo '</select>';
                 echo '<label for="input_informacion">INFORMACION ADICIONAL</label><textarea id="input_informacion" name="informacion" rows="5">' . $old_informacion . '</textarea>
                 <p>Temporadas disponibles/totales: x/x<br>Episodios disponibles/totales: x/x<br>Montador...</p>';
-echo '<label for="input_private">Privada (solo leyendas)</label>';
-echo '<input type="checkbox" id="input_private" name="private" value="1" ' . ($old_private == '1' ? 'checked' : '') . '>';
                 echo '</div>';
             }
 
@@ -377,10 +373,13 @@ echo '<input type="checkbox" id="input_private" name="private" value="1" ' . ($o
             } else {
                 // ACTUALIZAR / CREAR POST WORDPRESS
                 $my_post = array();
+                $titulo_original_post = isset( $_POST['titulo_original'] ) ? trim( (string) $_POST['titulo_original'] ) : '';
+                $titulo_spanish_post = isset( $_POST['titulo_spanish'] ) ? trim( (string) $_POST['titulo_spanish'] ) : '';
+                $titulo_post_final = $titulo_original_post !== '' ? $titulo_original_post : $titulo_spanish_post;
 
                 $my_post['post_type'] = 'post';
-                $my_post['post_title'] = $_POST['titulo_spanish'];
-                $my_post['post_name'] = sanitize_title( $_POST['titulo_spanish'] );
+                $my_post['post_title'] = $titulo_post_final;
+                $my_post['post_name'] = sanitize_title( $titulo_post_final );
                 //url
                 $my_post['post_content'] = $_POST['sinopsis'];
 
@@ -484,7 +483,6 @@ echo '<input type="checkbox" id="input_private" name="private" value="1" ' . ($o
                 update_field( 'field_6140b6074b100', $_POST['tmdbid'], $post_id );
                 update_field( 'field_61420601ee84f', $_POST['imdbid'], $post_id );
                 update_field( 'field_6140b6a355c52', $_POST['titulo_spanish'], $post_id );
-                update_field( 'field_6140b7ea720f3', $_POST['titulo_original'], $post_id );
                 update_field( 'field_6140b8c510b0c', $_POST['titulos_alternativos'], $post_id );
                 update_field( 'field_6140bd33708b6', $_POST['anio'], $post_id );
                 update_field( 'field_6140beeb04a5c', $_POST['duracion'], $post_id );
@@ -507,8 +505,6 @@ echo '<input type="checkbox" id="input_private" name="private" value="1" ' . ($o
                     update_field( 'field_5d00d90c1c9b0', $_POST['select_estado_aporte'], $post_id );
                     update_field( 'field_5d00d80aec1ab', $_POST['select_rango'], $post_id );
                     update_field( 'field_5d07b0cc888a6', $_POST['informacion'], $post_id );
-                    $private_value = isset($_POST['private']) && $_POST['private'] == '1' ? "true" : "false";
-			update_field('private', $private_value, $post_id);
 
                     // ACTUALIZAR POSTER
                     $new_manual_imagen = $_FILES['my_image_upload'];

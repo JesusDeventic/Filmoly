@@ -1859,20 +1859,20 @@ class S {
     );
   }
 
-  /// `No tienes permiso para hacer esto.`
+  /// `No tienes permiso para hacer esto`
   String get errorApiForbidden {
     return Intl.message(
-      'No tienes permiso para hacer esto.',
+      'No tienes permiso para hacer esto',
       name: 'errorApiForbidden',
       desc: '',
       args: [],
     );
   }
 
-  /// `No hemos encontrado lo que pedías.`
+  /// `No hemos encontrado lo que buscas`
   String get errorApiNotFound {
     return Intl.message(
-      'No hemos encontrado lo que pedías.',
+      'No hemos encontrado lo que buscas',
       name: 'errorApiNotFound',
       desc: '',
       args: [],
@@ -1889,10 +1889,10 @@ class S {
     );
   }
 
-  /// `Los datos enviados no son válidos.`
+  /// `Los datos enviados no son válidos`
   String get errorApiBadRequest {
     return Intl.message(
-      'Los datos enviados no son válidos.',
+      'Los datos enviados no son válidos',
       name: 'errorApiBadRequest',
       desc: '',
       args: [],
@@ -2059,10 +2059,10 @@ class S {
     );
   }
 
-  /// `Explora el directorio y conecta con otros usuarios`
+  /// `Conecta con otros usuarios`
   String get membersHomeCardSubtitle {
     return Intl.message(
-      'Explora el directorio y conecta con otros usuarios',
+      'Conecta con otros usuarios',
       name: 'membersHomeCardSubtitle',
       desc: '',
       args: [],
@@ -2097,16 +2097,6 @@ class S {
   /// `Biblioteca`
   String get menuLibrary {
     return Intl.message('Biblioteca', name: 'menuLibrary', desc: '', args: []);
-  }
-
-  /// `Vista`
-  String get libraryViewModeTitle {
-    return Intl.message(
-      'Vista',
-      name: 'libraryViewModeTitle',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Cuadrícula compacta`
@@ -2149,20 +2139,20 @@ class S {
     );
   }
 
-  /// `No hay entradas con estos filtros`
+  /// `No hay resultados con estos filtros`
   String get libraryEmpty {
     return Intl.message(
-      'No hay entradas con estos filtros',
+      'No hay resultados con estos filtros',
       name: 'libraryEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Prueba a cambiar filtros o la búsqueda.`
+  /// `Prueba a cambiar filtros o la búsqueda`
   String get libraryEmptySubtitle {
     return Intl.message(
-      'Prueba a cambiar filtros o la búsqueda.',
+      'Prueba a cambiar filtros o la búsqueda',
       name: 'libraryEmptySubtitle',
       desc: '',
       args: [],
@@ -2180,10 +2170,10 @@ class S {
   }
 
   /// `Texto a buscar`
-  String get librarySearchPlaceholder {
+  String get searchPlaceholder {
     return Intl.message(
       'Texto a buscar',
-      name: 'librarySearchPlaceholder',
+      name: 'searchPlaceholder',
       desc: '',
       args: [],
     );
@@ -2199,21 +2189,41 @@ class S {
     );
   }
 
-  /// `Fecha de publicación`
+  /// `Publicación (más reciente)`
   String get libraryOrderDate {
     return Intl.message(
-      'Fecha de publicación',
+      'Publicación (más reciente)',
       name: 'libraryOrderDate',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fecha de modificación`
+  /// `Publicación (más antigua)`
+  String get libraryOrderDateAsc {
+    return Intl.message(
+      'Publicación (más antigua)',
+      name: 'libraryOrderDateAsc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Modificación (más reciente)`
   String get libraryOrderModified {
     return Intl.message(
-      'Fecha de modificación',
+      'Modificación (más reciente)',
       name: 'libraryOrderModified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Modificación (más antigua)`
+  String get libraryOrderModifiedAsc {
+    return Intl.message(
+      'Modificación (más antigua)',
+      name: 'libraryOrderModifiedAsc',
       desc: '',
       args: [],
     );
@@ -2224,6 +2234,16 @@ class S {
     return Intl.message(
       'Título (A-Z)',
       name: 'libraryOrderTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Título (Z-A)`
+  String get libraryOrderTitleDesc {
+    return Intl.message(
+      'Título (Z-A)',
+      name: 'libraryOrderTitleDesc',
       desc: '',
       args: [],
     );
@@ -2289,10 +2309,10 @@ class S {
     );
   }
 
-  /// `Director`
+  /// `Dirección`
   String get librarySearchDirector {
     return Intl.message(
-      'Director',
+      'Dirección',
       name: 'librarySearchDirector',
       desc: '',
       args: [],
@@ -2319,10 +2339,10 @@ class S {
     );
   }
 
-  /// `Guión / música / fotografía`
+  /// `Guión / Música / Fotografía`
   String get librarySearchCrew {
     return Intl.message(
-      'Guión / música / fotografía',
+      'Guión / Música / Fotografía',
       name: 'librarySearchCrew',
       desc: '',
       args: [],
@@ -2367,6 +2387,2111 @@ class S {
   /// `Siguiente`
   String get nextLabel {
     return Intl.message('Siguiente', name: 'nextLabel', desc: '', args: []);
+  }
+
+  /// `Buscar por título...`
+  String get librarySearchPlaceholder {
+    return Intl.message(
+      'Buscar por título...',
+      name: 'librarySearchPlaceholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mostrar títulos`
+  String get titleDisplayModeLabel {
+    return Intl.message(
+      'Mostrar títulos',
+      name: 'titleDisplayModeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `En mi idioma`
+  String get titleDisplayModeLocalized {
+    return Intl.message(
+      'En mi idioma',
+      name: 'titleDisplayModeLocalized',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Título original`
+  String get titleDisplayModeOriginal {
+    return Intl.message(
+      'Título original',
+      name: 'titleDisplayModeOriginal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Categoría`
+  String get libraryFilterCategoryLabel {
+    return Intl.message(
+      'Categoría',
+      name: 'libraryFilterCategoryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estilo`
+  String get libraryFilterStyleLabel {
+    return Intl.message(
+      'Estilo',
+      name: 'libraryFilterStyleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Género`
+  String get libraryFilterGenreLabel {
+    return Intl.message(
+      'Género',
+      name: 'libraryFilterGenreLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subgénero`
+  String get libraryFilterSubgenreLabel {
+    return Intl.message(
+      'Subgénero',
+      name: 'libraryFilterSubgenreLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Película`
+  String get libraryTaxonomyCatPelicula {
+    return Intl.message(
+      'Película',
+      name: 'libraryTaxonomyCatPelicula',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Serie`
+  String get libraryTaxonomyCatSerie {
+    return Intl.message(
+      'Serie',
+      name: 'libraryTaxonomyCatSerie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cortometraje`
+  String get libraryTaxonomyCatCortometraje {
+    return Intl.message(
+      'Cortometraje',
+      name: 'libraryTaxonomyCatCortometraje',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Documental`
+  String get libraryTaxonomyCatDocumental {
+    return Intl.message(
+      'Documental',
+      name: 'libraryTaxonomyCatDocumental',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Programa TV`
+  String get libraryTaxonomyCatProgramatv {
+    return Intl.message(
+      'Programa TV',
+      name: 'libraryTaxonomyCatProgramatv',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Live Action`
+  String get libraryTaxonomyStyleLiveaction {
+    return Intl.message(
+      'Live Action',
+      name: 'libraryTaxonomyStyleLiveaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Animación`
+  String get libraryTaxonomyStyleAnimacion {
+    return Intl.message(
+      'Animación',
+      name: 'libraryTaxonomyStyleAnimacion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anime`
+  String get libraryTaxonomyStyleAnime {
+    return Intl.message(
+      'Anime',
+      name: 'libraryTaxonomyStyleAnime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Acción`
+  String get libraryTaxonomyGenreAccion {
+    return Intl.message(
+      'Acción',
+      name: 'libraryTaxonomyGenreAccion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aventuras`
+  String get libraryTaxonomyGenreAventuras {
+    return Intl.message(
+      'Aventuras',
+      name: 'libraryTaxonomyGenreAventuras',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bélico`
+  String get libraryTaxonomyGenreBelico {
+    return Intl.message(
+      'Bélico',
+      name: 'libraryTaxonomyGenreBelico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ciencia ficción`
+  String get libraryTaxonomyGenreCienciaFiccion {
+    return Intl.message(
+      'Ciencia ficción',
+      name: 'libraryTaxonomyGenreCienciaFiccion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine negro`
+  String get libraryTaxonomyGenreCineNegro {
+    return Intl.message(
+      'Cine negro',
+      name: 'libraryTaxonomyGenreCineNegro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine quinqui`
+  String get libraryTaxonomyGenreCineQuinqui {
+    return Intl.message(
+      'Cine quinqui',
+      name: 'libraryTaxonomyGenreCineQuinqui',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comedia`
+  String get libraryTaxonomyGenreComedia {
+    return Intl.message(
+      'Comedia',
+      name: 'libraryTaxonomyGenreComedia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Documental`
+  String get libraryTaxonomyGenreDocumental {
+    return Intl.message(
+      'Documental',
+      name: 'libraryTaxonomyGenreDocumental',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drama`
+  String get libraryTaxonomyGenreDrama {
+    return Intl.message(
+      'Drama',
+      name: 'libraryTaxonomyGenreDrama',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fantasía`
+  String get libraryTaxonomyGenreFantasia {
+    return Intl.message(
+      'Fantasía',
+      name: 'libraryTaxonomyGenreFantasia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Musical`
+  String get libraryTaxonomyGenreMusical {
+    return Intl.message(
+      'Musical',
+      name: 'libraryTaxonomyGenreMusical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Romance`
+  String get libraryTaxonomyGenreRomance {
+    return Intl.message(
+      'Romance',
+      name: 'libraryTaxonomyGenreRomance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suspense / intriga`
+  String get libraryTaxonomyGenreSuspense {
+    return Intl.message(
+      'Suspense / intriga',
+      name: 'libraryTaxonomyGenreSuspense',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terror`
+  String get libraryTaxonomyGenreTerror {
+    return Intl.message(
+      'Terror',
+      name: 'libraryTaxonomyGenreTerror',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thriller`
+  String get libraryTaxonomyGenreThriller {
+    return Intl.message(
+      'Thriller',
+      name: 'libraryTaxonomyGenreThriller',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Western`
+  String get libraryTaxonomyGenreWestern {
+    return Intl.message(
+      'Western',
+      name: 'libraryTaxonomyGenreWestern',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1.ª Guerra Mundial`
+  String get libraryTaxonomySub1aGuerraMundial {
+    return Intl.message(
+      '1.ª Guerra Mundial',
+      name: 'libraryTaxonomySub1aGuerraMundial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2.ª Guerra Mundial`
+  String get libraryTaxonomySub2aGuerraMundial {
+    return Intl.message(
+      '2.ª Guerra Mundial',
+      name: 'libraryTaxonomySub2aGuerraMundial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3D`
+  String get libraryTaxonomySub3d {
+    return Intl.message('3D', name: 'libraryTaxonomySub3d', desc: '', args: []);
+  }
+
+  /// `Abusos sexuales`
+  String get libraryTaxonomySubAbusosSexuales {
+    return Intl.message(
+      'Abusos sexuales',
+      name: 'libraryTaxonomySubAbusosSexuales',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adaptación cómic`
+  String get libraryTaxonomySubAdaptacionComic {
+    return Intl.message(
+      'Adaptación cómic',
+      name: 'libraryTaxonomySubAdaptacionComic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adaptación libro`
+  String get libraryTaxonomySubAdaptacionLibro {
+    return Intl.message(
+      'Adaptación libro',
+      name: 'libraryTaxonomySubAdaptacionLibro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adaptación relato`
+  String get libraryTaxonomySubAdaptacionRelato {
+    return Intl.message(
+      'Adaptación relato',
+      name: 'libraryTaxonomySubAdaptacionRelato',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adaptación videojuego`
+  String get libraryTaxonomySubAdaptacionVideojuego {
+    return Intl.message(
+      'Adaptación videojuego',
+      name: 'libraryTaxonomySubAdaptacionVideojuego',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adolescencia`
+  String get libraryTaxonomySubAdolescencia {
+    return Intl.message(
+      'Adolescencia',
+      name: 'libraryTaxonomySubAdolescencia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `American Gothic`
+  String get libraryTaxonomySubAmericanGothic {
+    return Intl.message(
+      'American Gothic',
+      name: 'libraryTaxonomySubAmericanGothic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Animales`
+  String get libraryTaxonomySubAnimales {
+    return Intl.message(
+      'Animales',
+      name: 'libraryTaxonomySubAnimales',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Antigua Grecia`
+  String get libraryTaxonomySubAntiguaGrecia {
+    return Intl.message(
+      'Antigua Grecia',
+      name: 'libraryTaxonomySubAntiguaGrecia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Antigua Roma`
+  String get libraryTaxonomySubAntiguaRoma {
+    return Intl.message(
+      'Antigua Roma',
+      name: 'libraryTaxonomySubAntiguaRoma',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Antiguo Egipto`
+  String get libraryTaxonomySubAntiguoEgipto {
+    return Intl.message(
+      'Antiguo Egipto',
+      name: 'libraryTaxonomySubAntiguoEgipto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arqueología`
+  String get libraryTaxonomySubArqueologia {
+    return Intl.message(
+      'Arqueología',
+      name: 'libraryTaxonomySubArqueologia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Artes marciales`
+  String get libraryTaxonomySubArtesMarciales {
+    return Intl.message(
+      'Artes marciales',
+      name: 'libraryTaxonomySubArtesMarciales',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asesinos en serie`
+  String get libraryTaxonomySubAsesinosEnSerie {
+    return Intl.message(
+      'Asesinos en serie',
+      name: 'libraryTaxonomySubAsesinosEnSerie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aventuras aéreas`
+  String get libraryTaxonomySubAventurasAereas {
+    return Intl.message(
+      'Aventuras aéreas',
+      name: 'libraryTaxonomySubAventurasAereas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aventuras marinas`
+  String get libraryTaxonomySubAventurasMarinas {
+    return Intl.message(
+      'Aventuras marinas',
+      name: 'libraryTaxonomySubAventurasMarinas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bandas / pandillas callejeras`
+  String get libraryTaxonomySubBandasPandillasCallejeras {
+    return Intl.message(
+      'Bandas / pandillas callejeras',
+      name: 'libraryTaxonomySubBandasPandillasCallejeras',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Biblia`
+  String get libraryTaxonomySubBiblia {
+    return Intl.message(
+      'Biblia',
+      name: 'libraryTaxonomySubBiblia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Biográfico`
+  String get libraryTaxonomySubBiografico {
+    return Intl.message(
+      'Biográfico',
+      name: 'libraryTaxonomySubBiografico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bizarro`
+  String get libraryTaxonomySubBizarro {
+    return Intl.message(
+      'Bizarro',
+      name: 'libraryTaxonomySubBizarro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Body horror`
+  String get libraryTaxonomySubBodyHorror {
+    return Intl.message(
+      'Body horror',
+      name: 'libraryTaxonomySubBodyHorror',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Brujería / satanismo`
+  String get libraryTaxonomySubBrujeria {
+    return Intl.message(
+      'Brujería / satanismo',
+      name: 'libraryTaxonomySubBrujeria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Canibalismo`
+  String get libraryTaxonomySubCanibalismo {
+    return Intl.message(
+      'Canibalismo',
+      name: 'libraryTaxonomySubCanibalismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Capa y espada`
+  String get libraryTaxonomySubCapaYEspada {
+    return Intl.message(
+      'Capa y espada',
+      name: 'libraryTaxonomySubCapaYEspada',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Casas encantadas`
+  String get libraryTaxonomySubCasasEncantadas {
+    return Intl.message(
+      'Casas encantadas',
+      name: 'libraryTaxonomySubCasasEncantadas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Catástrofes`
+  String get libraryTaxonomySubCatastrofes {
+    return Intl.message(
+      'Catástrofes',
+      name: 'libraryTaxonomySubCatastrofes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine dentro de cine`
+  String get libraryTaxonomySubCineDentroDeCine {
+    return Intl.message(
+      'Cine dentro de cine',
+      name: 'libraryTaxonomySubCineDentroDeCine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine épico`
+  String get libraryTaxonomySubCineEpico {
+    return Intl.message(
+      'Cine épico',
+      name: 'libraryTaxonomySubCineEpico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine experimental`
+  String get libraryTaxonomySubCineExperimental {
+    return Intl.message(
+      'Cine experimental',
+      name: 'libraryTaxonomySubCineExperimental',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine familiar`
+  String get libraryTaxonomySubCineFamiliar {
+    return Intl.message(
+      'Cine familiar',
+      name: 'libraryTaxonomySubCineFamiliar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cine mudo`
+  String get libraryTaxonomySubMudo {
+    return Intl.message(
+      'Cine mudo',
+      name: 'libraryTaxonomySubMudo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Claustrofobia`
+  String get libraryTaxonomySubClaustrofobia {
+    return Intl.message(
+      'Claustrofobia',
+      name: 'libraryTaxonomySubClaustrofobia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coches / automóviles`
+  String get libraryTaxonomySubCochesAutomoviles {
+    return Intl.message(
+      'Coches / automóviles',
+      name: 'libraryTaxonomySubCochesAutomoviles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Colegios / universidades`
+  String get libraryTaxonomySubColegiosUniversidades {
+    return Intl.message(
+      'Colegios / universidades',
+      name: 'libraryTaxonomySubColegiosUniversidades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comedia de terror`
+  String get libraryTaxonomySubComediaDeTerror {
+    return Intl.message(
+      'Comedia de terror',
+      name: 'libraryTaxonomySubComediaDeTerror',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comedia romántica`
+  String get libraryTaxonomySubComediaRomantica {
+    return Intl.message(
+      'Comedia romántica',
+      name: 'libraryTaxonomySubComediaRomantica',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Crimen`
+  String get libraryTaxonomySubCrimen {
+    return Intl.message(
+      'Crimen',
+      name: 'libraryTaxonomySubCrimen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Crossover`
+  String get libraryTaxonomySubCrossover {
+    return Intl.message(
+      'Crossover',
+      name: 'libraryTaxonomySubCrossover',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cuentos`
+  String get libraryTaxonomySubCuentos {
+    return Intl.message(
+      'Cuentos',
+      name: 'libraryTaxonomySubCuentos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Culto`
+  String get libraryTaxonomySubCulto {
+    return Intl.message(
+      'Culto',
+      name: 'libraryTaxonomySubCulto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cyberpunk`
+  String get libraryTaxonomySubCyberpunk {
+    return Intl.message(
+      'Cyberpunk',
+      name: 'libraryTaxonomySubCyberpunk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Demonios`
+  String get libraryTaxonomySubDemonios {
+    return Intl.message(
+      'Demonios',
+      name: 'libraryTaxonomySubDemonios',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deportes`
+  String get libraryTaxonomySubDeportes {
+    return Intl.message(
+      'Deportes',
+      name: 'libraryTaxonomySubDeportes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dictadura argentina`
+  String get libraryTaxonomySubDictaduraArgentina {
+    return Intl.message(
+      'Dictadura argentina',
+      name: 'libraryTaxonomySubDictaduraArgentina',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dictadura chilena`
+  String get libraryTaxonomySubDictaduraChilena {
+    return Intl.message(
+      'Dictadura chilena',
+      name: 'libraryTaxonomySubDictaduraChilena',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dinosaurios`
+  String get libraryTaxonomySubDinosaurios {
+    return Intl.message(
+      'Dinosaurios',
+      name: 'libraryTaxonomySubDinosaurios',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Distopía`
+  String get libraryTaxonomySubDistopia {
+    return Intl.message(
+      'Distopía',
+      name: 'libraryTaxonomySubDistopia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Divulgativo / educativo`
+  String get libraryTaxonomySubDivulgativoEducativo {
+    return Intl.message(
+      'Divulgativo / educativo',
+      name: 'libraryTaxonomySubDivulgativoEducativo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dragones`
+  String get libraryTaxonomySubDragones {
+    return Intl.message(
+      'Dragones',
+      name: 'libraryTaxonomySubDragones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drama social`
+  String get libraryTaxonomySubDramaSocial {
+    return Intl.message(
+      'Drama social',
+      name: 'libraryTaxonomySubDramaSocial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drogas`
+  String get libraryTaxonomySubDrogas {
+    return Intl.message(
+      'Drogas',
+      name: 'libraryTaxonomySubDrogas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duendes`
+  String get libraryTaxonomySubDuendes {
+    return Intl.message(
+      'Duendes',
+      name: 'libraryTaxonomySubDuendes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edad Media`
+  String get libraryTaxonomySubEdadMedia {
+    return Intl.message(
+      'Edad Media',
+      name: 'libraryTaxonomySubEdadMedia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Erotismo`
+  String get libraryTaxonomySubErotismo {
+    return Intl.message(
+      'Erotismo',
+      name: 'libraryTaxonomySubErotismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Esclavitud`
+  String get libraryTaxonomySubEsclavitud {
+    return Intl.message(
+      'Esclavitud',
+      name: 'libraryTaxonomySubEsclavitud',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Espacio / espacial`
+  String get libraryTaxonomySubEspacial {
+    return Intl.message(
+      'Espacio / espacial',
+      name: 'libraryTaxonomySubEspacial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Espada y brujería`
+  String get libraryTaxonomySubEspadaYBrujeria {
+    return Intl.message(
+      'Espada y brujería',
+      name: 'libraryTaxonomySubEspadaYBrujeria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Espionaje`
+  String get libraryTaxonomySubEspionaje {
+    return Intl.message(
+      'Espionaje',
+      name: 'libraryTaxonomySubEspionaje',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Experimentos`
+  String get libraryTaxonomySubExperimentos {
+    return Intl.message(
+      'Experimentos',
+      name: 'libraryTaxonomySubExperimentos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exploitation`
+  String get libraryTaxonomySubExplotation {
+    return Intl.message(
+      'Exploitation',
+      name: 'libraryTaxonomySubExplotation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expresionismo alemán`
+  String get libraryTaxonomySubExpresionismoAleman {
+    return Intl.message(
+      'Expresionismo alemán',
+      name: 'libraryTaxonomySubExpresionismoAleman',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extraterrestres`
+  String get libraryTaxonomySubExtraterrestres {
+    return Intl.message(
+      'Extraterrestres',
+      name: 'libraryTaxonomySubExtraterrestres',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Familia`
+  String get libraryTaxonomySubFamilia {
+    return Intl.message(
+      'Familia',
+      name: 'libraryTaxonomySubFamilia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fantasmas`
+  String get libraryTaxonomySubFantasmas {
+    return Intl.message(
+      'Fantasmas',
+      name: 'libraryTaxonomySubFantasmas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Folk`
+  String get libraryTaxonomySubFolk {
+    return Intl.message(
+      'Folk',
+      name: 'libraryTaxonomySubFolk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Futurismo`
+  String get libraryTaxonomySubFuturismo {
+    return Intl.message(
+      'Futurismo',
+      name: 'libraryTaxonomySubFuturismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giallo`
+  String get libraryTaxonomySubGiallo {
+    return Intl.message(
+      'Giallo',
+      name: 'libraryTaxonomySubGiallo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gore`
+  String get libraryTaxonomySubGore {
+    return Intl.message(
+      'Gore',
+      name: 'libraryTaxonomySubGore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gótico`
+  String get libraryTaxonomySubGotico {
+    return Intl.message(
+      'Gótico',
+      name: 'libraryTaxonomySubGotico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra civil española`
+  String get libraryTaxonomySubGuerraCivilEspanola {
+    return Intl.message(
+      'Guerra civil española',
+      name: 'libraryTaxonomySubGuerraCivilEspanola',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra de Corea`
+  String get libraryTaxonomySubGuerraDeCorea {
+    return Intl.message(
+      'Guerra de Corea',
+      name: 'libraryTaxonomySubGuerraDeCorea',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra de independencia americana`
+  String get libraryTaxonomySubGuerraDeIndependenciaAmericana {
+    return Intl.message(
+      'Guerra de independencia americana',
+      name: 'libraryTaxonomySubGuerraDeIndependenciaAmericana',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra de Irak`
+  String get libraryTaxonomySubGuerraDeIrak {
+    return Intl.message(
+      'Guerra de Irak',
+      name: 'libraryTaxonomySubGuerraDeIrak',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra de las Malvinas`
+  String get libraryTaxonomySubGuerraDeLasMalvinas {
+    return Intl.message(
+      'Guerra de las Malvinas',
+      name: 'libraryTaxonomySubGuerraDeLasMalvinas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra de Secesión`
+  String get libraryTaxonomySubGuerraDeSecesion {
+    return Intl.message(
+      'Guerra de Secesión',
+      name: 'libraryTaxonomySubGuerraDeSecesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra de Vietnam`
+  String get libraryTaxonomySubGuerraDeVietnam {
+    return Intl.message(
+      'Guerra de Vietnam',
+      name: 'libraryTaxonomySubGuerraDeVietnam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerra fría`
+  String get libraryTaxonomySubGuerraFria {
+    return Intl.message(
+      'Guerra fría',
+      name: 'libraryTaxonomySubGuerraFria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guerras napoleónicas`
+  String get libraryTaxonomySubGuerrasNapoleonicas {
+    return Intl.message(
+      'Guerras napoleónicas',
+      name: 'libraryTaxonomySubGuerrasNapoleonicas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Halloween`
+  String get libraryTaxonomySubHalloween {
+    return Intl.message(
+      'Halloween',
+      name: 'libraryTaxonomySubHalloween',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hechos reales`
+  String get libraryTaxonomySubHechosReales {
+    return Intl.message(
+      'Hechos reales',
+      name: 'libraryTaxonomySubHechosReales',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Historias cortas / antología`
+  String get libraryTaxonomySubAntologia {
+    return Intl.message(
+      'Historias cortas / antología',
+      name: 'libraryTaxonomySubAntologia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Histórico`
+  String get libraryTaxonomySubHistorico {
+    return Intl.message(
+      'Histórico',
+      name: 'libraryTaxonomySubHistorico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hombres lobo`
+  String get libraryTaxonomySubHombresLobo {
+    return Intl.message(
+      'Hombres lobo',
+      name: 'libraryTaxonomySubHombresLobo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home invasion`
+  String get libraryTaxonomySubHomeInvasion {
+    return Intl.message(
+      'Home invasion',
+      name: 'libraryTaxonomySubHomeInvasion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homosexual`
+  String get libraryTaxonomySubHomosexual {
+    return Intl.message(
+      'Homosexual',
+      name: 'libraryTaxonomySubHomosexual',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Humor negro`
+  String get libraryTaxonomySubHumorNegro {
+    return Intl.message(
+      'Humor negro',
+      name: 'libraryTaxonomySubHumorNegro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Independiente`
+  String get libraryTaxonomySubIndependiente {
+    return Intl.message(
+      'Independiente',
+      name: 'libraryTaxonomySubIndependiente',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Infantil`
+  String get libraryTaxonomySubInfantil {
+    return Intl.message(
+      'Infantil',
+      name: 'libraryTaxonomySubInfantil',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Japón feudal`
+  String get libraryTaxonomySubJaponFeudal {
+    return Intl.message(
+      'Japón feudal',
+      name: 'libraryTaxonomySubJaponFeudal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Juego`
+  String get libraryTaxonomySubJuego {
+    return Intl.message(
+      'Juego',
+      name: 'libraryTaxonomySubJuego',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Juicios`
+  String get libraryTaxonomySubJuicios {
+    return Intl.message(
+      'Juicios',
+      name: 'libraryTaxonomySubJuicios',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kaiju eiga`
+  String get libraryTaxonomySubKaijuEiga {
+    return Intl.message(
+      'Kaiju eiga',
+      name: 'libraryTaxonomySubKaijuEiga',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Krimi`
+  String get libraryTaxonomySubKrimi {
+    return Intl.message(
+      'Krimi',
+      name: 'libraryTaxonomySubKrimi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Locura`
+  String get libraryTaxonomySubLocura {
+    return Intl.message(
+      'Locura',
+      name: 'libraryTaxonomySubLocura',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mad doctor`
+  String get libraryTaxonomySubMadDoctor {
+    return Intl.message(
+      'Mad doctor',
+      name: 'libraryTaxonomySubMadDoctor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mafia`
+  String get libraryTaxonomySubMafia {
+    return Intl.message(
+      'Mafia',
+      name: 'libraryTaxonomySubMafia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Magia`
+  String get libraryTaxonomySubMagia {
+    return Intl.message(
+      'Magia',
+      name: 'libraryTaxonomySubMagia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Miniserie`
+  String get libraryTaxonomySubMiniserie {
+    return Intl.message(
+      'Miniserie',
+      name: 'libraryTaxonomySubMiniserie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Misterio`
+  String get libraryTaxonomySubMisterio {
+    return Intl.message(
+      'Misterio',
+      name: 'libraryTaxonomySubMisterio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mitología`
+  String get libraryTaxonomySubMitologia {
+    return Intl.message(
+      'Mitología',
+      name: 'libraryTaxonomySubMitologia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mockbuster`
+  String get libraryTaxonomySubMockbuster {
+    return Intl.message(
+      'Mockbuster',
+      name: 'libraryTaxonomySubMockbuster',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mockumentary`
+  String get libraryTaxonomySubMockumentary {
+    return Intl.message(
+      'Mockumentary',
+      name: 'libraryTaxonomySubMockumentary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Momias`
+  String get libraryTaxonomySubMomias {
+    return Intl.message(
+      'Momias',
+      name: 'libraryTaxonomySubMomias',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monstruos`
+  String get libraryTaxonomySubMonstruos {
+    return Intl.message(
+      'Monstruos',
+      name: 'libraryTaxonomySubMonstruos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Muñecos`
+  String get libraryTaxonomySubMunecos {
+    return Intl.message(
+      'Muñecos',
+      name: 'libraryTaxonomySubMunecos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Música / baile`
+  String get libraryTaxonomySubMusica {
+    return Intl.message(
+      'Música / baile',
+      name: 'libraryTaxonomySubMusica',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mutaciones`
+  String get libraryTaxonomySubMutaciones {
+    return Intl.message(
+      'Mutaciones',
+      name: 'libraryTaxonomySubMutaciones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Naturaleza`
+  String get libraryTaxonomySubPlantasVegetacion {
+    return Intl.message(
+      'Naturaleza',
+      name: 'libraryTaxonomySubPlantasVegetacion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Navidad`
+  String get libraryTaxonomySubNavidad {
+    return Intl.message(
+      'Navidad',
+      name: 'libraryTaxonomySubNavidad',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nazismo`
+  String get libraryTaxonomySubNazismo {
+    return Intl.message(
+      'Nazismo',
+      name: 'libraryTaxonomySubNazismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ninjas`
+  String get libraryTaxonomySubNinjas {
+    return Intl.message(
+      'Ninjas',
+      name: 'libraryTaxonomySubNinjas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Niños`
+  String get libraryTaxonomySubNinos {
+    return Intl.message(
+      'Niños',
+      name: 'libraryTaxonomySubNinos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Obsesión`
+  String get libraryTaxonomySubObsesion {
+    return Intl.message(
+      'Obsesión',
+      name: 'libraryTaxonomySubObsesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Parodia`
+  String get libraryTaxonomySubParodia {
+    return Intl.message(
+      'Parodia',
+      name: 'libraryTaxonomySubParodia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payasos`
+  String get libraryTaxonomySubPayasos {
+    return Intl.message(
+      'Payasos',
+      name: 'libraryTaxonomySubPayasos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Peplum`
+  String get libraryTaxonomySubPeplum {
+    return Intl.message(
+      'Peplum',
+      name: 'libraryTaxonomySubPeplum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pesadillas / alucinaciones`
+  String get libraryTaxonomySubPesadillas {
+    return Intl.message(
+      'Pesadillas / alucinaciones',
+      name: 'libraryTaxonomySubPesadillas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Piratas`
+  String get libraryTaxonomySubPiratas {
+    return Intl.message(
+      'Piratas',
+      name: 'libraryTaxonomySubPiratas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Policiaco`
+  String get libraryTaxonomySubPoliciaco {
+    return Intl.message(
+      'Policiaco',
+      name: 'libraryTaxonomySubPoliciaco',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Política`
+  String get libraryTaxonomySubPolitica {
+    return Intl.message(
+      'Política',
+      name: 'libraryTaxonomySubPolitica',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Posesiones / exorcismos`
+  String get libraryTaxonomySubPosesionesExorcismos {
+    return Intl.message(
+      'Posesiones / exorcismos',
+      name: 'libraryTaxonomySubPosesionesExorcismos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Posguerra española`
+  String get libraryTaxonomySubPosguerraEspanola {
+    return Intl.message(
+      'Posguerra española',
+      name: 'libraryTaxonomySubPosguerraEspanola',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Postapocalipsis`
+  String get libraryTaxonomySubPostApocalipsis {
+    return Intl.message(
+      'Postapocalipsis',
+      name: 'libraryTaxonomySubPostApocalipsis',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Precuela`
+  String get libraryTaxonomySubPrecuela {
+    return Intl.message(
+      'Precuela',
+      name: 'libraryTaxonomySubPrecuela',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prehistoria`
+  String get libraryTaxonomySubPrehistoria {
+    return Intl.message(
+      'Prehistoria',
+      name: 'libraryTaxonomySubPrehistoria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prisión / cárcel`
+  String get libraryTaxonomySubPrisionCarcel {
+    return Intl.message(
+      'Prisión / cárcel',
+      name: 'libraryTaxonomySubPrisionCarcel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Psicológico`
+  String get libraryTaxonomySubThrillerPsicologico {
+    return Intl.message(
+      'Psicológico',
+      name: 'libraryTaxonomySubThrillerPsicologico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Psicopatía`
+  String get libraryTaxonomySubPsicopatia {
+    return Intl.message(
+      'Psicopatía',
+      name: 'libraryTaxonomySubPsicopatia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Racismo`
+  String get libraryTaxonomySubRacismo {
+    return Intl.message(
+      'Racismo',
+      name: 'libraryTaxonomySubRacismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Realidad paralela / virtual`
+  String get libraryTaxonomySubRealidadParalelaVirtual {
+    return Intl.message(
+      'Realidad paralela / virtual',
+      name: 'libraryTaxonomySubRealidadParalelaVirtual',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Realismo mágico`
+  String get libraryTaxonomySubRealismoMagico {
+    return Intl.message(
+      'Realismo mágico',
+      name: 'libraryTaxonomySubRealismoMagico',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Religión`
+  String get libraryTaxonomySubReligion {
+    return Intl.message(
+      'Religión',
+      name: 'libraryTaxonomySubReligion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remake / reboot`
+  String get libraryTaxonomySubRemake {
+    return Intl.message(
+      'Remake / reboot',
+      name: 'libraryTaxonomySubRemake',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revolución francesa`
+  String get libraryTaxonomySubRevolucionFrancesa {
+    return Intl.message(
+      'Revolución francesa',
+      name: 'libraryTaxonomySubRevolucionFrancesa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revolución mexicana`
+  String get libraryTaxonomySubRevolucionMexicana {
+    return Intl.message(
+      'Revolución mexicana',
+      name: 'libraryTaxonomySubRevolucionMexicana',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revolución rusa`
+  String get libraryTaxonomySubRevolucionRusa {
+    return Intl.message(
+      'Revolución rusa',
+      name: 'libraryTaxonomySubRevolucionRusa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Road movie`
+  String get libraryTaxonomySubRoadMovie {
+    return Intl.message(
+      'Road movie',
+      name: 'libraryTaxonomySubRoadMovie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Robos / atracos`
+  String get libraryTaxonomySubRobos {
+    return Intl.message(
+      'Robos / atracos',
+      name: 'libraryTaxonomySubRobos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Robots / androides`
+  String get libraryTaxonomySubRobotsAndroides {
+    return Intl.message(
+      'Robots / androides',
+      name: 'libraryTaxonomySubRobotsAndroides',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Samuráis`
+  String get libraryTaxonomySubSamurais {
+    return Intl.message(
+      'Samuráis',
+      name: 'libraryTaxonomySubSamurais',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sátira`
+  String get libraryTaxonomySubSatira {
+    return Intl.message(
+      'Sátira',
+      name: 'libraryTaxonomySubSatira',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sectas`
+  String get libraryTaxonomySubSectas {
+    return Intl.message(
+      'Sectas',
+      name: 'libraryTaxonomySubSectas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secuela`
+  String get libraryTaxonomySubSecuela {
+    return Intl.message(
+      'Secuela',
+      name: 'libraryTaxonomySubSecuela',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secuela alternativa`
+  String get libraryTaxonomySubSecuelaAlternativa {
+    return Intl.message(
+      'Secuela alternativa',
+      name: 'libraryTaxonomySubSecuelaAlternativa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secuestros / desapariciones`
+  String get libraryTaxonomySubSecuestrosDesapariciones {
+    return Intl.message(
+      'Secuestros / desapariciones',
+      name: 'libraryTaxonomySubSecuestrosDesapariciones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Serie B`
+  String get libraryTaxonomySubSerieB {
+    return Intl.message(
+      'Serie B',
+      name: 'libraryTaxonomySubSerieB',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Serie Z`
+  String get libraryTaxonomySubSerieZ {
+    return Intl.message(
+      'Serie Z',
+      name: 'libraryTaxonomySubSerieZ',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sexo`
+  String get libraryTaxonomySubSexo {
+    return Intl.message(
+      'Sexo',
+      name: 'libraryTaxonomySubSexo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sitcom`
+  String get libraryTaxonomySubSitcom {
+    return Intl.message(
+      'Sitcom',
+      name: 'libraryTaxonomySubSitcom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sketches`
+  String get libraryTaxonomySubSketches {
+    return Intl.message(
+      'Sketches',
+      name: 'libraryTaxonomySubSketches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Slasher`
+  String get libraryTaxonomySubSlasher {
+    return Intl.message(
+      'Slasher',
+      name: 'libraryTaxonomySubSlasher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Snuff`
+  String get libraryTaxonomySubSnuff {
+    return Intl.message(
+      'Snuff',
+      name: 'libraryTaxonomySubSnuff',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sobrenatural`
+  String get libraryTaxonomySubSobrenatural {
+    return Intl.message(
+      'Sobrenatural',
+      name: 'libraryTaxonomySubSobrenatural',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spin-off`
+  String get libraryTaxonomySubSpinOff {
+    return Intl.message(
+      'Spin-off',
+      name: 'libraryTaxonomySubSpinOff',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Steampunk`
+  String get libraryTaxonomySubSteampunk {
+    return Intl.message(
+      'Steampunk',
+      name: 'libraryTaxonomySubSteampunk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Superhéroes`
+  String get libraryTaxonomySubSuperheroes {
+    return Intl.message(
+      'Superhéroes',
+      name: 'libraryTaxonomySubSuperheroes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Surrealismo`
+  String get libraryTaxonomySubSurrealismo {
+    return Intl.message(
+      'Surrealismo',
+      name: 'libraryTaxonomySubSurrealismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Survival / supervivencia`
+  String get libraryTaxonomySubSurvivalSupervivencia {
+    return Intl.message(
+      'Survival / supervivencia',
+      name: 'libraryTaxonomySubSurvivalSupervivencia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tecnología / informática`
+  String get libraryTaxonomySubTecnologiaInformatica {
+    return Intl.message(
+      'Tecnología / informática',
+      name: 'libraryTaxonomySubTecnologiaInformatica',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telefilm`
+  String get libraryTaxonomySubTelefilm {
+    return Intl.message(
+      'Telefilm',
+      name: 'libraryTaxonomySubTelefilm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terrorismo`
+  String get libraryTaxonomySubTerrorismo {
+    return Intl.message(
+      'Terrorismo',
+      name: 'libraryTaxonomySubTerrorismo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tiburones asesinos`
+  String get libraryTaxonomySubTiburonesAsesinos {
+    return Intl.message(
+      'Tiburones asesinos',
+      name: 'libraryTaxonomySubTiburonesAsesinos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokusatsu`
+  String get libraryTaxonomySubTokusatsu {
+    return Intl.message(
+      'Tokusatsu',
+      name: 'libraryTaxonomySubTokusatsu',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Torturas`
+  String get libraryTaxonomySubTorturas {
+    return Intl.message(
+      'Torturas',
+      name: 'libraryTaxonomySubTorturas',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transexualidad / transgénero`
+  String get libraryTaxonomySubTransexualidadTransgenero {
+    return Intl.message(
+      'Transexualidad / transgénero',
+      name: 'libraryTaxonomySubTransexualidadTransgenero',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vampirismo`
+  String get libraryTaxonomySubVampiros {
+    return Intl.message(
+      'Vampirismo',
+      name: 'libraryTaxonomySubVampiros',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Venganza`
+  String get libraryTaxonomySubVenganza {
+    return Intl.message(
+      'Venganza',
+      name: 'libraryTaxonomySubVenganza',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Viaje temporal`
+  String get libraryTaxonomySubViajeTemporal {
+    return Intl.message(
+      'Viaje temporal',
+      name: 'libraryTaxonomySubViajeTemporal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vikingos`
+  String get libraryTaxonomySubVikingos {
+    return Intl.message(
+      'Vikingos',
+      name: 'libraryTaxonomySubVikingos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visiones`
+  String get libraryTaxonomySubVisiones {
+    return Intl.message(
+      'Visiones',
+      name: 'libraryTaxonomySubVisiones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vudú`
+  String get libraryTaxonomySubVudu {
+    return Intl.message(
+      'Vudú',
+      name: 'libraryTaxonomySubVudu',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wuxia`
+  String get libraryTaxonomySubWuxia {
+    return Intl.message(
+      'Wuxia',
+      name: 'libraryTaxonomySubWuxia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zombies / infectados`
+  String get libraryTaxonomySubZombiesInfectados {
+    return Intl.message(
+      'Zombies / infectados',
+      name: 'libraryTaxonomySubZombiesInfectados',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Año`
+  String get libraryFilterYearLabel {
+    return Intl.message(
+      'Año',
+      name: 'libraryFilterYearLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Año desde`
+  String get libraryFilterYearFromLabel {
+    return Intl.message(
+      'Año desde',
+      name: 'libraryFilterYearFromLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Año hasta`
+  String get libraryFilterYearToLabel {
+    return Intl.message(
+      'Año hasta',
+      name: 'libraryFilterYearToLabel',
+      desc: '',
+      args: [],
+    );
   }
 }
 

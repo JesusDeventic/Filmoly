@@ -939,102 +939,13 @@ class _HomePlaceholderPageState extends State<HomePlaceholderPage> {
 
   Widget _buildMainContent() {
     final theme = Theme.of(context);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 560),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                '${S.current.welcome}, ${globalCurrentUser.displayName.isNotEmpty ? globalCurrentUser.displayName : globalCurrentUser.username}',
-                style: theme.textTheme.titleLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                S.current.appName,
-                style: theme.textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 28),
-              Text(
-                S.current.homeProfileShortcutsTitle,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Card(
-                child: ListTile(
-                  leading: userAvatar(
-                    context,
-                    avatarUrl: globalCurrentUser.avatarUrl,
-                    username: globalCurrentUser.username,
-                    size: 44,
-                  ),
-                  title: Text(
-                    globalCurrentUser.displayName.isNotEmpty
-                        ? globalCurrentUser.displayName
-                        : globalCurrentUser.username,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  subtitle: Text(
-                    globalCurrentUser.username,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PublicUserProfilePage(
-                          username: globalCurrentUser.username,
-                          initialUser: globalCurrentUser,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-              Card(
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.person_rounded),
-                      title: Text(S.current.accountSettings),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AccountProfilePage(),
-                          ),
-                        );
-                      },
-                    ),
-                    const Divider(height: 1),
-                    ListTile(
-                      leading: const Icon(Icons.settings_rounded),
-                      title: Text(S.current.generalSettings),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const GeneralSettingsPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Text(
+          'Cartelera, novedades, populares, seguir viendo...',
+          style: theme.textTheme.titleLarge,
+          textAlign: TextAlign.center,
         ),
       ),
     );

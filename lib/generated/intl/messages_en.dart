@@ -115,13 +115,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "errorApiBadRequest": MessageLookupByLibrary.simpleMessage(
-      "Los datos enviados no son válidos.",
+      "Los datos enviados no son válidos",
     ),
     "errorApiEndpointUnavailable": MessageLookupByLibrary.simpleMessage(
       "No se ha podido completar la operación. Inténtalo más tarde.",
     ),
     "errorApiForbidden": MessageLookupByLibrary.simpleMessage(
-      "No tienes permiso para hacer esto.",
+      "No tienes permiso para hacer esto",
     ),
     "errorApiGeneric": MessageLookupByLibrary.simpleMessage(
       "No se ha podido completar la operación. Inténtalo más tarde.",
@@ -130,7 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No se ha podido conectar con el servidor. Revisa tu conexión o inténtalo más tarde.",
     ),
     "errorApiNotFound": MessageLookupByLibrary.simpleMessage(
-      "No hemos encontrado lo que pedías.",
+      "No hemos encontrado lo que buscas",
     ),
     "errorApiServer": MessageLookupByLibrary.simpleMessage(
       "Ha ocurrido un error en el servidor. Inténtalo más tarde.",
@@ -263,13 +263,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "lastAccessChipPrefix": MessageLookupByLibrary.simpleMessage("Last seen"),
     "legalNoticeLabel": MessageLookupByLibrary.simpleMessage("Legal notice"),
     "libraryEmpty": MessageLookupByLibrary.simpleMessage(
-      "No hay entradas con estos filtros",
+      "No hay resultados con estos filtros",
     ),
     "libraryEmptySubtitle": MessageLookupByLibrary.simpleMessage(
-      "Prueba a cambiar filtros o la búsqueda.",
+      "Prueba a cambiar filtros o la búsqueda",
     ),
     "libraryErrorLoad": MessageLookupByLibrary.simpleMessage(
       "No se pudo cargar la biblioteca",
+    ),
+    "libraryFilterCategoryLabel": MessageLookupByLibrary.simpleMessage(
+      "Categoría",
+    ),
+    "libraryFilterGenreLabel": MessageLookupByLibrary.simpleMessage("Género"),
+    "libraryFilterStyleLabel": MessageLookupByLibrary.simpleMessage("Estilo"),
+    "libraryFilterSubgenreLabel": MessageLookupByLibrary.simpleMessage(
+      "Subgénero",
+    ),
+    "libraryFilterYearFromLabel": MessageLookupByLibrary.simpleMessage(
+      "Año desde",
+    ),
+    "libraryFilterYearLabel": MessageLookupByLibrary.simpleMessage("Año"),
+    "libraryFilterYearToLabel": MessageLookupByLibrary.simpleMessage(
+      "Año hasta",
     ),
     "libraryLayoutComfortable": MessageLookupByLibrary.simpleMessage(
       "Cuadrícula amplia",
@@ -279,10 +294,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "libraryLayoutList": MessageLookupByLibrary.simpleMessage("Listado"),
     "libraryOrderDate": MessageLookupByLibrary.simpleMessage(
-      "Fecha de publicación",
+      "Publicación (más reciente)",
+    ),
+    "libraryOrderDateAsc": MessageLookupByLibrary.simpleMessage(
+      "Publicación (más antigua)",
     ),
     "libraryOrderModified": MessageLookupByLibrary.simpleMessage(
-      "Fecha de modificación",
+      "Modificación (más reciente)",
+    ),
+    "libraryOrderModifiedAsc": MessageLookupByLibrary.simpleMessage(
+      "Modificación (más antigua)",
     ),
     "libraryOrderRatingAsc": MessageLookupByLibrary.simpleMessage(
       "Peor valoradas",
@@ -294,6 +315,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mejor valoradas",
     ),
     "libraryOrderTitle": MessageLookupByLibrary.simpleMessage("Título (A-Z)"),
+    "libraryOrderTitleDesc": MessageLookupByLibrary.simpleMessage(
+      "Título (Z-A)",
+    ),
     "libraryOrderYearAsc": MessageLookupByLibrary.simpleMessage(
       "Año (ascendente)",
     ),
@@ -303,20 +327,539 @@ class MessageLookup extends MessageLookupByLibrary {
     "libraryResultsTotal": m3,
     "librarySearchCast": MessageLookupByLibrary.simpleMessage("Reparto"),
     "librarySearchCrew": MessageLookupByLibrary.simpleMessage(
-      "Guión / música / fotografía",
+      "Guión / Música / Fotografía",
     ),
-    "librarySearchDirector": MessageLookupByLibrary.simpleMessage("Director"),
+    "librarySearchDirector": MessageLookupByLibrary.simpleMessage("Dirección"),
     "librarySearchFieldLabel": MessageLookupByLibrary.simpleMessage(
       "Buscar en",
     ),
     "librarySearchImdb": MessageLookupByLibrary.simpleMessage("IMDB ID"),
     "librarySearchPlaceholder": MessageLookupByLibrary.simpleMessage(
-      "Texto a buscar",
+      "Buscar por título...",
     ),
     "librarySearchStudio": MessageLookupByLibrary.simpleMessage("Productora"),
     "librarySearchTitle": MessageLookupByLibrary.simpleMessage("Título"),
     "librarySearchTmdb": MessageLookupByLibrary.simpleMessage("TMDB ID"),
-    "libraryViewModeTitle": MessageLookupByLibrary.simpleMessage("Vista"),
+    "libraryTaxonomyCatCortometraje": MessageLookupByLibrary.simpleMessage(
+      "Cortometraje",
+    ),
+    "libraryTaxonomyCatDocumental": MessageLookupByLibrary.simpleMessage(
+      "Documental",
+    ),
+    "libraryTaxonomyCatPelicula": MessageLookupByLibrary.simpleMessage(
+      "Película",
+    ),
+    "libraryTaxonomyCatProgramatv": MessageLookupByLibrary.simpleMessage(
+      "Programa TV",
+    ),
+    "libraryTaxonomyCatSerie": MessageLookupByLibrary.simpleMessage("Serie"),
+    "libraryTaxonomyGenreAccion": MessageLookupByLibrary.simpleMessage(
+      "Acción",
+    ),
+    "libraryTaxonomyGenreAventuras": MessageLookupByLibrary.simpleMessage(
+      "Aventuras",
+    ),
+    "libraryTaxonomyGenreBelico": MessageLookupByLibrary.simpleMessage(
+      "Bélico",
+    ),
+    "libraryTaxonomyGenreCienciaFiccion": MessageLookupByLibrary.simpleMessage(
+      "Ciencia ficción",
+    ),
+    "libraryTaxonomyGenreCineNegro": MessageLookupByLibrary.simpleMessage(
+      "Cine negro",
+    ),
+    "libraryTaxonomyGenreCineQuinqui": MessageLookupByLibrary.simpleMessage(
+      "Cine quinqui",
+    ),
+    "libraryTaxonomyGenreComedia": MessageLookupByLibrary.simpleMessage(
+      "Comedia",
+    ),
+    "libraryTaxonomyGenreDocumental": MessageLookupByLibrary.simpleMessage(
+      "Documental",
+    ),
+    "libraryTaxonomyGenreDrama": MessageLookupByLibrary.simpleMessage("Drama"),
+    "libraryTaxonomyGenreFantasia": MessageLookupByLibrary.simpleMessage(
+      "Fantasía",
+    ),
+    "libraryTaxonomyGenreMusical": MessageLookupByLibrary.simpleMessage(
+      "Musical",
+    ),
+    "libraryTaxonomyGenreRomance": MessageLookupByLibrary.simpleMessage(
+      "Romance",
+    ),
+    "libraryTaxonomyGenreSuspense": MessageLookupByLibrary.simpleMessage(
+      "Suspense / intriga",
+    ),
+    "libraryTaxonomyGenreTerror": MessageLookupByLibrary.simpleMessage(
+      "Terror",
+    ),
+    "libraryTaxonomyGenreThriller": MessageLookupByLibrary.simpleMessage(
+      "Thriller",
+    ),
+    "libraryTaxonomyGenreWestern": MessageLookupByLibrary.simpleMessage(
+      "Western",
+    ),
+    "libraryTaxonomyStyleAnimacion": MessageLookupByLibrary.simpleMessage(
+      "Animación",
+    ),
+    "libraryTaxonomyStyleAnime": MessageLookupByLibrary.simpleMessage("Anime"),
+    "libraryTaxonomyStyleLiveaction": MessageLookupByLibrary.simpleMessage(
+      "Live Action",
+    ),
+    "libraryTaxonomySub1aGuerraMundial": MessageLookupByLibrary.simpleMessage(
+      "1.ª Guerra Mundial",
+    ),
+    "libraryTaxonomySub2aGuerraMundial": MessageLookupByLibrary.simpleMessage(
+      "2.ª Guerra Mundial",
+    ),
+    "libraryTaxonomySub3d": MessageLookupByLibrary.simpleMessage("3D"),
+    "libraryTaxonomySubAbusosSexuales": MessageLookupByLibrary.simpleMessage(
+      "Abusos sexuales",
+    ),
+    "libraryTaxonomySubAdaptacionComic": MessageLookupByLibrary.simpleMessage(
+      "Adaptación cómic",
+    ),
+    "libraryTaxonomySubAdaptacionLibro": MessageLookupByLibrary.simpleMessage(
+      "Adaptación libro",
+    ),
+    "libraryTaxonomySubAdaptacionRelato": MessageLookupByLibrary.simpleMessage(
+      "Adaptación relato",
+    ),
+    "libraryTaxonomySubAdaptacionVideojuego":
+        MessageLookupByLibrary.simpleMessage("Adaptación videojuego"),
+    "libraryTaxonomySubAdolescencia": MessageLookupByLibrary.simpleMessage(
+      "Adolescencia",
+    ),
+    "libraryTaxonomySubAmericanGothic": MessageLookupByLibrary.simpleMessage(
+      "American Gothic",
+    ),
+    "libraryTaxonomySubAnimales": MessageLookupByLibrary.simpleMessage(
+      "Animales",
+    ),
+    "libraryTaxonomySubAntiguaGrecia": MessageLookupByLibrary.simpleMessage(
+      "Antigua Grecia",
+    ),
+    "libraryTaxonomySubAntiguaRoma": MessageLookupByLibrary.simpleMessage(
+      "Antigua Roma",
+    ),
+    "libraryTaxonomySubAntiguoEgipto": MessageLookupByLibrary.simpleMessage(
+      "Antiguo Egipto",
+    ),
+    "libraryTaxonomySubAntologia": MessageLookupByLibrary.simpleMessage(
+      "Historias cortas / antología",
+    ),
+    "libraryTaxonomySubArqueologia": MessageLookupByLibrary.simpleMessage(
+      "Arqueología",
+    ),
+    "libraryTaxonomySubArtesMarciales": MessageLookupByLibrary.simpleMessage(
+      "Artes marciales",
+    ),
+    "libraryTaxonomySubAsesinosEnSerie": MessageLookupByLibrary.simpleMessage(
+      "Asesinos en serie",
+    ),
+    "libraryTaxonomySubAventurasAereas": MessageLookupByLibrary.simpleMessage(
+      "Aventuras aéreas",
+    ),
+    "libraryTaxonomySubAventurasMarinas": MessageLookupByLibrary.simpleMessage(
+      "Aventuras marinas",
+    ),
+    "libraryTaxonomySubBandasPandillasCallejeras":
+        MessageLookupByLibrary.simpleMessage("Bandas / pandillas callejeras"),
+    "libraryTaxonomySubBiblia": MessageLookupByLibrary.simpleMessage("Biblia"),
+    "libraryTaxonomySubBiografico": MessageLookupByLibrary.simpleMessage(
+      "Biográfico",
+    ),
+    "libraryTaxonomySubBizarro": MessageLookupByLibrary.simpleMessage(
+      "Bizarro",
+    ),
+    "libraryTaxonomySubBodyHorror": MessageLookupByLibrary.simpleMessage(
+      "Body horror",
+    ),
+    "libraryTaxonomySubBrujeria": MessageLookupByLibrary.simpleMessage(
+      "Brujería / satanismo",
+    ),
+    "libraryTaxonomySubCanibalismo": MessageLookupByLibrary.simpleMessage(
+      "Canibalismo",
+    ),
+    "libraryTaxonomySubCapaYEspada": MessageLookupByLibrary.simpleMessage(
+      "Capa y espada",
+    ),
+    "libraryTaxonomySubCasasEncantadas": MessageLookupByLibrary.simpleMessage(
+      "Casas encantadas",
+    ),
+    "libraryTaxonomySubCatastrofes": MessageLookupByLibrary.simpleMessage(
+      "Catástrofes",
+    ),
+    "libraryTaxonomySubCineDentroDeCine": MessageLookupByLibrary.simpleMessage(
+      "Cine dentro de cine",
+    ),
+    "libraryTaxonomySubCineEpico": MessageLookupByLibrary.simpleMessage(
+      "Cine épico",
+    ),
+    "libraryTaxonomySubCineExperimental": MessageLookupByLibrary.simpleMessage(
+      "Cine experimental",
+    ),
+    "libraryTaxonomySubCineFamiliar": MessageLookupByLibrary.simpleMessage(
+      "Cine familiar",
+    ),
+    "libraryTaxonomySubClaustrofobia": MessageLookupByLibrary.simpleMessage(
+      "Claustrofobia",
+    ),
+    "libraryTaxonomySubCochesAutomoviles": MessageLookupByLibrary.simpleMessage(
+      "Coches / automóviles",
+    ),
+    "libraryTaxonomySubColegiosUniversidades":
+        MessageLookupByLibrary.simpleMessage("Colegios / universidades"),
+    "libraryTaxonomySubComediaDeTerror": MessageLookupByLibrary.simpleMessage(
+      "Comedia de terror",
+    ),
+    "libraryTaxonomySubComediaRomantica": MessageLookupByLibrary.simpleMessage(
+      "Comedia romántica",
+    ),
+    "libraryTaxonomySubCrimen": MessageLookupByLibrary.simpleMessage("Crimen"),
+    "libraryTaxonomySubCrossover": MessageLookupByLibrary.simpleMessage(
+      "Crossover",
+    ),
+    "libraryTaxonomySubCuentos": MessageLookupByLibrary.simpleMessage(
+      "Cuentos",
+    ),
+    "libraryTaxonomySubCulto": MessageLookupByLibrary.simpleMessage("Culto"),
+    "libraryTaxonomySubCyberpunk": MessageLookupByLibrary.simpleMessage(
+      "Cyberpunk",
+    ),
+    "libraryTaxonomySubDemonios": MessageLookupByLibrary.simpleMessage(
+      "Demonios",
+    ),
+    "libraryTaxonomySubDeportes": MessageLookupByLibrary.simpleMessage(
+      "Deportes",
+    ),
+    "libraryTaxonomySubDictaduraArgentina":
+        MessageLookupByLibrary.simpleMessage("Dictadura argentina"),
+    "libraryTaxonomySubDictaduraChilena": MessageLookupByLibrary.simpleMessage(
+      "Dictadura chilena",
+    ),
+    "libraryTaxonomySubDinosaurios": MessageLookupByLibrary.simpleMessage(
+      "Dinosaurios",
+    ),
+    "libraryTaxonomySubDistopia": MessageLookupByLibrary.simpleMessage(
+      "Distopía",
+    ),
+    "libraryTaxonomySubDivulgativoEducativo":
+        MessageLookupByLibrary.simpleMessage("Divulgativo / educativo"),
+    "libraryTaxonomySubDragones": MessageLookupByLibrary.simpleMessage(
+      "Dragones",
+    ),
+    "libraryTaxonomySubDramaSocial": MessageLookupByLibrary.simpleMessage(
+      "Drama social",
+    ),
+    "libraryTaxonomySubDrogas": MessageLookupByLibrary.simpleMessage("Drogas"),
+    "libraryTaxonomySubDuendes": MessageLookupByLibrary.simpleMessage(
+      "Duendes",
+    ),
+    "libraryTaxonomySubEdadMedia": MessageLookupByLibrary.simpleMessage(
+      "Edad Media",
+    ),
+    "libraryTaxonomySubErotismo": MessageLookupByLibrary.simpleMessage(
+      "Erotismo",
+    ),
+    "libraryTaxonomySubEsclavitud": MessageLookupByLibrary.simpleMessage(
+      "Esclavitud",
+    ),
+    "libraryTaxonomySubEspacial": MessageLookupByLibrary.simpleMessage(
+      "Espacio / espacial",
+    ),
+    "libraryTaxonomySubEspadaYBrujeria": MessageLookupByLibrary.simpleMessage(
+      "Espada y brujería",
+    ),
+    "libraryTaxonomySubEspionaje": MessageLookupByLibrary.simpleMessage(
+      "Espionaje",
+    ),
+    "libraryTaxonomySubExperimentos": MessageLookupByLibrary.simpleMessage(
+      "Experimentos",
+    ),
+    "libraryTaxonomySubExplotation": MessageLookupByLibrary.simpleMessage(
+      "Exploitation",
+    ),
+    "libraryTaxonomySubExpresionismoAleman":
+        MessageLookupByLibrary.simpleMessage("Expresionismo alemán"),
+    "libraryTaxonomySubExtraterrestres": MessageLookupByLibrary.simpleMessage(
+      "Extraterrestres",
+    ),
+    "libraryTaxonomySubFamilia": MessageLookupByLibrary.simpleMessage(
+      "Familia",
+    ),
+    "libraryTaxonomySubFantasmas": MessageLookupByLibrary.simpleMessage(
+      "Fantasmas",
+    ),
+    "libraryTaxonomySubFolk": MessageLookupByLibrary.simpleMessage("Folk"),
+    "libraryTaxonomySubFuturismo": MessageLookupByLibrary.simpleMessage(
+      "Futurismo",
+    ),
+    "libraryTaxonomySubGiallo": MessageLookupByLibrary.simpleMessage("Giallo"),
+    "libraryTaxonomySubGore": MessageLookupByLibrary.simpleMessage("Gore"),
+    "libraryTaxonomySubGotico": MessageLookupByLibrary.simpleMessage("Gótico"),
+    "libraryTaxonomySubGuerraCivilEspanola":
+        MessageLookupByLibrary.simpleMessage("Guerra civil española"),
+    "libraryTaxonomySubGuerraDeCorea": MessageLookupByLibrary.simpleMessage(
+      "Guerra de Corea",
+    ),
+    "libraryTaxonomySubGuerraDeIndependenciaAmericana":
+        MessageLookupByLibrary.simpleMessage(
+          "Guerra de independencia americana",
+        ),
+    "libraryTaxonomySubGuerraDeIrak": MessageLookupByLibrary.simpleMessage(
+      "Guerra de Irak",
+    ),
+    "libraryTaxonomySubGuerraDeLasMalvinas":
+        MessageLookupByLibrary.simpleMessage("Guerra de las Malvinas"),
+    "libraryTaxonomySubGuerraDeSecesion": MessageLookupByLibrary.simpleMessage(
+      "Guerra de Secesión",
+    ),
+    "libraryTaxonomySubGuerraDeVietnam": MessageLookupByLibrary.simpleMessage(
+      "Guerra de Vietnam",
+    ),
+    "libraryTaxonomySubGuerraFria": MessageLookupByLibrary.simpleMessage(
+      "Guerra fría",
+    ),
+    "libraryTaxonomySubGuerrasNapoleonicas":
+        MessageLookupByLibrary.simpleMessage("Guerras napoleónicas"),
+    "libraryTaxonomySubHalloween": MessageLookupByLibrary.simpleMessage(
+      "Halloween",
+    ),
+    "libraryTaxonomySubHechosReales": MessageLookupByLibrary.simpleMessage(
+      "Hechos reales",
+    ),
+    "libraryTaxonomySubHistorico": MessageLookupByLibrary.simpleMessage(
+      "Histórico",
+    ),
+    "libraryTaxonomySubHombresLobo": MessageLookupByLibrary.simpleMessage(
+      "Hombres lobo",
+    ),
+    "libraryTaxonomySubHomeInvasion": MessageLookupByLibrary.simpleMessage(
+      "Home invasion",
+    ),
+    "libraryTaxonomySubHomosexual": MessageLookupByLibrary.simpleMessage(
+      "Homosexual",
+    ),
+    "libraryTaxonomySubHumorNegro": MessageLookupByLibrary.simpleMessage(
+      "Humor negro",
+    ),
+    "libraryTaxonomySubIndependiente": MessageLookupByLibrary.simpleMessage(
+      "Independiente",
+    ),
+    "libraryTaxonomySubInfantil": MessageLookupByLibrary.simpleMessage(
+      "Infantil",
+    ),
+    "libraryTaxonomySubJaponFeudal": MessageLookupByLibrary.simpleMessage(
+      "Japón feudal",
+    ),
+    "libraryTaxonomySubJuego": MessageLookupByLibrary.simpleMessage("Juego"),
+    "libraryTaxonomySubJuicios": MessageLookupByLibrary.simpleMessage(
+      "Juicios",
+    ),
+    "libraryTaxonomySubKaijuEiga": MessageLookupByLibrary.simpleMessage(
+      "Kaiju eiga",
+    ),
+    "libraryTaxonomySubKrimi": MessageLookupByLibrary.simpleMessage("Krimi"),
+    "libraryTaxonomySubLocura": MessageLookupByLibrary.simpleMessage("Locura"),
+    "libraryTaxonomySubMadDoctor": MessageLookupByLibrary.simpleMessage(
+      "Mad doctor",
+    ),
+    "libraryTaxonomySubMafia": MessageLookupByLibrary.simpleMessage("Mafia"),
+    "libraryTaxonomySubMagia": MessageLookupByLibrary.simpleMessage("Magia"),
+    "libraryTaxonomySubMiniserie": MessageLookupByLibrary.simpleMessage(
+      "Miniserie",
+    ),
+    "libraryTaxonomySubMisterio": MessageLookupByLibrary.simpleMessage(
+      "Misterio",
+    ),
+    "libraryTaxonomySubMitologia": MessageLookupByLibrary.simpleMessage(
+      "Mitología",
+    ),
+    "libraryTaxonomySubMockbuster": MessageLookupByLibrary.simpleMessage(
+      "Mockbuster",
+    ),
+    "libraryTaxonomySubMockumentary": MessageLookupByLibrary.simpleMessage(
+      "Mockumentary",
+    ),
+    "libraryTaxonomySubMomias": MessageLookupByLibrary.simpleMessage("Momias"),
+    "libraryTaxonomySubMonstruos": MessageLookupByLibrary.simpleMessage(
+      "Monstruos",
+    ),
+    "libraryTaxonomySubMudo": MessageLookupByLibrary.simpleMessage("Cine mudo"),
+    "libraryTaxonomySubMunecos": MessageLookupByLibrary.simpleMessage(
+      "Muñecos",
+    ),
+    "libraryTaxonomySubMusica": MessageLookupByLibrary.simpleMessage(
+      "Música / baile",
+    ),
+    "libraryTaxonomySubMutaciones": MessageLookupByLibrary.simpleMessage(
+      "Mutaciones",
+    ),
+    "libraryTaxonomySubNavidad": MessageLookupByLibrary.simpleMessage(
+      "Navidad",
+    ),
+    "libraryTaxonomySubNazismo": MessageLookupByLibrary.simpleMessage(
+      "Nazismo",
+    ),
+    "libraryTaxonomySubNinjas": MessageLookupByLibrary.simpleMessage("Ninjas"),
+    "libraryTaxonomySubNinos": MessageLookupByLibrary.simpleMessage("Niños"),
+    "libraryTaxonomySubObsesion": MessageLookupByLibrary.simpleMessage(
+      "Obsesión",
+    ),
+    "libraryTaxonomySubParodia": MessageLookupByLibrary.simpleMessage(
+      "Parodia",
+    ),
+    "libraryTaxonomySubPayasos": MessageLookupByLibrary.simpleMessage(
+      "Payasos",
+    ),
+    "libraryTaxonomySubPeplum": MessageLookupByLibrary.simpleMessage("Peplum"),
+    "libraryTaxonomySubPesadillas": MessageLookupByLibrary.simpleMessage(
+      "Pesadillas / alucinaciones",
+    ),
+    "libraryTaxonomySubPiratas": MessageLookupByLibrary.simpleMessage(
+      "Piratas",
+    ),
+    "libraryTaxonomySubPlantasVegetacion": MessageLookupByLibrary.simpleMessage(
+      "Naturaleza",
+    ),
+    "libraryTaxonomySubPoliciaco": MessageLookupByLibrary.simpleMessage(
+      "Policiaco",
+    ),
+    "libraryTaxonomySubPolitica": MessageLookupByLibrary.simpleMessage(
+      "Política",
+    ),
+    "libraryTaxonomySubPosesionesExorcismos":
+        MessageLookupByLibrary.simpleMessage("Posesiones / exorcismos"),
+    "libraryTaxonomySubPosguerraEspanola": MessageLookupByLibrary.simpleMessage(
+      "Posguerra española",
+    ),
+    "libraryTaxonomySubPostApocalipsis": MessageLookupByLibrary.simpleMessage(
+      "Postapocalipsis",
+    ),
+    "libraryTaxonomySubPrecuela": MessageLookupByLibrary.simpleMessage(
+      "Precuela",
+    ),
+    "libraryTaxonomySubPrehistoria": MessageLookupByLibrary.simpleMessage(
+      "Prehistoria",
+    ),
+    "libraryTaxonomySubPrisionCarcel": MessageLookupByLibrary.simpleMessage(
+      "Prisión / cárcel",
+    ),
+    "libraryTaxonomySubPsicopatia": MessageLookupByLibrary.simpleMessage(
+      "Psicopatía",
+    ),
+    "libraryTaxonomySubRacismo": MessageLookupByLibrary.simpleMessage(
+      "Racismo",
+    ),
+    "libraryTaxonomySubRealidadParalelaVirtual":
+        MessageLookupByLibrary.simpleMessage("Realidad paralela / virtual"),
+    "libraryTaxonomySubRealismoMagico": MessageLookupByLibrary.simpleMessage(
+      "Realismo mágico",
+    ),
+    "libraryTaxonomySubReligion": MessageLookupByLibrary.simpleMessage(
+      "Religión",
+    ),
+    "libraryTaxonomySubRemake": MessageLookupByLibrary.simpleMessage(
+      "Remake / reboot",
+    ),
+    "libraryTaxonomySubRevolucionFrancesa":
+        MessageLookupByLibrary.simpleMessage("Revolución francesa"),
+    "libraryTaxonomySubRevolucionMexicana":
+        MessageLookupByLibrary.simpleMessage("Revolución mexicana"),
+    "libraryTaxonomySubRevolucionRusa": MessageLookupByLibrary.simpleMessage(
+      "Revolución rusa",
+    ),
+    "libraryTaxonomySubRoadMovie": MessageLookupByLibrary.simpleMessage(
+      "Road movie",
+    ),
+    "libraryTaxonomySubRobos": MessageLookupByLibrary.simpleMessage(
+      "Robos / atracos",
+    ),
+    "libraryTaxonomySubRobotsAndroides": MessageLookupByLibrary.simpleMessage(
+      "Robots / androides",
+    ),
+    "libraryTaxonomySubSamurais": MessageLookupByLibrary.simpleMessage(
+      "Samuráis",
+    ),
+    "libraryTaxonomySubSatira": MessageLookupByLibrary.simpleMessage("Sátira"),
+    "libraryTaxonomySubSectas": MessageLookupByLibrary.simpleMessage("Sectas"),
+    "libraryTaxonomySubSecuela": MessageLookupByLibrary.simpleMessage(
+      "Secuela",
+    ),
+    "libraryTaxonomySubSecuelaAlternativa":
+        MessageLookupByLibrary.simpleMessage("Secuela alternativa"),
+    "libraryTaxonomySubSecuestrosDesapariciones":
+        MessageLookupByLibrary.simpleMessage("Secuestros / desapariciones"),
+    "libraryTaxonomySubSerieB": MessageLookupByLibrary.simpleMessage("Serie B"),
+    "libraryTaxonomySubSerieZ": MessageLookupByLibrary.simpleMessage("Serie Z"),
+    "libraryTaxonomySubSexo": MessageLookupByLibrary.simpleMessage("Sexo"),
+    "libraryTaxonomySubSitcom": MessageLookupByLibrary.simpleMessage("Sitcom"),
+    "libraryTaxonomySubSketches": MessageLookupByLibrary.simpleMessage(
+      "Sketches",
+    ),
+    "libraryTaxonomySubSlasher": MessageLookupByLibrary.simpleMessage(
+      "Slasher",
+    ),
+    "libraryTaxonomySubSnuff": MessageLookupByLibrary.simpleMessage("Snuff"),
+    "libraryTaxonomySubSobrenatural": MessageLookupByLibrary.simpleMessage(
+      "Sobrenatural",
+    ),
+    "libraryTaxonomySubSpinOff": MessageLookupByLibrary.simpleMessage(
+      "Spin-off",
+    ),
+    "libraryTaxonomySubSteampunk": MessageLookupByLibrary.simpleMessage(
+      "Steampunk",
+    ),
+    "libraryTaxonomySubSuperheroes": MessageLookupByLibrary.simpleMessage(
+      "Superhéroes",
+    ),
+    "libraryTaxonomySubSurrealismo": MessageLookupByLibrary.simpleMessage(
+      "Surrealismo",
+    ),
+    "libraryTaxonomySubSurvivalSupervivencia":
+        MessageLookupByLibrary.simpleMessage("Survival / supervivencia"),
+    "libraryTaxonomySubTecnologiaInformatica":
+        MessageLookupByLibrary.simpleMessage("Tecnología / informática"),
+    "libraryTaxonomySubTelefilm": MessageLookupByLibrary.simpleMessage(
+      "Telefilm",
+    ),
+    "libraryTaxonomySubTerrorismo": MessageLookupByLibrary.simpleMessage(
+      "Terrorismo",
+    ),
+    "libraryTaxonomySubThrillerPsicologico":
+        MessageLookupByLibrary.simpleMessage("Psicológico"),
+    "libraryTaxonomySubTiburonesAsesinos": MessageLookupByLibrary.simpleMessage(
+      "Tiburones asesinos",
+    ),
+    "libraryTaxonomySubTokusatsu": MessageLookupByLibrary.simpleMessage(
+      "Tokusatsu",
+    ),
+    "libraryTaxonomySubTorturas": MessageLookupByLibrary.simpleMessage(
+      "Torturas",
+    ),
+    "libraryTaxonomySubTransexualidadTransgenero":
+        MessageLookupByLibrary.simpleMessage("Transexualidad / transgénero"),
+    "libraryTaxonomySubVampiros": MessageLookupByLibrary.simpleMessage(
+      "Vampirismo",
+    ),
+    "libraryTaxonomySubVenganza": MessageLookupByLibrary.simpleMessage(
+      "Venganza",
+    ),
+    "libraryTaxonomySubViajeTemporal": MessageLookupByLibrary.simpleMessage(
+      "Viaje temporal",
+    ),
+    "libraryTaxonomySubVikingos": MessageLookupByLibrary.simpleMessage(
+      "Vikingos",
+    ),
+    "libraryTaxonomySubVisiones": MessageLookupByLibrary.simpleMessage(
+      "Visiones",
+    ),
+    "libraryTaxonomySubVudu": MessageLookupByLibrary.simpleMessage("Vudú"),
+    "libraryTaxonomySubWuxia": MessageLookupByLibrary.simpleMessage("Wuxia"),
+    "libraryTaxonomySubZombiesInfectados": MessageLookupByLibrary.simpleMessage(
+      "Zombies / infectados",
+    ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "loginCountdownMessage": m0,
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
@@ -331,7 +874,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No se pudo cargar el directorio",
     ),
     "membersHomeCardSubtitle": MessageLookupByLibrary.simpleMessage(
-      "Explora el directorio y conecta con otros usuarios",
+      "Conecta con otros usuarios",
     ),
     "membersLabel": MessageLookupByLibrary.simpleMessage("Miembros"),
     "membersSearchApplyTooltip": MessageLookupByLibrary.simpleMessage(
@@ -492,6 +1035,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "retryPublicProfile": MessageLookupByLibrary.simpleMessage("Retry"),
     "reviewsLabel": MessageLookupByLibrary.simpleMessage("Reseñas"),
+    "searchPlaceholder": MessageLookupByLibrary.simpleMessage("Texto a buscar"),
     "sendCode": MessageLookupByLibrary.simpleMessage("Send code"),
     "sendMessageTooltip": MessageLookupByLibrary.simpleMessage("Send message"),
     "settingsLabel": MessageLookupByLibrary.simpleMessage("Settings"),
@@ -538,6 +1082,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
     "themeDark": MessageLookupByLibrary.simpleMessage("Dark mode"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Light mode"),
+    "titleDisplayModeLabel": MessageLookupByLibrary.simpleMessage(
+      "Mostrar títulos",
+    ),
+    "titleDisplayModeLocalized": MessageLookupByLibrary.simpleMessage(
+      "En mi idioma",
+    ),
+    "titleDisplayModeOriginal": MessageLookupByLibrary.simpleMessage(
+      "Título original",
+    ),
     "userAvatar": MessageLookupByLibrary.simpleMessage("Avatar"),
     "userDescription": MessageLookupByLibrary.simpleMessage("Bio"),
     "userEmail": MessageLookupByLibrary.simpleMessage("Email"),

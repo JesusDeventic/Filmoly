@@ -85,7 +85,7 @@ class _FilmaniakAppState extends State<FilmaniakApp> {
     _lastHandledUri = uri;
 
     final path = uri.path;
-    if (path.startsWith('/user/')) {
+    if (path.startsWith('/user/') || path.startsWith('/library/')) {
       final ctx = navigatorKey.currentContext;
       if (ctx == null) return;
       ctx.go(path);
@@ -125,6 +125,8 @@ class _FilmaniakAppState extends State<FilmaniakApp> {
 // ============================================================================
 // Regenerar archivos de idiomas
 // dart run intl_utils:generate
+// Ejecutar en Chrome con servidor web para urls:
+// flutter run -d chrome --web-port 50058
 
 
 

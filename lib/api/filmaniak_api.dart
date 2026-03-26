@@ -277,6 +277,7 @@ class FilmaniakApi {
     String? lastName,
     String? description,
     String? language,
+    String? titleDisplayPreference,
     String? dateFormat,
     String? weekStart,
     String? country,
@@ -308,6 +309,9 @@ class FilmaniakApi {
     if (lastName != null) request.fields['last_name'] = lastName;
     if (description != null) request.fields['description'] = description;
     if (language != null) request.fields['language'] = language;
+    if (titleDisplayPreference != null) {
+      request.fields['title_display_preference'] = titleDisplayPreference;
+    }
     if (dateFormat != null) request.fields['date_format'] = dateFormat;
     if (weekStart != null) request.fields['start_day_week'] = weekStart;
     if (country != null) request.fields['country'] = country;
@@ -502,8 +506,16 @@ class FilmaniakApi {
     };
 
     try {
-      final url = Uri.parse('$_baseUrl/library').replace(queryParameters: params);
-      final response = await http.get(url, headers: _headers(token: token));
+      final headers = _headers(token: token);
+      final appLanguage = globalCurrentUser.language.trim();
+      if (appLanguage.isNotEmpty) {
+        headers['Accept-Language'] = appLanguage;
+        // También lo enviamos explícito para backend con reglas propias.
+        params['language'] = appLanguage;
+      }
+      final urlWithLanguage =
+          Uri.parse('$_baseUrl/library').replace(queryParameters: params);
+      final response = await http.get(urlWithLanguage, headers: headers);
       final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
 
       if (response.statusCode != 200 || data['success'] != true) {
@@ -533,6 +545,94 @@ class FilmaniakApi {
       return {
         'posts': <LibraryEntry>[],
         'pagination': <String, dynamic>{},
+        'error': true,
+        'errorMessage': userFacingNetworkError(e),
+      };
+    }
+  }
+
+  /// GET /library/{id} — detalle general de ficha (sin datos de aporte).
+  static Future<Map<String, dynamic>> getLibraryEntryDetail(int id) async {
+    final token = globalUserToken;
+    if (token.isEmpty) {
+      return {
+        'error': true,
+        'errorMessage': getAuthErrorMessage('missing_token'),
+      };
+    }
+    if (id <= 0) {
+      return {
+        'error': true,
+        'errorMessage': 'ID no válido',
+      };
+    }
+
+    try {
+      final headers = _headers(token: token);
+      final appLanguage = globalCurrentUser.language.trim();
+      final params = <String, String>{};
+      if (appLanguage.isNotEmpty) {
+        headers['Accept-Language'] = appLanguage;
+        params['language'] = appLanguage;
+      }
+      final url = Uri.parse('$_baseUrl/library/$id').replace(
+        queryParameters: params.isEmpty ? null : params,
+      );
+      final response = await http.get(url, headers: headers);
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      if (response.statusCode != 200 || data['success'] != true) {
+        return {
+          'error': true,
+          'errorMessage': mapJsonErrorToUserMessage(response.statusCode, data),
+          'code': data['code'],
+          'data': data,
+        };
+      }
+      return {
+        'entry': data['entry'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      };
+    } catch (e) {
+      return {
+        'error': true,
+        'errorMessage': userFacingNetworkError(e),
+      };
+    }
+  }
+
+  /// GET /library/{id}/aporte — datos de aporte (solo usuarios autorizados).
+  static Future<Map<String, dynamic>> getLibraryEntryAporte(int id) async {
+    final token = globalUserToken;
+    if (token.isEmpty) {
+      return {
+        'error': true,
+        'errorMessage': getAuthErrorMessage('missing_token'),
+      };
+    }
+    if (id <= 0) {
+      return {
+        'error': true,
+        'errorMessage': 'ID no válido',
+      };
+    }
+
+    try {
+      final url = Uri.parse('$_baseUrl/library/$id/aporte');
+      final response = await http.get(url, headers: _headers(token: token));
+      final data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      if (response.statusCode != 200 || data['success'] != true) {
+        return {
+          'error': true,
+          'errorMessage': mapJsonErrorToUserMessage(response.statusCode, data),
+          'code': data['code'],
+          'data': data,
+        };
+      }
+      return {
+        'entryAporte':
+            data['entry_aporte'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      };
+    } catch (e) {
+      return {
         'error': true,
         'errorMessage': userFacingNetworkError(e),
       };

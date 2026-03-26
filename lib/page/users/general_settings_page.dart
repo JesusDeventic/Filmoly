@@ -28,6 +28,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
     with WidgetsBindingObserver {
   String _weekStart = 'monday';
   String _dateFormat = 'dd/MM/yyyy';
+  String _titleDisplayPreference = 'localized';
   bool _isEditing = false;
   bool _loadingNotificationPermission = true;
   AuthorizationStatus _notificationStatus = AuthorizationStatus.notDetermined;
@@ -36,6 +37,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
   late String _initialLanguage;
   late String _initialWeekStart;
   late String _initialDateFormat;
+  late String _initialTitleDisplayPreference;
 
   final _prefs = UserPreferences();
 
@@ -100,6 +102,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
                           }
                           _weekStart = _initialWeekStart;
                           _dateFormat = _initialDateFormat;
+                          _titleDisplayPreference = _initialTitleDisplayPreference;
                         });
                       },
                       child: Text(S.current.actionNo),
@@ -139,9 +142,14 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
     if (u.dateFormat.isNotEmpty) {
       _dateFormat = u.dateFormat;
     }
+    if (u.titleDisplayPreference == 'original' ||
+        u.titleDisplayPreference == 'localized') {
+      _titleDisplayPreference = u.titleDisplayPreference;
+    }
     setState(() {
       _initialWeekStart = _weekStart;
       _initialDateFormat = _dateFormat;
+      _initialTitleDisplayPreference = _titleDisplayPreference;
     });
   }
 
@@ -154,6 +162,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
       final result = await FilmaniakApi.updateUser(
         userEmail: globalCurrentUser.email,
         language: context.read<LanguageProvider>().currentLanguage,
+        titleDisplayPreference: _titleDisplayPreference,
         dateFormat: _dateFormat,
         weekStart: _weekStart,
       );
@@ -170,6 +179,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
       setState(() {
         _initialWeekStart = _weekStart;
         _initialDateFormat = _dateFormat;
+        _initialTitleDisplayPreference = _titleDisplayPreference;
         _initialIsDarkMode = context.read<ThemeProvider>().isDarkMode;
         _initialLanguage = context.read<LanguageProvider>().currentLanguage;
         _isEditing = false;
@@ -300,6 +310,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
                         setState(() {
                           _weekStart = _initialWeekStart;
                           _dateFormat = _initialDateFormat;
+                          _titleDisplayPreference = _initialTitleDisplayPreference;
                           _isEditing = false;
                         });
                       }
@@ -463,6 +474,30 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage>
                         }).toList(),
                       ),
                       const SizedBox(height: 16),
+
+                      customToggleButtons(
+                        context: context,
+                        isEditing: _isEditing,
+                        options: [
+                          l10n.titleDisplayModeLocalized,
+                          l10n.titleDisplayModeOriginal,
+                        ],
+                        isSelected: [
+                          _titleDisplayPreference == 'localized',
+                          _titleDisplayPreference == 'original',
+                        ],
+                        onPressed: (index) {
+                          if (!_isEditing) return;
+                          setState(() {
+                            _titleDisplayPreference =
+                                index == 0 ? 'localized' : 'original';
+                          });
+                        },
+                        title: l10n.titleDisplayModeLabel,
+                        icon: Icons.title_rounded,
+                      ),
+                      const SizedBox(height: 16),
+
                       if (_showNotificationPermissionSection) ...[
                         // Permisos de notificaciones del dispositivo (sin guardar en DB/SP)
                         Row(

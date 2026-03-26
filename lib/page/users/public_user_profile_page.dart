@@ -499,9 +499,12 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
                                   start: user.displayName.isNotEmpty ? 8 : 0,
                                   top: 0,
                                 ),
-                                child: Text(
-                                  countryFlag,
-                                  style: const TextStyle(fontSize: 20),
+                                child: Tooltip(
+                                  message: _tryCountryTooltip(context, user.country),
+                                  child: Text(
+                                    countryFlag,
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
                                 ),
                               ),
                           ],
@@ -733,6 +736,17 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
       return Country.parse(countryCode).flagEmoji;
     } catch (_) {
       return '';
+    }
+  }
+
+  String _tryCountryTooltip(BuildContext context, String countryCode) {
+    final code = countryCode.trim();
+    if (code.isEmpty) return '';
+    try {
+      final country = Country.parse(code);
+      return country.getTranslatedName(context) ?? country.displayNameNoCountryCode;
+    } catch (_) {
+      return code.toUpperCase();
     }
   }
 }
