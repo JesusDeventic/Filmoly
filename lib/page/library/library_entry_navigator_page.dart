@@ -1,5 +1,6 @@
 import 'package:filmaniak/api/filmaniak_api.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:filmaniak/core/global_variables.dart';
 import 'package:filmaniak/model/library_entry_model.dart';
 import 'package:filmaniak/widget/components_widgets.dart';
 import 'package:flutter/material.dart';
@@ -327,10 +328,16 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
         !_loadingDetailIds.contains(entryId)) {
       _loadEntryDetail(entryId);
     }
-    if (!_entryAporteCache.containsKey(entryId) &&
+    if (globalCurrentUser.isRetrotecaUser &&
+        !_entryAporteCache.containsKey(entryId) &&
         !_aporteForbiddenIds.contains(entryId) &&
         !_loadingAporteIds.contains(entryId)) {
+      debugPrint('[library][aporte] loading aporte for entryId=$entryId');
       _loadEntryAporte(entryId);
+    } else if (!globalCurrentUser.isRetrotecaUser) {
+      debugPrint(
+        '[library][aporte] skipped for entryId=$entryId because isRetrotecaUser=false',
+      );
     }
   }
 
@@ -367,6 +374,9 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
       _loadingAporteIds.remove(entryId);
       if (result['error'] == true) {
         final code = (result['code'] as String?) ?? '';
+        debugPrint(
+          '[library][aporte] error entryId=$entryId code=$code message=${result['errorMessage']}',
+        );
         if (code == 'library_aporte_forbidden') {
           _aporteForbiddenIds.add(entryId);
           _aporteErrors.remove(entryId);
@@ -377,6 +387,7 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
               : 'No se pudo cargar el aporte.';
         }
       } else {
+        debugPrint('[library][aporte] success entryId=$entryId');
         _entryAporteCache[entryId] =
             result['entryAporte'] as Map<String, dynamic>? ?? <String, dynamic>{};
       }
@@ -669,10 +680,6 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
                                 aportePayload?['author'] is Map<String, dynamic>
                                 ? aportePayload!['author'] as Map<String, dynamic>
                                 : <String, dynamic>{};
-                            final viewerData =
-                                aportePayload?['viewer'] is Map<String, dynamic>
-                                ? aportePayload!['viewer'] as Map<String, dynamic>
-                                : <String, dynamic>{};
 
                             return SingleChildScrollView(
                               padding: const EdgeInsets.all(16),
@@ -786,23 +793,6 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
                                             _safeText(technical['fotografia']),
                                           ),
                                           _detailRow(theme, 'Reparto', cast),
-                                          _detailRow(
-                                            theme,
-                                            'Premios',
-                                            _safeText(technical['premios']),
-                                          ),
-                                          _detailRow(
-                                            theme,
-                                            'Curiosidades',
-                                            _safeText(technical['curiosidades']),
-                                          ),
-                                          _detailRow(
-                                            theme,
-                                            'Frases célebres',
-                                            _safeText(
-                                              technical['frases_celebres'],
-                                            ),
-                                          ),
                                           _detailRow(theme, 'Sinopsis', synopsis),
                                         ],
                                       ),
@@ -894,11 +884,6 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
                                             ),
                                             _detailRow(
                                               theme,
-                                              'Tu rango',
-                                              _safeText(viewerData['rank_title']),
-                                            ),
-                                            _detailRow(
-                                              theme,
                                               'Modificación',
                                               _safeText(aporteData['modificacion']),
                                             ),
@@ -906,38 +891,6 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
                                               theme,
                                               'Tickets',
                                               'Descarga ${_safeText(aporteData['tickets_descarga'])} / Online ${_safeText(aporteData['tickets_online'])}',
-                                            ),
-                                            _detailRow(
-                                              theme,
-                                              'Tus tickets',
-                                              _safeText(
-                                                viewerData['tickets_balance'],
-                                              ),
-                                            ),
-                                            _detailRow(
-                                              theme,
-                                              'Tickets necesarios',
-                                              '${_safeText(aporteData['tickets_descarga'])} (Descarga) / ${_safeText(aporteData['tickets_online'])} (Online) — Tienes ${_safeText(viewerData['tickets_balance'])}',
-                                            ),
-                                            _detailRow(
-                                              theme,
-                                              'Cumple rango',
-                                              _safeText(
-                                                            viewerData['has_required_rank'],
-                                                          ) ==
-                                                          'true'
-                                                  ? 'Sí'
-                                                  : 'No',
-                                            ),
-                                            _detailRow(
-                                              theme,
-                                              'Tickets suficientes',
-                                              _safeText(
-                                                            viewerData['has_required_tickets'],
-                                                          ) ==
-                                                          'true'
-                                                  ? 'Sí'
-                                                  : 'No',
                                             ),
                                             _detailRow(
                                               theme,

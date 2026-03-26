@@ -194,9 +194,6 @@ function filmaniak_library_build_entry_general_data($post_id, WP_REST_Request $r
             'guion' => (string) get_field('ficha_guion', $post_id),
             'musica' => (string) get_field('ficha_musica', $post_id),
             'fotografia' => (string) get_field('ficha_fotografia', $post_id),
-            'premios' => (string) get_field('ficha_premios', $post_id),
-            'curiosidades' => (string) get_field('ficha_curiosidades', $post_id),
-            'frases_celebres' => (string) get_field('ficha_frases_celebres', $post_id),
         ],
         'taxonomies' => [
             'category' => filmaniak_library_get_terms_payload($post_id, 'category'),
@@ -230,19 +227,7 @@ function filmaniak_library_build_entry_aporte_data_for_user($post_id, $user_id) 
         return new WP_Error('library_not_found', 'Ficha no encontrada.', ['status' => 404]);
     }
 
-    $user_rank_level = 7;
-    $user_rank_title = '';
-    if (function_exists('mycred_get_users_rank')) {
-        $rank_obj = mycred_get_users_rank($user_id, 'mycred_retroaportes');
-        if (is_object($rank_obj) && isset($rank_obj->title)) {
-            $user_rank_title = (string) $rank_obj->title;
-            $user_rank_level = filmaniak_library_rank_title_to_level($user_rank_title);
-        }
-    }
-
     $required_rank_title = (string) get_field('aporte_rango', $post_id);
-    $required_rank_level = filmaniak_library_rank_title_to_level($required_rank_title);
-    $has_required_rank = $user_rank_level >= $required_rank_level;
 
     $tipo_aporte = filmaniak_library_primary_category_name($post_id);
     $tickets_download = 10;
@@ -255,12 +240,6 @@ function filmaniak_library_build_entry_aporte_data_for_user($post_id, $user_id) 
         $tickets_download = $tickets_download * 2;
     }
     $tickets_online = (int) round(($tickets_download / 2), 0, PHP_ROUND_HALF_DOWN);
-
-    $tickets_balance = 0;
-    if (function_exists('mycred_get_users_balance')) {
-        $tickets_balance = (int) mycred_get_users_balance($user_id, 'mycred_default');
-    }
-    $has_required_tickets = $tickets_balance >= $tickets_download;
 
     $post_author_id = (int) get_post_field('post_author', $post_id);
     $author_login = (string) get_the_author_meta('user_login', $post_author_id);
@@ -284,14 +263,6 @@ function filmaniak_library_build_entry_aporte_data_for_user($post_id, $user_id) 
             'info' => (string) get_field('aporte_info', $post_id),
             'tickets_descarga' => $tickets_download,
             'tickets_online' => $tickets_online,
-        ],
-        'viewer' => [
-            'user_id' => $user_id,
-            'rank_title' => $user_rank_title,
-            'rank_level' => $user_rank_level,
-            'tickets_balance' => $tickets_balance,
-            'has_required_rank' => $has_required_rank,
-            'has_required_tickets' => $has_required_tickets,
         ],
     ];
 }

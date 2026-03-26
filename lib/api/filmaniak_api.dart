@@ -134,6 +134,7 @@ class FilmaniakApi {
       url,
       headers: _headers(token: token),
     );
+    print('[api][auth/me][raw_response] ${response.body}');
     if (response.statusCode != 200) return null;
     final data = jsonDecode(response.body) as Map<String, dynamic>?;
     if (data == null || data['success'] != true) return null;

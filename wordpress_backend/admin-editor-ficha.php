@@ -48,10 +48,6 @@ if ( !is_user_logged_in() ) {
                 //$old_sinopsis = str_replace( '</p>', '', $old_sinopsis );
                 $old_sinopsis = get_post_field( 'post_content', $post_id );
                 
-                $old_premios = get_field( 'field_6275041cce02e', $post_id );
-                $old_curiosidades = get_field( 'field_62750f7681b92', $post_id );
-                $old_frases = get_field( 'field_62750fab81b93', $post_id );
-
                 // DATOS ACTUALES DEL APORTE
                 $old_calidad = get_field( 'field_5cff8cfcad886', $post_id );
                 $old_resolucion = get_field( 'field_5cff8c4a18ae8', $post_id );
@@ -232,18 +228,6 @@ echo '<div class="edicion-datos-tecnicos">';
 
             echo '</div>';
         
-            echo '<div class="edicion-curiosidades">';
-            echo '<label for="input_premios">PREMIOS Y NOMINACIONES (Uno por línea)</label><textarea id="input_premios" name="premios" rows="5">' . $old_premios . '</textarea>';
-            echo '<label for="input_curiosidades">CURIOSIDADES Y ERRORES (Uno por línea)</label><textarea id="input_curiosidades" name="curiosidades" rows="5">' . $old_curiosidades . '</textarea>';
-            echo '<label for="input_frases">FRASES CELEBRES (Uno por línea)</label><textarea id="input_frases" name="frases" rows="5">' . $old_frases . '</textarea>';
-            echo '</div>';
-
-
-
-
-
-
-
  // SI SE ESTA CREANDO UNA FICHA O ES ADMIN, PERMITO EDITAR APORTE
             if ( isset( $_POST['cargar-creador'] ) || ( $role[0] == 'editor' || $role[0] == 'administrator' ) ) {
 
@@ -489,9 +473,6 @@ echo '<div class="edicion-datos-tecnicos">';
                 update_field( 'field_61671faf59600', $_POST['guion'], $post_id );
                 update_field( 'field_61671f77595ff', $_POST['musica'], $post_id );
                 update_field( 'field_616724c5d05ac', $_POST['fotografia'], $post_id );
-                update_field( 'field_6275041cce02e', $_POST['premios'], $post_id );
-                update_field( 'field_62750f7681b92', $_POST['curiosidades'], $post_id );
-                update_field( 'field_62750fab81b93', $_POST['frases'], $post_id );
 
                 // SI SE ESTA CREANDO UNA FICHA O ES ADMIN, PERMITO GUARDAR POSTER Y ACTUALIZAR APORTE
                 if ( $creacion || ( $role[0] == 'editor' || $role[0] == 'administrator' ) ) {

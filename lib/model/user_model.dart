@@ -78,10 +78,8 @@ class FilmaniakUser {
       weekStart: (json['start_day_week'] as String?) ?? 'monday',
       country: (json['country'] as String?) ?? '',
       birthdate: (json['birthdate'] as String?) ?? '',
-      isRetrotecaUser:
-          (json['filmaniak_retroteca_user'] as bool?) ?? false,
-      marketingConsent:
-          (json['marketing_consent'] as bool?) ?? false,
+      isRetrotecaUser: (json['filmaniak_retroteca_user'] as bool?) ?? false,
+      marketingConsent: (json['marketing_consent'] as bool?) ?? false,
       accountStatus: (json['account_status'] as String?) ?? 'active',
       lastLogin: (json['filmaniak_last_login'] as String?) ?? '',
       reviewStatus:
