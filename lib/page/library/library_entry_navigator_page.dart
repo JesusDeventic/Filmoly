@@ -62,6 +62,7 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
   final FocusNode _focusNode = FocusNode(debugLabel: 'LibraryEntryNavigator');
   final Map<int, Map<String, dynamic>> _entryDetailCache = {};
   final Map<int, Map<String, dynamic>> _entryAporteCache = {};
+  final Map<int, String> _stablePosterUrlCache = {};
   final Set<int> _loadingDetailIds = {};
   final Set<int> _loadingAporteIds = {};
   final Set<int> _aporteForbiddenIds = {};
@@ -415,6 +416,22 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
     return names.join(', ');
   }
 
+  String _stablePosterUrl({
+    required int entryId,
+    required String listPosterUrl,
+    required String detailPosterUrl,
+  }) {
+    final cached = _stablePosterUrlCache[entryId];
+    if (cached != null && cached.trim().isNotEmpty) return cached;
+    final candidate = listPosterUrl.trim().isNotEmpty
+        ? listPosterUrl.trim()
+        : detailPosterUrl.trim();
+    if (candidate.isNotEmpty) {
+      _stablePosterUrlCache[entryId] = candidate;
+    }
+    return candidate;
+  }
+
   ({String title, String countryCode}) _parseAltTitleWithCountry(String raw) {
     final text = raw.trim();
     if (text.isEmpty) {
@@ -636,9 +653,11 @@ class _LibraryEntryNavigatorPageState extends State<LibraryEntryNavigatorPage> {
                             final displayTitle = _safeText(detail?['title']).isNotEmpty
                                 ? _safeText(detail?['title'])
                                 : entry.title;
-                            final posterUrl = _safeText(detail?['thumbnail_url']).isNotEmpty
-                                ? _safeText(detail?['thumbnail_url'])
-                                : entry.thumbnailUrl;
+                            final posterUrl = _stablePosterUrl(
+                              entryId: entry.id,
+                              listPosterUrl: entry.thumbnailUrl,
+                              detailPosterUrl: _safeText(detail?['thumbnail_url']),
+                            );
                             final rfAverage =
                                 (detail?['rf_average'] as num?)?.toDouble() ??
                                 entry.rfAverage;

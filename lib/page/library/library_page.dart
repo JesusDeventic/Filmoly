@@ -906,9 +906,9 @@ class _LibraryPageState extends State<LibraryPage> {
   double _childAspectRatioForGrid() {
     switch (_layoutMode) {
       case LibraryLayoutMode.compact:
-        return 0.58;
+        return 0.50;
       case LibraryLayoutMode.comfortable:
-        return 0.58;
+        return 0.50;
       case LibraryLayoutMode.list:
         return 0.52;
     }
